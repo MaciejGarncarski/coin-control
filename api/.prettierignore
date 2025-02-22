@@ -1,0 +1,8 @@
+node_modules
+.github
+coverage
+dist
+image-upload
+.dockerignore
+Dockerfile
+pnpm-lock.yaml
