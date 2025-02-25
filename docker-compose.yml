@@ -1,0 +1,20 @@
+services:
+  api-dev:
+    build:
+      target: dev
+      dockerfile: Dockerfile
+      context: ./api
+    volumes:
+      - .:/api
+    ports:
+      - "${API_CONTAINER_PORT}:3001"
+    env_file: "./api/.env"
+
+  api:
+    build:
+      target: prod
+      dockerfile: Dockerfile
+      context: ./api
+    ports:
+      - "${API_CONTAINER_PORT}:3001"
+    env_file: "./api/.env"

@@ -1,4 +1,4 @@
-import { env } from "@config/env.js";
+import { env } from "./env.js";
 
 export const environment = env.NODE_ENV;
 export const isDev = environment === "development";

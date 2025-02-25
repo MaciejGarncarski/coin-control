@@ -1,31 +1,33 @@
-import { styleText } from "node:util";
-
-import { env } from "@config/env.js";
-import { httpLogger } from "@logger/logger.js";
 import express from "express";
+
+import { env } from "./config/env.js";
+import { httpLogger } from "./logger/logger.js";
+import { corsMiddleware } from "./middlewares/cors.js";
+import { errorMiddleware } from "./middlewares/error.js";
+import { router } from "./modules/router.js";
+import { showStartMessage } from "./utils/start-message.js";
 
 const app = express();
 
 app.use(httpLogger);
-
-app.route("/").get((req, res) => {
-	res.send(`elo elo 320`);
-});
+app.use(corsMiddleware());
+app.use(router());
+app.use(errorMiddleware);
 
 app.listen(Number(env.PORT), env.HOST, (error) => {
 	if (error) {
 		httpLogger.logger.error("API server failed to start");
-		throw new Error("API server failed to start");
+
+		if (error instanceof Error) {
+			if (error.message.includes("EADDRINUSE")) {
+				httpLogger.logger.error(`Port ${env.PORT} is already in use`);
+			} else {
+				httpLogger.logger.error(error.message);
+			}
+		}
+
+		process.exit(1);
 	}
 
-	const hashes = styleText("greenBright", "########################################");
-	const message = styleText(
-		"greenBright",
-		` Server running on ${styleText(["bgWhite", "black"], `http://${env.HOST}:${env.PORT}`)}`,
-	);
-
-	console.log(hashes);
-	console.log(message);
-	console.log(hashes);
-	console.log("\n");
+	showStartMessage();
 });

@@ -1,13 +1,11 @@
 import { Router } from "express";
 
-const router = Router();
+const route = Router();
 
-router.get("/login", (req, res) => {
-	res.send("Login Route");
-});
+export const authRoutes = (app: Router) => {
+	app.use("/auth", route);
 
-router.post("/register", (req, res) => {
-	res.send("Register Route");
-});
-
-export default router;
+	route.get("/login", (req, res) => {
+		res.send("Login");
+	});
+};
