@@ -7,8 +7,11 @@ services:
     volumes:
       - .:/api
     ports:
-      - "${API_CONTAINER_PORT}:3001"
-    env_file: "./api/.env"
+      - "${API_PORT}:${API_PORT}"
+    environment:
+      - PORT=${API_PORT}
+      - APP_ORIGIN=${APP_ORIGIN}
+      - HOST=${HOST}
 
   api:
     build:
@@ -16,5 +19,8 @@ services:
       dockerfile: Dockerfile
       context: ./api
     ports:
-      - "${API_CONTAINER_PORT}:3001"
-    env_file: "./api/.env"
+      - "${API_PORT}:${API_PORT}"
+    environment:
+      - PORT=${API_PORT}
+      - APP_ORIGIN=${APP_ORIGIN}
+      - HOST=${HOST}
