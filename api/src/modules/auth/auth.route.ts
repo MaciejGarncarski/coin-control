@@ -6,6 +6,8 @@ export const authRoutes = (app: Router) => {
 	app.use("/auth", route);
 
 	route.get("/login", (req, res) => {
-		res.send("Login");
+		res.status(404).json({
+			siemano: "kolanooo",
+		});
 	});
 };

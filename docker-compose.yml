@@ -1,11 +1,38 @@
 services:
+  db:
+    image: postgres
+    container_name: local_pgdb
+    restart: always
+    profiles: [dev, prod]
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASS}
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    profiles: [dev, prod]
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASS}
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
   api-dev:
     build:
       target: dev
       dockerfile: Dockerfile
       context: ./api
+    depends_on:
+      - db
     volumes:
-      - .:/api
+      - ./api/src:/app/src
+    profiles: [dev]
     ports:
       - "${API_PORT}:${API_PORT}"
     environment:
@@ -18,9 +45,16 @@ services:
       target: prod
       dockerfile: Dockerfile
       context: ./api
+    depends_on:
+      - db
+    profiles: [prod]
     ports:
       - "${API_PORT}:${API_PORT}"
     environment:
       - PORT=${API_PORT}
       - APP_ORIGIN=${APP_ORIGIN}
       - HOST=${HOST}
+
+volumes:
+  local_pgdata:
+  pgadmin-data:
