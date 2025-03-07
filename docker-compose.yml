@@ -26,25 +26,40 @@ services:
   api-dev:
     build:
       target: dev
-      dockerfile: Dockerfile
-      context: ./api
+      dockerfile: ./docker/api.Dockerfile
     depends_on:
       - db
     volumes:
-      - ./api/src:/app/src
+      - ./api/src:/app/api/src
+      - ./shared:/app/shared
     profiles: [dev]
     ports:
       - "${API_PORT}:${API_PORT}"
     environment:
       - PORT=${API_PORT}
-      - APP_ORIGIN=${APP_ORIGIN}
+      - APP_ORIGIN=${APP_URL}
       - HOST=${HOST}
+  web-dev:
+    build:
+      target: dev
+      dockerfile: ./docker/web.Dockerfile
+    depends_on:
+      - api-dev
+    volumes:
+      - ./web/src:/app/web/src
+      - ./shared:/app/shared
+    profiles: [dev]
+    ports:
+      - "${WEB_PORT}:${WEB_PORT}"
+    environment:
+      - VITE_PORT=${WEB_PORT}
+      - VITE_API_URL=${API_URL}
+      - VITE_APP_URL=${APP_URL}
 
   api:
     build:
       target: prod
-      dockerfile: Dockerfile
-      context: ./api
+      dockerfile: ./docker/api.Dockerfile
     depends_on:
       - db
     profiles: [prod]
@@ -52,8 +67,22 @@ services:
       - "${API_PORT}:${API_PORT}"
     environment:
       - PORT=${API_PORT}
-      - APP_ORIGIN=${APP_ORIGIN}
+      - APP_ORIGIN=${APP_URL}
       - HOST=${HOST}
+
+  web:
+    build:
+      target: prod
+      dockerfile: ./docker/web.Dockerfile
+    depends_on:
+      - api
+    profiles: [prod]
+    ports:
+      - "${WEB_PORT}:${WEB_PORT}"
+    environment:
+      - VITE_PORT=${WEB_PORT}
+      - VITE_API_URL=${API_URL}
+      - VITE_APP_URL=${APP_URL}
 
 volumes:
   local_pgdata:
