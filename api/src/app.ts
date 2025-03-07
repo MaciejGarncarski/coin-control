@@ -1,4 +1,3 @@
-import { jakisTest } from '@shared/zod-schemas'
 import express from 'express'
 
 import { env } from './config/env.js'
@@ -14,8 +13,6 @@ app.use(httpLogger)
 app.use(corsMiddleware())
 app.use(router())
 app.use(errorMiddleware)
-
-console.log(jakisTest)
 
 app.listen(Number(env.PORT), env.HOST, (error) => {
   if (error) {

@@ -9,3 +9,5 @@ export const loginMutationResponseSchema = z.object({
   status: z.union([z.literal("success"), z.literal("error")]),
   message: z.string(),
 });
+
+export type LoginResponse = z.infer<typeof loginMutationResponseSchema>;

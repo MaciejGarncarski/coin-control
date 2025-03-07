@@ -39,6 +39,8 @@ services:
       - PORT=${API_PORT}
       - APP_ORIGIN=${APP_URL}
       - HOST=${HOST}
+      - PG_USER=${PG_USER}
+      - PG_PASS=${PG_PASS}
   web-dev:
     build:
       target: dev

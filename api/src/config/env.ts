@@ -3,6 +3,8 @@ import { z } from '@shared/zod-schemas'
 import { httpLogger } from '../logger/logger.js'
 
 const envSchema = z.object({
+  PG_USER: z.string(),
+  PG_PASS: z.string(),
   HOST: z.string().ip({ version: 'v4' }),
   APP_ORIGIN: z.string().startsWith('http'),
   PORT: z.string().length(4),
