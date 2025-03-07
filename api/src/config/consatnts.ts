@@ -1,5 +1,5 @@
-import { env } from "./env.js";
+import { env } from './env.js'
 
-export const environment = env.NODE_ENV;
-export const isDev = environment === "development";
-export const isProd = environment === "production";
+export const environment = env.NODE_ENV
+export const isDev = environment === 'development'
+export const isProd = environment === 'production'

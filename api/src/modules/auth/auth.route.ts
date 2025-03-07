@@ -1,10 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express'
 
-import { postLoginHandler } from "./auth.controller.js";
+import { postLoginHandler } from './auth.controller.js'
 
-const route = Router();
+const route = Router()
 
 export const authRoutes = (app: Router) => {
-	app.use("/auth", route);
-	route.post("/login", postLoginHandler);
-};
+  app.use('/auth', route)
+  route.post('/login', postLoginHandler)
+}

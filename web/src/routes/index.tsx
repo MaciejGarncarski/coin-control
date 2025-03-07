@@ -1,13 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { jakisTest } from "@shared/zod-schemas";
-import { useLoginMutation } from "../features/auth/login/api/login";
+import { createFileRoute } from '@tanstack/react-router'
+import { jakisTest } from '@shared/zod-schemas'
+import { useLoginMutation } from '../features/auth/login/api/login'
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   component: App,
-});
+})
 
 function App() {
-  const mutation = useLoginMutation();
+  const mutation = useLoginMutation()
 
   return (
     <div className="text-center">
@@ -16,5 +16,5 @@ function App() {
         Mutat
       </button>
     </div>
-  );
+  )
 }

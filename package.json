@@ -1,12 +1,14 @@
 {
   "name": "budget_tracker",
   "version": "1.0.0",
-  "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "pnpm run -r lint",
+    "format": "pnpm run -r format",
+    "lint-format": "pnpm run -r lint-format",
+    "check-types": "pnpm run -r check-types"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.4.1"

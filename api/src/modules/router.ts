@@ -1,11 +1,11 @@
-import { Router } from "express";
+import { Router } from 'express'
 
-import { authRoutes } from "./auth/auth.route.js";
+import { authRoutes } from './auth/auth.route.js'
 
 export const router = () => {
-	const app = Router();
+  const app = Router()
 
-	authRoutes(app);
+  authRoutes(app)
 
-	return app;
-};
+  return app
+}
