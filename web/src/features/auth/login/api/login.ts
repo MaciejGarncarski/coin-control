@@ -1,22 +1,38 @@
-import { fetcher } from "@/lib/api-client";
-import { loginMutationResponseSchema } from "@shared/zod-schemas/auth/login";
+import { fetcher } from '@/lib/fetcher'
+import {
+  loginMutationResponseSchema,
+  type LoginMutation,
+} from '@shared/zod-schemas/auth/login'
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
+import { toast } from 'sonner'
 
 export const useLoginMutation = () => {
+  const navigate = useNavigate()
+
   return useMutation({
-    mutationFn: () => {
-      return fetcher.post({
-        url: "/auth/login",
+    mutationFn: async (mutationData: LoginMutation) => {
+      const response = await fetcher({
+        method: 'POST',
+        url: '/auth/login',
         schema: loginMutationResponseSchema,
         body: {
-          siemano: "l",
+          email: mutationData.email,
+          password: mutationData.password,
         },
-      });
+      })
+
+      if (response.status === 'ok') {
+        return response.data.data
+      }
     },
-    // onSuccess: (d) => console.log(d),
-    onError: (e) => {
-      console.log(e);
+    onSuccess: async () => {
+      toast.success('Logged in successfully')
+      await navigate({
+        from: '/auth/login',
+        to: '/',
+      })
     },
-  });
-};
+  })
+}

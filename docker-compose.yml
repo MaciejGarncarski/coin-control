@@ -41,6 +41,8 @@ services:
       - HOST=${HOST}
       - PG_USER=${PG_USER}
       - PG_PASS=${PG_PASS}
+      - API_SECRET=${API_SECRET}
+
   web-dev:
     build:
       target: dev

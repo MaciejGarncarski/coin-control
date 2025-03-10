@@ -6,9 +6,20 @@ import { corsMiddleware } from './middlewares/cors.js'
 import { errorMiddleware } from './middlewares/error.js'
 import { router } from './modules/router.js'
 import { showStartMessage } from './utils/start-message.js'
+import bodyParser from 'body-parser'
+import { sessionConfig } from './config/session.js'
+import expressSession from 'express-session'
 
 const app = express()
 
+declare module 'express-session' {
+  interface SessionData {
+    userId: string
+  }
+}
+
+app.use(bodyParser.json())
+app.use(expressSession(sessionConfig))
 app.use(httpLogger)
 app.use(corsMiddleware())
 app.use(router())

@@ -1,20 +1,25 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { jakisTest } from "@shared/zod-schemas";
-import { useLoginMutation } from "@/features/auth/login/api/login";
+import { LogoutButton } from '@/components/logout-button'
+import { userQueryOptions } from '@/lib/auth'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   component: App,
-});
+  beforeLoad: async ({ context: { queryClient } }) => {
+    const isLoggedIn = await queryClient.fetchQuery(userQueryOptions)
+
+    if (!isLoggedIn) {
+      throw redirect({
+        to: '/auth/login',
+      })
+    }
+  },
+})
 
 function App() {
-  const mutation = useLoginMutation();
-
   return (
-    <div className="text-center">
-      {jakisTest}
-      <button type="button" onClick={() => mutation.mutate()}>
-        Mutat
-      </button>
+    <div className="animate-in fade-in text-center">
+      home
+      <LogoutButton />
     </div>
-  );
+  )
 }

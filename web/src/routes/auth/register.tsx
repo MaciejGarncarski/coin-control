@@ -1,5 +1,4 @@
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import {
   Card,
   CardContent,
@@ -15,19 +14,21 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { useLoginMutation } from '@/features/auth/login/api/login'
-import { createFileRoute, Link, redirect } from '@tanstack/react-router'
-import { AlertCircle } from 'lucide-react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import {
   loginMutationSchema,
   type LoginMutation,
 } from '@shared/zod-schemas/auth/login'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { Link } from '@tanstack/react-router'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { AlertCircle } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { userQueryOptions } from '@/lib/auth'
 
-export const Route = createFileRoute('/auth/login')({
+export const Route = createFileRoute('/auth/register')({
   beforeLoad: async ({ context: { queryClient } }) => {
     const isLoggedIn = await queryClient.fetchQuery(userQueryOptions)
 
@@ -42,7 +43,6 @@ export const Route = createFileRoute('/auth/login')({
 
 function RouteComponent() {
   const loginMutation = useLoginMutation()
-
   const form = useForm<LoginMutation>({
     resolver: zodResolver(loginMutationSchema),
     defaultValues: {
@@ -53,13 +53,13 @@ function RouteComponent() {
 
   return (
     <main className="flex h-screen items-center justify-center">
-      <Card className="w-[20rem] md:w-[25rem]">
+      <Card className="w-[25rem]">
         <CardHeader>
-          <CardTitle>Login</CardTitle>
+          <CardTitle>Register</CardTitle>
           <CardDescription>
-            Login to <span className="font-semibold">CoinControl</span> or
-            register{' '}
-            <Link to="/auth/register" className="text-foreground underline">
+            Register to <span className="font-semibold">CoinControl</span> or
+            login{' '}
+            <Link to="/auth/login" className="text-foreground underline">
               here
             </Link>
             .
@@ -104,7 +104,7 @@ function RouteComponent() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Login</Button>
+              <Button type="submit">Register</Button>
             </form>
           </Form>
         </CardContent>
