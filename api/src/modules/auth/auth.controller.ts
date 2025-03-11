@@ -3,7 +3,7 @@ import { db } from '../../../lib/db.js'
 import type {
   LoginMutation,
   LoginResponse,
-} from '@shared/zod-schemas/auth/login.ts'
+} from '@shared/zod-schemas/auth/login.js'
 import { status } from 'http-status'
 import type { ApiError } from '@shared/zod-schemas'
 import { verify } from '@node-rs/argon2'
@@ -13,7 +13,8 @@ interface LoginRequest extends Request {
 }
 
 const credentialsError: ApiError = {
-  error: 'Invalid credentials.',
+  statusCode: status.UNAUTHORIZED,
+  message: 'Invalid email or password.',
 }
 
 const response: LoginResponse = {
@@ -23,7 +24,8 @@ const response: LoginResponse = {
 }
 
 const errorMessage: ApiError = {
-  error: 'Internal server error.',
+  statusCode: status.INTERNAL_SERVER_ERROR,
+  message: 'Internal server error.',
 }
 
 export const postLoginHandler = async (req: LoginRequest, res: Response) => {
@@ -63,7 +65,12 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
 
 export const getUserHandler = async (req: Request, res: Response) => {
   if (!req.session.userId) {
-    res.status(status.UNAUTHORIZED).json({ data: null })
+    const notFoundUserError: ApiError = {
+      message: 'User not found.',
+      statusCode: status.NOT_FOUND,
+    }
+
+    res.status(status.UNAUTHORIZED).json(notFoundUserError)
     return
   }
 

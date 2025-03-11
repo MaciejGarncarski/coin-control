@@ -23,6 +23,9 @@ app.use(expressSession(sessionConfig))
 app.use(httpLogger)
 app.use(corsMiddleware())
 app.use(router())
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' })
+})
 app.use(errorMiddleware)
 
 app.listen(Number(env.PORT), env.HOST, (error) => {

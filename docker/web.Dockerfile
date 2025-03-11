@@ -2,6 +2,7 @@
 
 ARG NODE_VERSION=22.14.0
 ARG PNPM_VERSION=10.4.1
+ARG VITE_API_URL
 
 # base
 FROM node:${NODE_VERSION}-alpine as base
@@ -22,6 +23,8 @@ CMD [ "pnpm", "--filter", "web", "dev" ]
 
 # build prod
 FROM base AS build
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL?vite_api_url_not_set}
 COPY . /app
 WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
@@ -29,10 +32,8 @@ RUN pnpm run -r build
 RUN pnpm deploy --filter=web --prod /prod/web
 RUN pnpm deploy "--filter=@shared/zod-schemas" --prod /prod/shared/zod-schemas
 
-# prod
-FROM base AS prod
-COPY --from=build /prod/web /prod/web
-WORKDIR /prod/web
-EXPOSE ${PORT}
-ENV NODE_ENV production
-CMD ["node", "./dist/src/app.js"]
+FROM nginx:alpine AS prod
+WORKDIR /app
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /prod/web/dist /usr/share/nginx/html
+CMD ["nginx", "-g", "daemon off;"]

@@ -9,6 +9,11 @@
     "lint-format": "pnpm run -r lint-format",
     "check-types": "pnpm run -r check-types"
   },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3"
+  },
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.6.1"

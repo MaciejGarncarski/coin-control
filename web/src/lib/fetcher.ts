@@ -1,5 +1,6 @@
 import { env } from '@/config/env'
-import { z } from '@shared/zod-schemas'
+import { ApiError } from '@/utils/api-error'
+import { apiErrorSchema, z } from '@shared/zod-schemas'
 
 type ResponseType = 'json' | 'text' | 'arrayBuffer'
 
@@ -7,7 +8,7 @@ type HttpMethod = 'GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH'
 
 type Body = FormData | Record<string, unknown>
 
-type Properties<
+export type FetcherProperties<
   R extends ResponseType | undefined = 'json',
   M extends HttpMethod = 'GET',
   S extends z.ZodTypeAny = z.ZodTypeAny,
@@ -23,27 +24,21 @@ type Properties<
         ? Body
         : never
   schema?: R extends 'arrayBuffer' ? never : S
+  throwOnError?: boolean
 }
 
 type ReturnType<R extends ResponseType | undefined, S extends z.ZodTypeAny> =
-  | {
-      data: R extends 'arrayBuffer'
-        ? ArrayBuffer
-        : R extends 'text'
-          ? S extends undefined
-            ? string
-            : z.infer<S>
-          : S extends undefined
-            ? Record<string, unknown>
-            : z.infer<S>
-      status: 'ok'
-      statusCode?: number
-    }
-  | {
-      message: string
-      status: 'error'
-      statusCode?: number
-    }
+  | (R extends 'arrayBuffer'
+      ? ArrayBuffer
+      : R extends 'text'
+        ? S extends undefined
+          ? string
+          : z.infer<S>
+        : S extends undefined
+          ? Record<string, unknown>
+          : z.infer<S>)
+  | never
+  | null
 
 export const fetcher = async <
   R extends ResponseType | undefined = 'json',
@@ -55,66 +50,92 @@ export const fetcher = async <
   responseType = 'json',
   schema,
   url,
-}: Properties<R, M, S>): Promise<ReturnType<R, S>> => {
-  const transformedBody =
-    method === 'POST'
-      ? body
-      : method === 'PUT'
+  throwOnError = false,
+}: FetcherProperties<R, M, S>): Promise<ReturnType<R, S>> => {
+  try {
+    const transformedBody =
+      method === 'POST'
         ? body
-        : method === 'PATCH'
+        : method === 'PUT'
           ? body
-          : null
+          : method === 'PATCH'
+            ? body
+            : null
 
-  const response = await fetch(pasrseUrl(url), {
-    body: canSendBody(method)
-      ? transformedBody instanceof FormData
-        ? transformedBody
-        : JSON.stringify(transformedBody)
-      : undefined,
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: method,
-  })
+    const response = await fetch(pasrseUrl(url), {
+      body: canSendBody(method)
+        ? transformedBody instanceof FormData
+          ? transformedBody
+          : JSON.stringify(transformedBody)
+        : undefined,
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: method,
+    })
 
-  if (!response.ok) {
-    return {
-      status: 'error',
-      message: 'request failed',
-      statusCode: response.status,
+    if (!response.ok) {
+      const responseJson = await response.json()
+      const parsedResponse = apiErrorSchema.safeParse(responseJson)
+
+      if (!parsedResponse.success) {
+        throw new ApiError({
+          statusCode: response.status,
+          message: 'parsing failed',
+        })
+      }
+
+      if (parsedResponse.data.toastMessage) {
+        throw new ApiError({
+          message: 'request failed',
+          statusCode: response.status,
+          toastMessage: parsedResponse.data.toastMessage,
+        })
+      }
+
+      if (parsedResponse.data.message) {
+        throw new ApiError({
+          statusCode: response.status,
+          message: parsedResponse.data.message,
+        })
+      }
+
+      throw new ApiError({
+        statusCode: response.status,
+        message: 'request failed',
+      })
     }
-  }
 
-  const transformedData =
-    responseType === 'arrayBuffer'
-      ? await response.arrayBuffer()
-      : responseType === 'text'
-        ? await response.text()
-        : responseType === 'json'
-          ? await response.json()
-          : await response.json()
+    const transformedData =
+      responseType === 'arrayBuffer'
+        ? await response.arrayBuffer()
+        : responseType === 'text'
+          ? await response.text()
+          : responseType === 'json'
+            ? await response.json()
+            : await response.json()
 
-  if (!schema) {
-    return {
-      data: transformedData,
-      status: 'ok',
-      statusCode: response.status,
+    if (!schema) {
+      return transformedData
     }
-  }
 
-  const parsed = schema.safeParse(transformedData)
+    const parsed = schema.safeParse(transformedData)
 
-  if (parsed.error) {
-    return {
-      status: 'error',
-      message: 'parsing failed',
+    if (parsed.error) {
+      throw new ApiError({
+        statusCode: response.status,
+        message: 'parsing failed',
+      })
     }
-  }
 
-  return {
-    data: parsed.data,
-    status: 'ok',
+    return parsed.data
+  } catch (error) {
+    if (throwOnError) {
+      throw error
+    }
+
+    return null
   }
 }
 

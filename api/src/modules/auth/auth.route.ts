@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import { loginMutationSchema } from '@shared/zod-schemas/auth/login.js'
+import { loginMutationSchema } from '@shared/zod-schemas'
 import {
   getUserHandler,
   logoutHandler,

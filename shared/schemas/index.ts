@@ -1,17 +1,12 @@
 import { z } from "zod";
 
 export const apiErrorSchema = z.object({
-  error: z.string().min(1),
-  message: z.any(),
+  statusCode: z.number().min(100).max(600),
+  message: z.string(),
+  toastMessage: z.string().optional(),
 });
 
 export type ApiError = z.infer<typeof apiErrorSchema>;
 
-export const testSchema = z.object({
-  test: z.string(),
-  drugiTest: z.number(),
-});
-
-export const jakisTest = "test";
-
+export * from "./auth/login.js";
 export { z } from "zod";

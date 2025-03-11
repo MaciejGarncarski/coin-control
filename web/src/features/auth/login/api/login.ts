@@ -23,9 +23,7 @@ export const useLoginMutation = () => {
         },
       })
 
-      if (response.status === 'ok') {
-        return response.data.data
-      }
+      return response.data
     },
     onSuccess: async () => {
       toast.success('Logged in successfully')

@@ -17,11 +17,7 @@ export const userQueryOptions = queryOptions({
       schema: loginMutationResponseSchema,
     })
 
-    if (response.status === 'ok') {
-      return response.data
-    }
-
-    return null
+    return response
   },
 })
 
@@ -36,18 +32,11 @@ export const useLogoutMutation = () => {
         to: '/',
       })
     },
-    mutationFn: async () => {
-      const response = await fetcher({
+    mutationFn: () =>
+      fetcher({
         method: 'DELETE',
         url: '/auth/me',
         schema: loginMutationResponseSchema,
-      })
-
-      if (response.status === 'ok') {
-        return response.data
-      }
-
-      return null
-    },
+      }),
   })
 }

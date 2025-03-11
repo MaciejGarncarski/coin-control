@@ -1,17 +1,20 @@
 {
   "private": "true",
   "name": "@shared/zod-schemas",
+  "author": "Maciej Garncarski",
   "type": "module",
   "version": "1.0.0",
-  "main": "index.ts",
-  "packageManager": "pnpm@10.6.1",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "rm -rf dist && tsc"
+    "build": "rm -rf dist && tsc -b",
+    "dev": "tsc --watch"
   },
   "dependencies": {
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "typescript": "^5.8.2"
-  }
+  },
+  "packageManager": "pnpm@10.6.1"
 }

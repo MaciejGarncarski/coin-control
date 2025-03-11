@@ -20,7 +20,6 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 ENV NODE_ENV development
 EXPOSE ${PORT}
 CMD [ "pnpm", "--filter", "api", "dev" ]
-# RUN pnpm --filter "api" dev
 
 # build prod
 FROM base AS build

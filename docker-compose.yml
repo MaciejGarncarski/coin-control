@@ -44,17 +44,17 @@ services:
       - PORT=${API_PORT}
       - APP_ORIGIN=${APP_URL}
       - HOST=${HOST}
+      - DB_URL=${DB_URL}
+      - API_SECRET=${API_SECRET}
 
   web:
     build:
-      target: prod
       dockerfile: ./docker/web.Dockerfile
+      args:
+        VITE_API_URL: ${API_URL}
+        VITE_PORT: ${WEB_PORT}
     depends_on:
       - api
     profiles: [prod]
     ports:
-      - "${WEB_PORT}:${WEB_PORT}"
-    environment:
-      - VITE_PORT=${WEB_PORT}
-      - VITE_API_URL=${API_URL}
-      - VITE_APP_URL=${APP_URL}
+      - "${WEB_PORT}:80"

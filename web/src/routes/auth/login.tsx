@@ -29,7 +29,7 @@ import { userQueryOptions } from '@/lib/auth'
 
 export const Route = createFileRoute('/auth/login')({
   beforeLoad: async ({ context: { queryClient } }) => {
-    const isLoggedIn = await queryClient.fetchQuery(userQueryOptions)
+    const isLoggedIn = await queryClient.ensureQueryData(userQueryOptions)
 
     if (isLoggedIn) {
       throw redirect({
@@ -52,7 +52,7 @@ function RouteComponent() {
   })
 
   return (
-    <main className="flex h-screen items-center justify-center">
+    <main className="flex h-screen flex-col items-center justify-center gap-4">
       <Card className="w-[20rem] md:w-[25rem]">
         <CardHeader>
           <CardTitle>Login</CardTitle>
@@ -64,12 +64,6 @@ function RouteComponent() {
             </Link>
             .
           </CardDescription>
-          {loginMutation.isError && (
-            <Alert variant={'destructive'} className="animate-in fade-in mt-3">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>Invalid email or password.</AlertDescription>
-            </Alert>
-          )}
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -109,6 +103,15 @@ function RouteComponent() {
           </Form>
         </CardContent>
       </Card>
+
+      {loginMutation.isError && (
+        <Alert
+          variant={'destructive'}
+          className="animate-in fade-in bg-card mt-3 w-[20rem] md:w-[25rem]">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>Invalid email or password.</AlertDescription>
+        </Alert>
+      )}
     </main>
   )
 }
