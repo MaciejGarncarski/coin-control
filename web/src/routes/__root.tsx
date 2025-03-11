@@ -7,8 +7,6 @@ import {
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { Toaster } from 'sonner'
 
-const queryClient = new QueryClient()
-
 interface RouterContext {
   queryClient: QueryClient
 }
