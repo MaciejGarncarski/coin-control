@@ -1,34 +1,8 @@
 services:
-  db:
-    image: postgres
-    container_name: local_pgdb
-    restart: always
-    profiles: [dev, prod]
-    ports:
-      - "6432:5432"
-    environment:
-      POSTGRES_USER: ${PG_USER}
-      POSTGRES_PASSWORD: ${PG_PASS}
-    volumes:
-      - local_pgdata:/var/lib/postgresql/data
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin4_container
-    restart: always
-    profiles: [dev, prod]
-    ports:
-      - "8888:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASS}
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
   api-dev:
     build:
       target: dev
       dockerfile: ./docker/api.Dockerfile
-    depends_on:
-      - db
     volumes:
       - ./api/src:/app/api/src
       - ./shared:/app/shared
@@ -39,8 +13,7 @@ services:
       - PORT=${API_PORT}
       - APP_ORIGIN=${APP_URL}
       - HOST=${HOST}
-      - PG_USER=${PG_USER}
-      - PG_PASS=${PG_PASS}
+      - DB_URL=${DB_URL}
       - API_SECRET=${API_SECRET}
 
   web-dev:
@@ -64,8 +37,6 @@ services:
     build:
       target: prod
       dockerfile: ./docker/api.Dockerfile
-    depends_on:
-      - db
     profiles: [prod]
     ports:
       - "${API_PORT}:${API_PORT}"
@@ -87,7 +58,3 @@ services:
       - VITE_PORT=${WEB_PORT}
       - VITE_API_URL=${API_URL}
       - VITE_APP_URL=${APP_URL}
-
-volumes:
-  local_pgdata:
-  pgadmin-data:

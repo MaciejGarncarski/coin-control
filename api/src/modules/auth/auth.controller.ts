@@ -32,7 +32,7 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
   try {
     const user = await db`
     select
-      id, email, password
+      id, email, password_hash
     from users
     where 
     email = ${email}
@@ -46,7 +46,7 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
     const password = req.body.password
     const foundUser = user[0]
 
-    const passwordMatches = await verify(foundUser.password, password)
+    const passwordMatches = await verify(foundUser.password_hash, password)
 
     if (!passwordMatches) {
       res.status(status.BAD_REQUEST).json(credentialsError)

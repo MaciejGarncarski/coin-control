@@ -13,10 +13,10 @@ class PostgresSessionStore extends session.Store {
   private table: string
   private maxAge: number
 
-  constructor(options: PostgresSessionStoreOptions = {}) {
+  constructor() {
     super()
     this.sql = db
-    this.table = options.table || 'sessions'
+    this.table = 'sessions'
     this.maxAge = ms('1 week')
   }
 
