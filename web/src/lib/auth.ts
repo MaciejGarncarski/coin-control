@@ -6,7 +6,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
-import { useNavigate, useRouteContext } from '@tanstack/react-router'
+import { useRouteContext } from '@tanstack/react-router'
 
 export const userQueryOptions = queryOptions({
   queryKey: [AUTH_QUERY_KEYS.SESSION],
@@ -27,8 +27,10 @@ export const userQueryOptions = queryOptions({
 
 export const useLogoutMutation = () => {
   const queryClient = useQueryClient()
-  const routerContext = useRouteContext({ from: '__root__' })
-  const navigate = useNavigate()
+  const authContext = useRouteContext({
+    from: '__root__',
+    select: (context) => context.auth,
+  })
 
   return useMutation({
     mutationFn: () =>
@@ -41,10 +43,7 @@ export const useLogoutMutation = () => {
       await queryClient.invalidateQueries({
         queryKey: ['user'],
       })
-      routerContext.auth.logout()
-      await navigate({
-        to: '/auth/login',
-      })
+      authContext.logout()
     },
   })
 }

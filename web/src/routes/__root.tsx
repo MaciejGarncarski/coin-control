@@ -7,7 +7,6 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster } from 'sonner'
 import { lazy } from 'react'
-import { useAuth } from '@/hooks/use-auth'
 
 export const auth: Auth = {
   status: 'loggedOut',
@@ -40,13 +39,10 @@ const LazyRouterDevtools =
       )
 
 const RootComponent = () => {
-  useAuth()
-
   return (
     <>
       <HeadContent />
       <Outlet />
-      {process.env.NODE_ENV === 'development' ? 'dev' : 'prod'}
       <Toaster position="bottom-right" />
       <ReactQueryDevtools buttonPosition="top-right" />
       <LazyRouterDevtools />
@@ -68,4 +64,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   pendingMinMs: 0,
   pendingMs: 0,
   component: () => <RootComponent />,
+  shouldReload({ context }) {
+    return context.auth.status !== 'loggedIn'
+  },
 })

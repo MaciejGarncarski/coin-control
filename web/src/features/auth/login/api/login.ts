@@ -5,14 +5,15 @@ import {
 } from '@shared/zod-schemas/auth/login'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate, useRouteContext, useRouter } from '@tanstack/react-router'
+import { useRouteContext } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
 export const useLoginMutation = () => {
   const queryClient = useQueryClient()
-  const router = useRouter()
-  const routerContext = useRouteContext({ from: '__root__' })
-  const navigate = useNavigate()
+  const authContext = useRouteContext({
+    from: '__root__',
+    select: (context) => context.auth,
+  })
 
   return useMutation({
     mutationFn: async (mutationData: LoginMutation) => {
@@ -32,13 +33,7 @@ export const useLoginMutation = () => {
       await queryClient.invalidateQueries({
         queryKey: ['user'],
       })
-      routerContext.auth.login()
-      await router.invalidate()
-
-      await navigate({
-        to: '/',
-      })
-
+      authContext.login()
       toast.success('Logged in successfully')
     },
   })

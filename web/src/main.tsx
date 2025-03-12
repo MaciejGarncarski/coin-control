@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { StrictMode, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 
@@ -37,6 +37,10 @@ declare module '@tanstack/react-router' {
 
 const MainApp = () => {
   const userAuthenticated = useQuery(userQueryOptions)
+
+  useEffect(() => {
+    router.invalidate()
+  }, [userAuthenticated?.data])
 
   if (userAuthenticated.isLoading) return null
 
