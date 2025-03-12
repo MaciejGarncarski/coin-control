@@ -222,6 +222,9 @@ importers:
       '@shared/eslint-prettier':
         specifier: workspace:*
         version: file:shared/eslint-prettier(@typescript-eslint/eslint-plugin@8.26.0(@typescript-eslint/parser@8.26.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.2))(eslint@9.22.0(jiti@2.4.2))(prettier@3.5.3)(typescript@5.8.2)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.67.3
+        version: 5.67.3(@tanstack/react-query@5.67.1(react@19.0.0))(react@19.0.0)
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.0
@@ -1275,6 +1278,15 @@ packages:
 
   '@tanstack/query-core@5.67.1':
     resolution: {integrity: sha512-AkFmuukVejyqVIjEQoFhLb3q+xHl7JG8G9cANWTMe3s8iKzD9j1VBSYXgCjy6vm6xM8cUCR9zP2yqWxY9pTWOA==}
+
+  '@tanstack/query-devtools@5.67.2':
+    resolution: {integrity: sha512-O4QXFFd7xqp6EX7sdvc9tsVO8nm4lpWBqwpgjpVLW5g7IeOY6VnS/xvs/YzbRhBVkKTMaJMOUGU7NhSX+YGoNg==}
+
+  '@tanstack/react-query-devtools@5.67.3':
+    resolution: {integrity: sha512-+PM2UnCyXAQozXB32cnawx38wwnaHPTtFAhX1V5QmHy/FL1u9k7nd8nxn2+GTwf15SGbUaGfxA/vq/9EARUEIQ==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.67.3
+      react: ^18 || ^19
 
   '@tanstack/react-query@5.67.1':
     resolution: {integrity: sha512-fH5u4JLwB6A+wLFdi8wWBWAYoJV5deYif2OveJ26ktAWjU499uvVFS1wPWnyEyq5LvZX1MZInvv9QRaIZANRaQ==}
@@ -4683,6 +4695,14 @@ snapshots:
   '@tanstack/history@1.112.18': {}
 
   '@tanstack/query-core@5.67.1': {}
+
+  '@tanstack/query-devtools@5.67.2': {}
+
+  '@tanstack/react-query-devtools@5.67.3(@tanstack/react-query@5.67.1(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@tanstack/query-devtools': 5.67.2
+      '@tanstack/react-query': 5.67.1(react@19.0.0)
+      react: 19.0.0
 
   '@tanstack/react-query@5.67.1(react@19.0.0)':
     dependencies:

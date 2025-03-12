@@ -59,6 +59,7 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
     res.status(status.OK).json(response)
     return
   } catch (error) {
+    console.log(error)
     res.status(status.INTERNAL_SERVER_ERROR).json(errorMessage)
   }
 }

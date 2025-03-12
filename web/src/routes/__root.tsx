@@ -4,6 +4,7 @@ import {
   HeadContent,
   Outlet,
 } from '@tanstack/react-router'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { Toaster } from 'sonner'
 
@@ -26,6 +27,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       <HeadContent />
       <Outlet />
       <Toaster position="bottom-right" />
+      <ReactQueryDevtools buttonPosition="top-right" />
       <TanStackRouterDevtools />
     </>
   ),

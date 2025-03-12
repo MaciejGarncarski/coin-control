@@ -53,6 +53,7 @@ services:
       args:
         VITE_API_URL: ${API_URL}
         VITE_PORT: ${WEB_PORT}
+        NODE_ENV: production
     depends_on:
       - api
     profiles: [prod]
