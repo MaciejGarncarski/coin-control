@@ -46,6 +46,7 @@ services:
       - HOST=${HOST}
       - DB_URL=${DB_URL}
       - API_SECRET=${API_SECRET}
+    network_mode: "host"
 
   web:
     build:
