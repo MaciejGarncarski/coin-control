@@ -8,15 +8,32 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster } from 'sonner'
 import { lazy } from 'react'
 
+export const auth: Auth = {
+  status: 'loggedOut',
+  login: () => {
+    auth.status = 'loggedIn'
+  },
+  logout: () => {
+    auth.status = 'loggedOut'
+  },
+}
+
+export type Auth = {
+  login: () => void
+  logout: () => void
+  status: 'loggedOut' | 'loggedIn'
+}
+
 interface RouterContext {
   queryClient: QueryClient
+  auth: Auth
 }
 
 const LazyRouterDevtools =
   process.env.NODE_ENV === 'production'
     ? () => null
     : lazy(() =>
-        import('@tanstack/router-devtools').then((m) => ({
+        import('@tanstack/react-router-devtools').then((m) => ({
           default: m.TanStackRouterDevtools,
         })),
       )
@@ -31,6 +48,9 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       },
     ],
   }),
+  pendingComponent: () => <div>Loading...</div>,
+  pendingMinMs: 0,
+  pendingMs: 0,
   component: () => (
     <>
       <HeadContent />

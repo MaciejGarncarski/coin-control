@@ -88,7 +88,7 @@ export const fetcher = async <
       if (!parsedResponse.success) {
         throw new ApiError({
           statusCode: response.status,
-          message: 'parsing failed',
+          message: 'error parsing failed',
         })
       }
 
@@ -128,7 +128,7 @@ export const fetcher = async <
 
     const parsed = schema.safeParse(transformedData)
 
-    if (parsed.error) {
+    if (!parsed.success) {
       throw new ApiError({
         statusCode: response.status,
         message: 'parsing failed',

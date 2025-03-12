@@ -7,12 +7,14 @@ import { routeTree } from './routeTree.gen'
 
 import './styles.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useAuth } from '@/hooks/use-auth'
 
 const queryClient = new QueryClient()
 
 // Create a new router instance
 const router = createRouter({
   context: {
+    auth: undefined!,
     queryClient: queryClient,
   },
   routeTree,
@@ -28,6 +30,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+export type AppRouter = typeof router
+
+const MainApp = () => {
+  const auth = useAuth(router)
+
+  return (
+    <RouterProvider
+      router={router}
+      context={{
+        auth: auth,
+      }}
+    />
+  )
+}
+
 // Render the app
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
@@ -35,7 +52,7 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <MainApp />
       </QueryClientProvider>
     </StrictMode>,
   )

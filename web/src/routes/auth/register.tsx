@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import {
   Card,
   CardContent,
@@ -26,18 +26,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { userQueryOptions } from '@/lib/auth'
 
 export const Route = createFileRoute('/auth/register')({
-  beforeLoad: async ({ context: { queryClient } }) => {
-    const isLoggedIn = await queryClient.fetchQuery(userQueryOptions)
-
-    if (isLoggedIn) {
-      throw redirect({
-        to: '/',
-      })
-    }
-  },
   component: RouteComponent,
 })
 

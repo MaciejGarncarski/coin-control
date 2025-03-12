@@ -25,11 +25,10 @@ import {
   loginMutationSchema,
   type LoginMutation,
 } from '@shared/zod-schemas/auth/login'
-import { userQueryOptions } from '@/lib/auth'
 
 export const Route = createFileRoute('/auth/login')({
-  beforeLoad: async ({ context: { queryClient } }) => {
-    const isLoggedIn = await queryClient.ensureQueryData(userQueryOptions)
+  beforeLoad: async ({ context }) => {
+    const isLoggedIn = context.auth.status === 'loggedIn'
 
     if (isLoggedIn) {
       throw redirect({

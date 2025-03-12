@@ -59,7 +59,6 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
     res.status(status.OK).json(response)
     return
   } catch (error) {
-    console.log(error)
     res.status(status.INTERNAL_SERVER_ERROR).json(errorMessage)
   }
 }
@@ -79,14 +78,24 @@ export const getUserHandler = async (req: Request, res: Response) => {
 }
 
 export const logoutHandler = async (req: Request, res: Response) => {
+  const unauthorizedError: ApiError = {
+    message: 'Unauthorized.',
+    statusCode: status.UNAUTHORIZED,
+  }
+
   if (!req.session.userId) {
-    res.status(status.UNAUTHORIZED).json({ data: null })
+    res.status(status.UNAUTHORIZED).json(unauthorizedError)
     return
+  }
+
+  const responseError: ApiError = {
+    message: 'Internal server error.',
+    statusCode: status.INTERNAL_SERVER_ERROR,
   }
 
   req.session.destroy((err) => {
     if (err) {
-      res.status(status.INTERNAL_SERVER_ERROR).json({ message: 'error' })
+      res.status(status.INTERNAL_SERVER_ERROR).json(responseError)
       return
     }
 

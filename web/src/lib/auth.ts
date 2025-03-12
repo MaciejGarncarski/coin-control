@@ -6,7 +6,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouteContext } from '@tanstack/react-router'
 
 export const userQueryOptions = queryOptions({
   queryKey: [AUTH_QUERY_KEYS.SESSION],
@@ -17,26 +17,34 @@ export const userQueryOptions = queryOptions({
       schema: loginMutationResponseSchema,
     })
 
-    return response
+    if (!response) {
+      return null
+    }
+
+    return response?.data
   },
 })
 
 export const useLogoutMutation = () => {
   const queryClient = useQueryClient()
+  const routerContext = useRouteContext({ from: '__root__' })
   const navigate = useNavigate()
 
   return useMutation({
-    onSuccess: () => {
-      queryClient.setQueryData([AUTH_QUERY_KEYS.SESSION], () => null)
-      navigate({
-        to: '/',
-      })
-    },
     mutationFn: () =>
       fetcher({
         method: 'DELETE',
         url: '/auth/me',
-        schema: loginMutationResponseSchema,
+        throwOnError: true,
       }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['user'],
+      })
+      routerContext.auth.logout()
+      await navigate({
+        to: '/auth/login',
+      })
+    },
   })
 }
