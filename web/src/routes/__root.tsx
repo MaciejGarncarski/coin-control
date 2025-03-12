@@ -65,7 +65,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     ],
   }),
   pendingComponent: () => <div>Loading...</div>,
-  wrapInSuspense: true,
   pendingMinMs: 0,
   pendingMs: 0,
   component: () => <RootComponent />,

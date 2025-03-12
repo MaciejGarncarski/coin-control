@@ -6,8 +6,13 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 
 import './styles.css'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query'
 import { auth } from '@/routes/__root'
+import { userQueryOptions } from '@/lib/auth'
 
 const queryClient = new QueryClient()
 
@@ -31,11 +36,18 @@ declare module '@tanstack/react-router' {
 }
 
 const MainApp = () => {
+  const userAuthenticated = useQuery(userQueryOptions)
+
+  if (userAuthenticated.isLoading) return null
+
   return (
     <RouterProvider
       router={router}
       context={{
-        auth: auth,
+        auth: {
+          ...auth,
+          status: userAuthenticated.data?.id ? 'loggedIn' : 'loggedOut',
+        },
       }}
     />
   )
