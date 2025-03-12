@@ -1,18 +1,19 @@
 import { userQueryOptions } from '@/lib/auth'
-import type { AppRouter } from '@/main'
-import { auth, type Auth } from '@/routes/__root'
-import { useQuery } from '@tanstack/react-query'
+import { auth } from '@/routes/__root'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { useRouteContext, useRouter } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
-export function useAuth(router: AppRouter): Auth {
-  const userAuthenticated = useQuery(userQueryOptions)
+export function useAuth() {
+  const router = useRouter()
+  const routeContext = useRouteContext({ from: '__root__' })
+  const userAuthenticated = useSuspenseQuery(userQueryOptions)
 
   useEffect(() => {
     router.invalidate()
-  }, [router, userAuthenticated.data])
-
-  return {
-    ...auth,
-    status: userAuthenticated.data?.id ? 'loggedIn' : 'loggedOut',
-  }
+    routeContext.auth = {
+      ...auth,
+      status: userAuthenticated.data?.id ? 'loggedIn' : 'loggedOut',
+    }
+  }, [routeContext, router, userAuthenticated.data])
 }

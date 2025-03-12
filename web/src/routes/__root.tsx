@@ -7,6 +7,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster } from 'sonner'
 import { lazy } from 'react'
+import { useAuth } from '@/hooks/use-auth'
 
 export const auth: Auth = {
   status: 'loggedOut',
@@ -38,6 +39,21 @@ const LazyRouterDevtools =
         })),
       )
 
+const RootComponent = () => {
+  useAuth()
+
+  return (
+    <>
+      <HeadContent />
+      <Outlet />
+      {process.env.NODE_ENV === 'development' ? 'dev' : 'prod'}
+      <Toaster position="bottom-right" />
+      <ReactQueryDevtools buttonPosition="top-right" />
+      <LazyRouterDevtools />
+    </>
+  )
+}
+
 export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
@@ -49,16 +65,8 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     ],
   }),
   pendingComponent: () => <div>Loading...</div>,
+  wrapInSuspense: true,
   pendingMinMs: 0,
   pendingMs: 0,
-  component: () => (
-    <>
-      <HeadContent />
-      <Outlet />
-      {process.env.NODE_ENV === 'development' ? 'dev' : 'prod'}
-      <Toaster position="bottom-right" />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <LazyRouterDevtools />
-    </>
-  ),
+  component: () => <RootComponent />,
 })

@@ -7,7 +7,7 @@ import { routeTree } from './routeTree.gen'
 
 import './styles.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useAuth } from '@/hooks/use-auth'
+import { auth } from '@/routes/__root'
 
 const queryClient = new QueryClient()
 
@@ -30,11 +30,7 @@ declare module '@tanstack/react-router' {
   }
 }
 
-export type AppRouter = typeof router
-
 const MainApp = () => {
-  const auth = useAuth(router)
-
   return (
     <RouterProvider
       router={router}
