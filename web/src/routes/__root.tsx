@@ -5,12 +5,21 @@ import {
   Outlet,
 } from '@tanstack/react-router'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { Toaster } from 'sonner'
+import { lazy } from 'react'
 
 interface RouterContext {
   queryClient: QueryClient
 }
+
+const LazyRouterDevtools =
+  process.env.NODE_ENV === 'production'
+    ? () => null
+    : lazy(() =>
+        import('@tanstack/router-devtools').then((m) => ({
+          default: m.TanStackRouterDevtools,
+        })),
+      )
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
@@ -26,9 +35,10 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     <>
       <HeadContent />
       <Outlet />
+      {process.env.NODE_ENV === 'development' ? 'dev' : 'prod'}
       <Toaster position="bottom-right" />
       <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
+      <LazyRouterDevtools />
     </>
   ),
 })

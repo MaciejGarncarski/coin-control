@@ -13,7 +13,7 @@ export default defineConfig({
     port: parseInt(env.VITE_PORT),
   },
   plugins: [
-    TanStackRouterVite({ autoCodeSplitting: true }),
+    TanStackRouterVite({ target: 'react', autoCodeSplitting: true }),
     viteReact(),
     tailwindcss(),
   ],

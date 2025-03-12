@@ -28,10 +28,11 @@ ENV VITE_API_URL=${VITE_API_URL?vite_api_url_not_set}
 COPY . /app
 WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+ARG NODE_ENV="production"
+ENV NODE_ENV="production"
 RUN pnpm run -r build
 RUN pnpm deploy --filter=web --prod /prod/web
 RUN pnpm deploy "--filter=@shared/zod-schemas" --prod /prod/shared/zod-schemas
-
 FROM nginx:alpine AS prod
 WORKDIR /app
 COPY nginx.conf /etc/nginx/conf.d/default.conf

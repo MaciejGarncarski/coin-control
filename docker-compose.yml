@@ -58,6 +58,8 @@ services:
         NODE_ENV: production
     depends_on:
       - api
+    environment:
+      - NODE_ENV=production
     profiles: [prod]
     ports:
       - "${WEB_PORT}:80"
