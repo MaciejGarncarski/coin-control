@@ -9,7 +9,7 @@ export class ApiError extends Error {
   constructor(data: TApiError) {
     super(data.message)
     this.message = data.message
-    this.statusCode = data.statusCode
+    this.statusCode = data.statusCode || null
     this.toastMessage = data.toastMessage
 
     if (this.toastMessage) {

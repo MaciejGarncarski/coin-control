@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const apiErrorSchema = z.object({
-  statusCode: z.number().min(100).max(600),
+  statusCode: z.number().min(100).max(600).optional(),
   message: z.string(),
   toastMessage: z.string().optional(),
 });

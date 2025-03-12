@@ -23,7 +23,7 @@ export const useLoginMutation = () => {
         },
       })
 
-      return response.data
+      return response?.data
     },
     onSuccess: async () => {
       toast.success('Logged in successfully')

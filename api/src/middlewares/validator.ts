@@ -15,14 +15,13 @@ export function validateData(schema: z.ZodObject<any, any>) {
         }))
 
         const apiError: ApiError = {
-          error: 'Invalid data',
-          message: errorMessages,
+          message: `Invalid data, ${errorMessages.join(', ')}`,
         }
 
         res.status(status.BAD_REQUEST).json(apiError)
       } else {
         const apiError: ApiError = {
-          error: 'Internal server error',
+          message: 'Internal server error',
         }
         res.status(status.INTERNAL_SERVER_ERROR).json(apiError)
       }

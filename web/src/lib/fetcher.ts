@@ -25,6 +25,8 @@ export type FetcherProperties<
         : never
   schema?: R extends 'arrayBuffer' ? never : S
   throwOnError?: boolean
+  signal?: AbortSignal
+  headers?: HeadersInit
 }
 
 type ReturnType<R extends ResponseType | undefined, S extends z.ZodTypeAny> =
@@ -51,6 +53,8 @@ export const fetcher = async <
   schema,
   url,
   throwOnError = false,
+  headers,
+  signal,
 }: FetcherProperties<R, M, S>): Promise<ReturnType<R, S>> => {
   try {
     const transformedBody =
@@ -69,8 +73,10 @@ export const fetcher = async <
           : JSON.stringify(transformedBody)
         : undefined,
       credentials: 'include',
+      signal: signal,
       headers: {
         'Content-Type': 'application/json',
+        ...headers,
       },
       method: method,
     })
@@ -150,3 +156,7 @@ function canSendBody(method: HttpMethod) {
 function pasrseUrl(url: string) {
   return url.startsWith('http') ? url : env.API_URL + url
 }
+
+/// ciekawy pomysl
+/// zrobic reusable useQuery, useMutation,
+/// useApi([AUTH_QUERY_KEYS.SESSION], fetchUser(userId), {onSuccess: (dostepny queryClient + typesafe query data) => {toast costam}})
