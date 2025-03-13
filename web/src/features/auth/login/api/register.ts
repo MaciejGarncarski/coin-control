@@ -1,14 +1,14 @@
 import { fetcher } from '@/lib/fetcher'
 import {
   loginMutationResponseSchema,
-  type LoginMutation,
+  type RegisterMutation,
 } from '@shared/zod-schemas'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouteContext } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
-export const useLoginMutation = () => {
+export const useRegisterMutation = () => {
   const queryClient = useQueryClient()
   const authContext = useRouteContext({
     from: '__root__',
@@ -16,15 +16,17 @@ export const useLoginMutation = () => {
   })
 
   return useMutation({
-    mutationFn: async (mutationData: LoginMutation) => {
+    mutationFn: async (mutationData: RegisterMutation) => {
       const response = await fetcher({
         method: 'POST',
-        url: '/auth/login',
+        url: '/auth/register',
         throwOnError: true,
         schema: loginMutationResponseSchema,
         body: {
           email: mutationData.email,
+          fullName: mutationData.fullName,
           password: mutationData.password,
+          confirmPassword: mutationData.confirmPassword,
         },
       })
 
@@ -35,7 +37,7 @@ export const useLoginMutation = () => {
         queryKey: ['user'],
       })
       authContext.login()
-      toast.success('Logged in successfully')
+      toast.success('Register completed.')
     },
   })
 }

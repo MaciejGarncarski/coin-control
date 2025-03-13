@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import {
   Card,
   CardContent,
@@ -14,11 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { useLoginMutation } from '@/features/auth/login/api/login'
-import {
-  loginMutationSchema,
-  type LoginMutation,
-} from '@shared/zod-schemas/auth/login'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Link } from '@tanstack/react-router'
@@ -26,18 +22,35 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import {
+  registerMutationSchema,
+  type RegisterMutation,
+} from '@shared/zod-schemas'
+import { InputPassword } from '@/components/ui/input-password'
+import { useRegisterMutation } from '@/features/auth/login/api/register'
 
 export const Route = createFileRoute('/auth/register')({
+  beforeLoad: async ({ context }) => {
+    const isLoggedIn = context.auth?.status === 'loggedIn'
+
+    if (isLoggedIn) {
+      throw redirect({
+        to: '/',
+      })
+    }
+  },
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const loginMutation = useLoginMutation()
-  const form = useForm<LoginMutation>({
-    resolver: zodResolver(loginMutationSchema),
+  const registerMutation = useRegisterMutation()
+  const form = useForm<RegisterMutation>({
+    resolver: zodResolver(registerMutationSchema),
     defaultValues: {
       email: '',
+      fullName: '',
       password: '',
+      confirmPassword: '',
     },
   })
 
@@ -54,18 +67,26 @@ function RouteComponent() {
             </Link>
             .
           </CardDescription>
-          {loginMutation.isError && (
+          {registerMutation.isError && (
             <Alert variant={'destructive'} className="animate-in fade-in mt-3">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>Invalid email or password.</AlertDescription>
+              <AlertDescription>
+                {registerMutation.error.message}
+              </AlertDescription>
             </Alert>
           )}
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(({ email, password }) =>
-                loginMutation.mutate({ email, password }),
+              onSubmit={form.handleSubmit(
+                ({ email, password, confirmPassword, fullName }) =>
+                  registerMutation.mutate({
+                    email,
+                    password,
+                    confirmPassword,
+                    fullName,
+                  }),
               )}
               className="flex flex-col gap-6">
               <FormField
@@ -82,13 +103,39 @@ function RouteComponent() {
                 )}
               />
               <FormField
+                name="fullName"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full name</FormLabel>
+                    <FormControl>
+                      <Input type="text" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
                 name="password"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <InputPassword {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="confirmPassword"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm password</FormLabel>
+                    <FormControl>
+                      <InputPassword {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

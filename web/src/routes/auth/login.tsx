@@ -21,14 +21,13 @@ import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  loginMutationSchema,
-  type LoginMutation,
-} from '@shared/zod-schemas/auth/login'
+import { loginMutationSchema, type LoginMutation } from '@shared/zod-schemas'
+import { cn } from '@/lib/utils'
+import { Spinner } from '@/components/spinner'
 
 export const Route = createFileRoute('/auth/login')({
   beforeLoad: async ({ context }) => {
-    const isLoggedIn = context.auth.status === 'loggedIn'
+    const isLoggedIn = context.auth?.status === 'loggedIn'
 
     if (isLoggedIn) {
       throw redirect({
@@ -63,6 +62,12 @@ function RouteComponent() {
             </Link>
             .
           </CardDescription>
+          {loginMutation.isError && (
+            <Alert variant={'destructive'} className={cn('bg-card mt-3')}>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{loginMutation.error.message}</AlertDescription>
+            </Alert>
+          )}
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -97,20 +102,14 @@ function RouteComponent() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Login</Button>
+              <Button type="submit">
+                {loginMutation.isPending ? <Spinner /> : null}
+                {loginMutation.isPending ? 'Logging in...' : 'Login'}
+              </Button>
             </form>
           </Form>
         </CardContent>
       </Card>
-
-      {loginMutation.isError && (
-        <Alert
-          variant={'destructive'}
-          className="animate-in fade-in bg-card mt-3 w-[20rem] md:w-[25rem]">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>Invalid email or password.</AlertDescription>
-        </Alert>
-      )}
     </main>
   )
 }

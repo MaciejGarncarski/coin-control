@@ -1,6 +1,6 @@
 import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
 import { fetcher } from '@/lib/fetcher'
-import { loginMutationResponseSchema } from '@shared/zod-schemas/auth/login'
+import { userSchema } from '@shared/zod-schemas'
 import {
   queryOptions,
   useMutation,
@@ -14,15 +14,17 @@ export const userQueryOptions = queryOptions({
     const response = await fetcher({
       method: 'GET',
       url: '/auth/me',
-      schema: loginMutationResponseSchema,
+      schema: userSchema,
     })
 
     if (!response) {
       return null
     }
 
-    return response?.data
+    return response
   },
+  staleTime: 1000 * 60,
+  gcTime: 1000 * 60 * 2,
 })
 
 export const useLogoutMutation = () => {
