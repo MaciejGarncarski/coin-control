@@ -31,8 +31,6 @@ export const useVerifyOTP = () => {
       if (toastRef.current) {
         toast.dismiss(toastRef.current)
       }
-
-      toastRef.current = toast.error('Error! Unable to verify your account.')
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({

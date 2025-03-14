@@ -208,12 +208,20 @@ export async function verifyOTPHandler(req: VerifyOTPRequest, res: Response) {
   }
 
   const otp = await db`
-  select id from otp_codes where user_id = ${req.session.userId} and otp = ${req.body.code}
+  select id, expires_at from otp_codes where user_id = ${req.session.userId} and otp = ${req.body.code}
   `
 
   if (!otp[0]) {
     throw new ApiError({
       message: 'Invalid OTP code.',
+      statusCode: status.UNAUTHORIZED,
+    })
+  }
+
+  if (otp[0].expires_at < new Date()) {
+    throw new ApiError({
+      message: 'OTP code expired.',
+      toastMessage: 'Code expired.',
       statusCode: status.UNAUTHORIZED,
     })
   }

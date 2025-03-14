@@ -63,19 +63,26 @@ export const VerifyEmailPage = () => {
   }
 
   return (
-    <main className="flex h-screen flex-col items-center justify-center gap-4">
-      <Card className="w-[20rem] items-center justify-center gap-4 md:w-[23rem]">
+    <main className="flex h-screen flex-col items-center justify-center">
+      <Card className="w-[20rem] items-center justify-center gap-8 md:w-[23rem]">
         <CardHeader>
           <CardTitle>
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-2 pb-2">
               <MailWarning />
               <h1 className="text-center">Verify Email</h1>
             </div>
           </CardTitle>
           <CardDescription className="text-center">
-            <p className="mx-auto flex w-[80%] flex-col gap-1">
-              Please enter the one-time code sent to your email.
-            </p>
+            <div className="mx-auto flex flex-col items-center justify-center gap-4 text-pretty">
+              <p className="mx-auto inline-block max-w-[80%] text-center">
+                Click on the button below to send an verification code to{' '}
+                <span className="font-semibold">{user.data?.email}</span>
+              </p>
+              <div className="flex gap-4">
+                <GetOtpButton />
+                <LogoutButton size="sm" variant="outline" />
+              </div>
+            </div>
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -88,6 +95,11 @@ export const VerifyEmailPage = () => {
                 name="otpCode"
                 render={({ field }) => (
                   <FormItem className="gap-4">
+                    <FormDescription>
+                      <p className="mx-auto flex w-[80%] flex-col gap-1 text-center">
+                        Please enter the code sent to your email.
+                      </p>
+                    </FormDescription>
                     <FormControl>
                       <InputOTP
                         containerClassName="justify-center"
@@ -106,24 +118,10 @@ export const VerifyEmailPage = () => {
                     </FormControl>
                     <div className="mx-auto flex w-[50%] items-center justify-center">
                       <Button className="w-full" type="submit" size="sm">
-                        Submit
+                        Verify
                       </Button>
                     </div>
-                    <FormDescription>
-                      <div className="mx-auto flex flex-col items-center justify-center gap-4 text-pretty">
-                        <p className="mx-auto inline-block max-w-[80%] text-center">
-                          Click on the button below to send a one-time password
-                          to{' '}
-                          <span className="font-semibold">
-                            {user.data?.email}
-                          </span>
-                        </p>
-                        <div className="flex gap-4">
-                          <GetOtpButton />
-                          <LogoutButton size="sm" />
-                        </div>
-                      </div>
-                    </FormDescription>
+
                     <FormMessage />
                   </FormItem>
                 )}

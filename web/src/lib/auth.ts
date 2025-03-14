@@ -10,6 +10,7 @@ import { useRouteContext } from '@tanstack/react-router'
 
 export const userQueryOptions = queryOptions({
   queryKey: [AUTH_QUERY_KEYS.SESSION],
+  refetchOnWindowFocus: true,
   queryFn: async () => {
     const response = await fetcher({
       method: 'GET',

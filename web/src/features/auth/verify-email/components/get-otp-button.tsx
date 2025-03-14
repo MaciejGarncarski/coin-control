@@ -55,7 +55,7 @@ export const GetOtpButton = () => {
     <Button
       type="button"
       size="sm"
-      variant={'outline'}
+      variant={'default'}
       onClick={() => (hasActiveOTPAlready ? null : mutate())}
       disabled={hasActiveOTPAlready || isPending}>
       {isPending ? <Spinner /> : <Mail />}
