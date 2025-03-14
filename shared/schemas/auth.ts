@@ -10,14 +10,6 @@ export const loginMutationSchema = z.object({
 
 export type LoginMutation = z.infer<typeof loginMutationSchema>;
 
-export const loginMutationResponseSchema = z.object({
-  data: z.object({
-    id: z.string(),
-  }),
-});
-
-export type LoginResponse = z.infer<typeof loginMutationResponseSchema>;
-
 export const registerMutationSchema = z
   .object({
     email: z.string().email({ message: "Invalid email." }),

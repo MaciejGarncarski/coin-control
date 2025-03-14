@@ -27,6 +27,13 @@ export const useVerifyOTP = () => {
     onMutate: () => {
       toastRef.current = toast.loading('Verifying your account...')
     },
+    onError: () => {
+      if (toastRef.current) {
+        toast.dismiss(toastRef.current)
+      }
+
+      toastRef.current = toast.error('Error! Unable to verify your account.')
+    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: [AUTH_QUERY_KEYS.SESSION],

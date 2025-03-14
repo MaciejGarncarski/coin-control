@@ -28,6 +28,7 @@ import {
 } from '@shared/zod-schemas'
 import { InputPassword } from '@/components/ui/input-password'
 import { useRegisterMutation } from '@/features/auth/login/api/register'
+import { ApiError } from '@/utils/api-error'
 
 export const Route = createFileRoute('/_not_authenticated/auth/register')({
   component: RouteComponent,
@@ -58,14 +59,17 @@ function RouteComponent() {
             </Link>
             .
           </CardDescription>
-          {registerMutation.isError && (
-            <Alert variant={'destructive'} className="animate-in fade-in mt-3">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                {registerMutation.error.message}
-              </AlertDescription>
-            </Alert>
-          )}
+          {registerMutation.isError &&
+            registerMutation.error instanceof ApiError && (
+              <Alert
+                variant={'destructive'}
+                className="animate-in fade-in mt-3">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  {registerMutation.error.toastMessage}
+                </AlertDescription>
+              </Alert>
+            )}
         </CardHeader>
         <CardContent>
           <Form {...form}>

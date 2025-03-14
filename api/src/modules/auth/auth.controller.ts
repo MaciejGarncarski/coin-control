@@ -1,15 +1,8 @@
 import type { Request, Response } from 'express'
 import { db } from '../../../lib/db.js'
-import {
-  type LoginMutation,
-  type LoginResponse,
-  type RegisterMutation,
-} from '@shared/zod-schemas'
+import { type LoginMutation, type RegisterMutation } from '@shared/zod-schemas'
 import { status } from 'http-status'
-import type {
-  OTPVerifyMutation,
-  ApiError as TApiError,
-} from '@shared/zod-schemas'
+import type { OTPVerifyMutation } from '@shared/zod-schemas'
 import { verify } from '@node-rs/argon2'
 import { registerUser } from './auth.service.js'
 import { ApiError } from '../../lib/api-error.js'
@@ -23,18 +16,12 @@ interface LoginRequest extends Request {
   body: LoginMutation
 }
 
-const response: LoginResponse = {
-  data: {
-    id: '2137',
-  },
-}
-
 export const postLoginHandler = async (req: LoginRequest, res: Response) => {
   const email = req.body.email
 
   const user = await db`
     select
-      id, email, password_hash, email_verified
+      id, email, password_hash, email_verified, name
     from users
     where 
     email = ${email}
@@ -59,8 +46,20 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
     })
   }
 
+  if (foundUser.email_verified === false) {
+    req.session.cookie.maxAge = ms('15 minutes')
+  }
+
   req.session.userId = foundUser.id
-  res.status(status.OK).json(response)
+
+  const userData = userDTO({
+    email: foundUser.email,
+    email_verified: foundUser.email_verified,
+    id: foundUser.id,
+    name: foundUser.name,
+  })
+
+  res.status(status.OK).json(userData)
   return
 }
 
@@ -73,13 +72,10 @@ type UserFromDB = {
 
 export const getUserHandler = async (req: Request, res: Response) => {
   if (!req.session.userId) {
-    const notFoundUserError: TApiError = {
+    throw new ApiError({
       message: 'User not found.',
-      statusCode: status.NOT_FOUND,
-    }
-
-    res.status(status.UNAUTHORIZED).json(notFoundUserError)
-    return
+      statusCode: status.UNAUTHORIZED,
+    })
   }
 
   const user = (await db`
@@ -98,7 +94,6 @@ export const getUserHandler = async (req: Request, res: Response) => {
   }
 
   const userData = userDTO(user[0])
-
   res.status(status.OK).json(userData)
 }
 
@@ -131,7 +126,7 @@ interface RegisterRequest extends Request {
 export async function registerHandler(req: RegisterRequest, res: Response) {
   const createdUser = await registerUser(req.body)
 
-  if (!createdUser.id) {
+  if (!createdUser) {
     throw new ApiError({
       toastMessage: 'User not found.',
       message: 'User not found.',
@@ -140,7 +135,7 @@ export async function registerHandler(req: RegisterRequest, res: Response) {
   }
 
   req.session.userId = createdUser.id
-  res.status(status.OK).json({ data: createdUser })
+  res.status(status.OK).json(createdUser)
   return
 }
 

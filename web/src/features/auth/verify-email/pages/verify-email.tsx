@@ -3,7 +3,6 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp'
-import { GetOtpButton } from '@/features/auth/verify-email/components/get-otp-button'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { z } from '@shared/zod-schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,7 +14,6 @@ import {
   FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import {
@@ -26,6 +24,11 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { REGEXP_ONLY_DIGITS } from 'input-otp'
+import { GetOtpButton } from '@/features/auth/verify-email/components/get-otp-button'
+import { userQueryOptions } from '@/lib/auth'
+import { useQuery } from '@tanstack/react-query'
+import { MailWarning } from 'lucide-react'
+import { LogoutButton } from '@/components/logout-button'
 
 const OTPFormSchema = z.object({
   otpCode: z.string().length(6, {
@@ -34,6 +37,7 @@ const OTPFormSchema = z.object({
 })
 
 export const VerifyEmailPage = () => {
+  const user = useQuery(userQueryOptions)
   const verifyOTPMutation = useVerifyOTP()
 
   const form = useForm<z.infer<typeof OTPFormSchema>>({
@@ -46,22 +50,33 @@ export const VerifyEmailPage = () => {
   const onSubmit: SubmitHandler<z.infer<typeof OTPFormSchema>> = async (
     data,
   ) => {
-    verifyOTPMutation.mutate({
-      code: data.otpCode,
-    })
+    verifyOTPMutation.mutate(
+      {
+        code: data.otpCode,
+      },
+      {
+        onError: () => {
+          form.reset({ otpCode: '' })
+        },
+      },
+    )
   }
 
   return (
     <main className="flex h-screen flex-col items-center justify-center gap-4">
-      <Card>
+      <Card className="w-[20rem] items-center justify-center gap-4 md:w-[23rem]">
         <CardHeader>
           <CardTitle>
-            <h1>Verify Email</h1>
+            <div className="flex items-center justify-center gap-2">
+              <MailWarning />
+              <h1 className="text-center">Verify Email</h1>
+            </div>
           </CardTitle>
-          <CardDescription>
-            Please verify your email address to continue.
+          <CardDescription className="text-center">
+            <p className="mx-auto flex w-[80%] flex-col gap-1">
+              Please enter the one-time code sent to your email.
+            </p>
           </CardDescription>
-          <GetOtpButton />
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -72,10 +87,10 @@ export const VerifyEmailPage = () => {
                 control={form.control}
                 name="otpCode"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>One-Time Password</FormLabel>
+                  <FormItem className="gap-4">
                     <FormControl>
                       <InputOTP
+                        containerClassName="justify-center"
                         maxLength={6}
                         {...field}
                         pattern={REGEXP_ONLY_DIGITS}>
@@ -89,15 +104,30 @@ export const VerifyEmailPage = () => {
                         </InputOTPGroup>
                       </InputOTP>
                     </FormControl>
+                    <div className="mx-auto flex w-[50%] items-center justify-center">
+                      <Button className="w-full" type="submit" size="sm">
+                        Submit
+                      </Button>
+                    </div>
                     <FormDescription>
-                      Please enter the one-time code sent to your email.
+                      <div className="mx-auto flex flex-col items-center justify-center gap-4 text-pretty">
+                        <p className="mx-auto inline-block max-w-[80%] text-center">
+                          Click on the button below to send a one-time password
+                          to{' '}
+                          <span className="font-semibold">
+                            {user.data?.email}
+                          </span>
+                        </p>
+                        <div className="flex gap-4">
+                          <GetOtpButton />
+                          <LogoutButton size="sm" />
+                        </div>
+                      </div>
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-              <Button type="submit">Submit</Button>
             </form>
           </Form>
         </CardContent>

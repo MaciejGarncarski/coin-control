@@ -1,8 +1,5 @@
 import { fetcher } from '@/lib/fetcher'
-import {
-  loginMutationResponseSchema,
-  type RegisterMutation,
-} from '@shared/zod-schemas'
+import { userSchema, type RegisterMutation } from '@shared/zod-schemas'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouteContext } from '@tanstack/react-router'
@@ -21,7 +18,7 @@ export const useRegisterMutation = () => {
         method: 'POST',
         url: '/auth/register',
         throwOnError: true,
-        schema: loginMutationResponseSchema,
+        schema: userSchema,
         body: {
           email: mutationData.email,
           fullName: mutationData.fullName,
@@ -30,7 +27,7 @@ export const useRegisterMutation = () => {
         },
       })
 
-      return response?.data
+      return response
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({

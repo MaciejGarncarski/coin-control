@@ -1,11 +1,18 @@
 import { Button } from '@/components/ui/button'
 import { useLogoutMutation } from '@/lib/auth'
 
-export const LogoutButton = () => {
+type Props = {
+  size?: 'sm' | 'default' | 'lg' | 'icon'
+}
+
+export const LogoutButton = ({ size }: Props) => {
   const logoutMutation = useLogoutMutation()
 
   return (
-    <Button type="button" onClick={() => logoutMutation.mutate()}>
+    <Button
+      size={size || 'default'}
+      type="button"
+      onClick={() => logoutMutation.mutate()}>
       Logout
     </Button>
   )

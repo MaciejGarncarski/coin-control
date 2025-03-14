@@ -4,11 +4,13 @@ import { hash } from '@node-rs/argon2'
 import { v7 } from 'uuid'
 import { ApiError } from '../../lib/api-error.js'
 import status from 'http-status'
+import { userDTO } from './user.dto.js'
 
-type CreatedUser = {
+type UserFromDB = {
   id: string
   email: string
   name: string
+  email_verified: boolean
 }
 
 export async function registerUser(userData: RegisterMutation) {
@@ -31,11 +33,11 @@ export async function registerUser(userData: RegisterMutation) {
   const hashedPassword = await hash(userData.password)
   const userId = v7()
 
-  const newUser = await db`
+  const newUser = (await db`
     insert into users (id, email, password_hash, name)
     values (${userId}, ${userData.email}, ${hashedPassword}, ${userData.fullName})
-    returning id, email, name
-    `
+    returning id, email, name, email_verified
+    `) as UserFromDB[]
 
-  return newUser[0] as CreatedUser
+  return newUser[0] ? userDTO(newUser[0]) : null
 }
