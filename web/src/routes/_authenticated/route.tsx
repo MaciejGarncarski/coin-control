@@ -1,4 +1,5 @@
 import { VerifyEmailPage } from '@/features/auth/verify-email/pages/verify-email'
+import { Layout } from '@/features/layout/comoponents/layout'
 import { userQueryOptions } from '@/lib/auth'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -39,8 +40,8 @@ function App() {
   }
 
   return (
-    <div className="animate-in fade-in text-center">
+    <Layout>
       <Outlet />
-    </div>
+    </Layout>
   )
 }

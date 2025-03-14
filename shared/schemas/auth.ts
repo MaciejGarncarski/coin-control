@@ -13,7 +13,10 @@ export type LoginMutation = z.infer<typeof loginMutationSchema>;
 export const registerMutationSchema = z
   .object({
     email: z.string().email({ message: "Invalid email." }),
-    fullName: z.string().min(1, { message: "Full name is required." }),
+    fullName: z
+      .string()
+      .min(1, { message: "Full name is required." })
+      .max(32, { message: "Full name is too long." }),
     password: z
       .string()
       .min(4, { message: "Password is too short." })

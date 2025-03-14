@@ -7,6 +7,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster } from 'sonner'
 import { lazy } from 'react'
+import { ThemeProvider } from '@/features/layout/comoponents/theme-provider'
 
 export const auth: Auth = {
   status: 'loggedOut',
@@ -44,10 +45,12 @@ const RootComponent = () => {
   return (
     <>
       <HeadContent />
-      <Outlet />
+      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+        <Outlet />
+      </ThemeProvider>
       <Toaster position="bottom-right" />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <LazyRouterDevtools />
+      <ReactQueryDevtools buttonPosition="bottom-left" />
+      <LazyRouterDevtools position="bottom-left" />
     </>
   )
 }
