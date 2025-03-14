@@ -28,16 +28,10 @@ export const useLoginMutation = () => {
 
       return response
     },
-    onSuccess: async (data) => {
-      if (!data?.isEmailVerified) {
-        queryClient.setQueryData([AUTH_QUERY_KEYS.SESSION], () => data)
-      }
-
-      if (data?.isEmailVerified) {
-        await queryClient.invalidateQueries({
-          queryKey: [AUTH_QUERY_KEYS.SESSION],
-        })
-      }
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [AUTH_QUERY_KEYS.SESSION],
+      })
 
       authContext.login()
       toast.success('Logged in successfully')
