@@ -34,3 +34,15 @@ export const registerMutationSchema = z
   });
 
 export type RegisterMutation = z.infer<typeof registerMutationSchema>;
+
+export const OTPResponeSchema = z.object({
+  message: z.string(),
+});
+
+export type OTPResponse = z.infer<typeof OTPResponeSchema>;
+
+export const OTPVerifyMutationSchema = z.object({
+  code: z.string().length(6, { message: "Invalid OTP code." }),
+});
+
+export type OTPVerifyMutation = z.infer<typeof OTPVerifyMutationSchema>;

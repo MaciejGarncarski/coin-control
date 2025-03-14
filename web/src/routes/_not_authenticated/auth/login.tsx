@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useLoginMutation } from '@/features/auth/login/api/login'
-import { createFileRoute, Link, redirect } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -25,16 +25,7 @@ import { loginMutationSchema, type LoginMutation } from '@shared/zod-schemas'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/spinner'
 
-export const Route = createFileRoute('/auth/login')({
-  beforeLoad: async ({ context }) => {
-    const isLoggedIn = context.auth?.status === 'loggedIn'
-
-    if (isLoggedIn) {
-      throw redirect({
-        to: '/',
-      })
-    }
-  },
+export const Route = createFileRoute('/_not_authenticated/auth/login')({
   component: RouteComponent,
 })
 

@@ -26,7 +26,7 @@ export function errorMiddleware(
     }
 
     res.status(error.statusCode || 500).json(responseMessage)
-    next()
+    return
   }
 
   const responseMessage: TApiError = {
@@ -36,6 +36,5 @@ export function errorMiddleware(
   }
 
   res.status(req.statusCode || 500).json(responseMessage)
-
-  next()
+  return
 }

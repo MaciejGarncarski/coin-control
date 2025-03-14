@@ -1,11 +1,20 @@
-import { LogoutButton } from '@/components/logout-button'
+import { VerifyEmailPage } from '@/features/auth/verify-email/pages/verify-email'
 import { userQueryOptions } from '@/lib/auth'
 import { useQuery } from '@tanstack/react-query'
-import { createFileRoute, Link, redirect } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  useRouteContext,
+} from '@tanstack/react-router'
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/_authenticated')({
   component: App,
   beforeLoad: async ({ context }) => {
+    if (!context.auth?.status) {
+      return
+    }
+
     const isLoggedIn = context.auth?.status === 'loggedIn'
 
     if (!isLoggedIn) {
@@ -19,18 +28,19 @@ export const Route = createFileRoute('/')({
 
 function App() {
   const user = useQuery(userQueryOptions)
+  const routeContext = useRouteContext({ from: '/_authenticated' })
 
   if (!user.data?.id) {
     return null
   }
 
+  if (!routeContext.auth.isEmailVerified) {
+    return <VerifyEmailPage />
+  }
+
   return (
     <div className="animate-in fade-in text-center">
-      home
-      <LogoutButton />
-      <br />
-      Moje id: {user.data.id}
-      <Link to="/account">Account</Link>
+      <Outlet />
     </div>
   )
 }

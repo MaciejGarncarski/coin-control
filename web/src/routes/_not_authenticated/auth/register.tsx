@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import {
   Card,
   CardContent,
@@ -29,16 +29,7 @@ import {
 import { InputPassword } from '@/components/ui/input-password'
 import { useRegisterMutation } from '@/features/auth/login/api/register'
 
-export const Route = createFileRoute('/auth/register')({
-  beforeLoad: async ({ context }) => {
-    const isLoggedIn = context.auth?.status === 'loggedIn'
-
-    if (isLoggedIn) {
-      throw redirect({
-        to: '/',
-      })
-    }
-  },
+export const Route = createFileRoute('/_not_authenticated/auth/register')({
   component: RouteComponent,
 })
 

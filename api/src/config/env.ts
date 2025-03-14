@@ -11,6 +11,8 @@ const envSchema = z.object({
   NODE_ENV: z
     .union([z.literal('development'), z.literal('production')])
     .default('development'),
+  MAIL_USER: z.string().email(),
+  MAIL_PASS: z.string(),
 })
 
 const parsedEnv = envSchema.safeParse(process.env)
