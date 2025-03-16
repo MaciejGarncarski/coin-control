@@ -13,6 +13,9 @@ const envSchema = z.object({
     .default('development'),
   MAIL_USER: z.string().email(),
   MAIL_PASS: z.string(),
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.string(),
+  REDIS_PASSWORD: z.string(),
 })
 
 const parsedEnv = envSchema.safeParse(process.env)

@@ -7,10 +7,10 @@ import { verify } from '@node-rs/argon2'
 import { registerUser } from './auth.service.js'
 import { ApiError } from '../../lib/api-error.js'
 import { userDTO } from './user.dto.js'
-import { mailer } from '../../lib/mailer.js'
 import { generateOTP } from '../../utils/generate-otp.js'
 import { v7 } from 'uuid'
 import ms from 'ms'
+import { emailVerificationQueue } from '../../../lib/queues/email-verification/queue.js'
 
 interface LoginRequest extends Request {
   body: LoginMutation
@@ -134,6 +134,19 @@ export async function registerHandler(req: RegisterRequest, res: Response) {
     })
   }
 
+  const expires_at = Date.now() + ms('15 minutes')
+  const otp_uuid = v7()
+  const OTPCode = generateOTP()
+
+  await db`
+      insert into otp_codes (id, user_id, otp, expires_at) values (${otp_uuid}, ${createdUser.id}, ${OTPCode}, ${expires_at})
+    `
+
+  emailVerificationQueue.add('verification-email', {
+    code: OTPCode,
+    userEmail: req.body.email,
+  })
+
   req.session.userId = createdUser.id
   res.status(status.OK).json(createdUser)
   return
@@ -168,27 +181,27 @@ export async function getOTPHandler(req: Request, res: Response) {
     select expires_at from otp_codes where user_id = ${req.session.userId} order by expires_at desc limit 1
   `
 
-  if (newestOTP[0] && newestOTP[0].expires_at > new Date()) {
+  const codeDate = newestOTP[0]?.expires_at - 13 * 60 * 1000
+
+  if (codeDate > Date.now()) {
     throw new ApiError({
-      message: 'You already have an active OTP code.',
-      toastMessage: 'You already have an active OTP code.',
-      statusCode: status.CONFLICT,
+      message: 'Wait two minutes before sending new code.',
+      toastMessage: 'Wait two minutes before sending new code.',
+      statusCode: status.TOO_MANY_REQUESTS,
     })
   }
 
-  const OTPCode = generateOTP()
-
   const expires_at = Date.now() + ms('15 minutes')
   const otp_uuid = v7()
+  const OTPCode = generateOTP()
 
   await db`
       insert into otp_codes (id, user_id, otp, expires_at) values (${otp_uuid}, ${req.session.userId}, ${OTPCode}, ${expires_at})
     `
 
-  await mailer.sendMail({
-    to: foundUser.email,
-    subject: 'CoinControl | Email verification',
-    text: `Your code: ${OTPCode}.\nVerify your email by providing it in the app.`,
+  emailVerificationQueue.add('verification-email', {
+    code: OTPCode,
+    userEmail: foundUser.email,
   })
 
   res.status(status.OK).json({ message: 'success' })

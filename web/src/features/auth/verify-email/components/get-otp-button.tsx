@@ -5,13 +5,13 @@ import { ApiError } from '@/utils/api-error'
 import { Mail } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
-const WAIT_TIMEOUT = 1000 * 60
+const WAIT_TIMEOUT = 1000 * 60 * 2
 
 export const GetOtpButton = () => {
   const [isDisabled, setIsDisabled] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  const { isPending, mutate, error, reset, isSuccess } = useSendOTP()
+  const { isPending, mutate, error, reset } = useSendOTP()
 
   const hasActiveOTPAlready =
     error instanceof ApiError && error.statusCode === 409
@@ -46,9 +46,21 @@ export const GetOtpButton = () => {
         variant={'outline'}
         type="button"
         disabled={isDisabled || isPending}>
-        Code sent, please wait for a while.
+        Code already sent.
       </Button>
     )
+  }
+
+  const sendCode = () => {
+    if (hasActiveOTPAlready) {
+      return
+    }
+
+    mutate(undefined, {
+      onSettled: () => {
+        setIsDisabled(true)
+      },
+    })
   }
 
   return (
@@ -56,10 +68,10 @@ export const GetOtpButton = () => {
       type="button"
       size="sm"
       variant={'default'}
-      onClick={() => (hasActiveOTPAlready ? null : mutate())}
+      onClick={sendCode}
       disabled={hasActiveOTPAlready || isPending}>
       {isPending ? <Spinner /> : <Mail />}
-      {isPending ? 'Sending email...' : isSuccess ? 'Resend code' : 'Send code'}
+      {isPending ? 'Sending email...' : 'Resend code'}
     </Button>
   )
 }

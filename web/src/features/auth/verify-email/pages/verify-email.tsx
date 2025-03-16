@@ -95,10 +95,8 @@ export const VerifyEmailPage = () => {
                 name="otpCode"
                 render={({ field }) => (
                   <FormItem className="gap-4">
-                    <FormDescription>
-                      <p className="mx-auto flex w-[80%] flex-col gap-1 text-center">
-                        Please enter the code sent to your email.
-                      </p>
+                    <FormDescription className="mx-auto flex w-[80%] flex-col gap-1 text-center">
+                      Please enter the code sent to your email.
                     </FormDescription>
                     <FormControl>
                       <InputOTP

@@ -1,5 +1,6 @@
 import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
 import { fetcher } from '@/lib/fetcher'
+import { ApiError } from '@/utils/api-error'
 import { OTPResponeSchema, type OTPVerifyMutation } from '@shared/zod-schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRef } from 'react'
@@ -27,9 +28,15 @@ export const useVerifyOTP = () => {
     onMutate: () => {
       toastRef.current = toast.loading('Verifying your account...')
     },
-    onError: () => {
+    onError: (error) => {
       if (toastRef.current) {
         toast.dismiss(toastRef.current)
+      }
+
+      if (error instanceof ApiError) {
+        if (error.message === 'Invalid OTP code.') {
+          toast.error('Invalid code.')
+        }
       }
     },
     onSuccess: async () => {

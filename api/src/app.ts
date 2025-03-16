@@ -9,6 +9,7 @@ import { showStartMessage } from './utils/start-message.js'
 import bodyParser from 'body-parser'
 import { sessionConfig } from './config/session.js'
 import expressSession from 'express-session'
+import { createEmailVerificationWorker } from '../lib/queues/email-verification/worker.js'
 
 const app = express()
 
@@ -27,6 +28,7 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' })
 })
 app.use(errorMiddleware)
+createEmailVerificationWorker()
 
 app.listen(Number(env.PORT), env.HOST, (error) => {
   if (error) {

@@ -1,5 +1,16 @@
 services:
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - cache:/data
+
   api-dev:
+    depends_on:
+      - cache
     build:
       target: dev
       dockerfile: ./docker/api.Dockerfile
@@ -17,6 +28,9 @@ services:
       - API_SECRET=${API_SECRET}
       - MAIL_USER=${MAIL_USER}
       - MAIL_PASS=${MAIL_PASS}
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
 
   web-dev:
     build:
@@ -36,10 +50,14 @@ services:
       - VITE_APP_URL=${APP_URL}
 
   api:
+    depends_on:
+      - cache
     build:
       target: prod
       dockerfile: ./docker/api.Dockerfile
     profiles: [prod]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "${API_PORT}:${API_PORT}"
     environment:
@@ -50,8 +68,9 @@ services:
       - API_SECRET=${API_SECRET}
       - MAIL_USER=${MAIL_USER}
       - MAIL_PASS=${MAIL_PASS}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
 
   web:
     build:
@@ -67,3 +86,7 @@ services:
     profiles: [prod]
     ports:
       - "${WEB_PORT}:80"
+
+volumes:
+  cache:
+    driver: local

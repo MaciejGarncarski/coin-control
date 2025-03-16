@@ -48,7 +48,7 @@ function RouteComponent() {
 
   return (
     <main className="flex h-screen items-center justify-center">
-      <Card className="w-[25rem]">
+      <Card className="w-[20rem] md:w-[25rem]">
         <CardHeader>
           <CardTitle>Register</CardTitle>
           <CardDescription>
