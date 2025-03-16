@@ -30,7 +30,8 @@ WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 ARG NODE_ENV="production"
 ENV NODE_ENV="production"
-RUN pnpm run -r build
+RUN pnpm "--filter=@shared/zod-schemas" build
+RUN pnpm --filter=web build
 RUN pnpm deploy --filter=web --prod /prod/web
 RUN pnpm deploy "--filter=@shared/zod-schemas" --prod /prod/shared/zod-schemas
 FROM nginx:alpine AS prod
