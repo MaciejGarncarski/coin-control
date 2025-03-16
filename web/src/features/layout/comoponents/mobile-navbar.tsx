@@ -1,4 +1,5 @@
 import { useIsMobile } from '@/components/hooks/use-mobile'
+import { LogoutButton } from '@/components/logout-button'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -42,6 +43,7 @@ export function MobileNavbar() {
               <Link to="/account">account</Link>
             </li>
           </ul>
+          <LogoutButton />
         </nav>
       </SheetContent>
     </Sheet>

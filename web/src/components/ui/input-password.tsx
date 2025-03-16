@@ -26,9 +26,9 @@ function InputPassword({
       />
       <Button
         type="button"
-        variant="outline"
+        variant="ghost"
         size="sm"
-        className="absolute top-0 right-0 h-full rounded-l-sm border px-3 py-2"
+        className="text-card hover:text-card absolute top-0 right-0 h-full rounded-l-sm px-3 py-2 opacity-70 hover:bg-transparent hover:opacity-100"
         onClick={() => setShowPassword((prev) => !prev)}
         disabled={disabled}>
         {showPassword && !disabled ? (

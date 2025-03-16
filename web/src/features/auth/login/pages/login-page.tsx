@@ -94,6 +94,12 @@ export const LoginPage = () => {
                   </FormItem>
                 )}
               />
+              <p className="text-muted-foreground text-sm">
+                Forgot password? Click{' '}
+                <Link to="/auth/reset-password" className="text-foreground">
+                  here.
+                </Link>
+              </p>
               <Button type="submit">
                 {loginMutation.isPending ? <Spinner /> : null}
                 {loginMutation.isPending ? 'Logging in...' : 'Login'}
