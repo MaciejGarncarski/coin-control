@@ -2,6 +2,7 @@ import { Worker } from 'bullmq'
 
 import { connection } from '../../redis.js'
 import { mailer } from '../../mailer.js'
+import { httpLogger } from '../../../logger/logger.js'
 
 type JobData = {
   userEmail: string
@@ -26,12 +27,14 @@ export const createEmailVerificationWorker = () => {
   )
 
   worker.on('completed', (job) => {
-    // eslint-disable-next-line no-console
-    console.log(`${job.id} has completed!`)
+    httpLogger.logger.info(
+      `Email job with ID: ${job.id} has completed successfully`,
+    )
   })
 
   worker.on('failed', (job, err) => {
-    // eslint-disable-next-line no-console
-    console.log(`${job?.id} has failed with ${err.message}`)
+    httpLogger.logger.error(
+      `Email job with ID: ${job?.id} has failed with ${err.message}`,
+    )
   })
 }

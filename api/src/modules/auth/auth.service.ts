@@ -24,7 +24,7 @@ export async function registerUser(userData: RegisterMutation) {
     },
   })
 
-  if (!user) {
+  if (user) {
     throw new ApiError({
       toastMessage: 'User already exists.',
       message: 'User already exists.',

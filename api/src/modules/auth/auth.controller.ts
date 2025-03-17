@@ -146,10 +146,20 @@ export async function registerHandler(req: RegisterRequest, res: Response) {
     },
   })
 
-  emailVerificationQueue.add('verification-email', {
-    code: OTPCode,
-    userEmail: req.body.email,
-  })
+  emailVerificationQueue.add(
+    'verification-email',
+    {
+      code: OTPCode,
+      userEmail: req.body.email,
+    },
+    {
+      attempts: 3,
+      backoff: {
+        type: 'exponential',
+        delay: 1000,
+      },
+    },
+  )
 
   req.session.userId = createdUser.id
   res.status(status.OK).json(createdUser)
@@ -217,10 +227,20 @@ export async function getOTPHandler(req: Request, res: Response) {
     },
   })
 
-  emailVerificationQueue.add('verification-email', {
-    code: OTPCode,
-    userEmail: user.email,
-  })
+  emailVerificationQueue.add(
+    'verification-email',
+    {
+      code: OTPCode,
+      userEmail: user.email,
+    },
+    {
+      attempts: 3,
+      backoff: {
+        type: 'exponential',
+        delay: 1000,
+      },
+    },
+  )
 
   res.status(status.OK).json({ message: 'success' })
   return
@@ -264,13 +284,22 @@ export async function verifyOTPHandler(req: VerifyOTPRequest, res: Response) {
     })
   }
 
-  await db.users.update({
-    data: {
-      email_verified: true,
-    },
-    where: {
-      id: req.session.userId,
-    },
+  await db.$transaction(async (tx) => {
+    await tx.users.update({
+      data: {
+        email_verified: true,
+      },
+      where: {
+        id: req.session.userId,
+      },
+    })
+
+    await tx.otp_codes.delete({
+      where: {
+        user_id: req.session.userId,
+        id: otp.id,
+      },
+    })
   })
 
   res.status(status.OK).json({ message: 'success' })

@@ -10,6 +10,7 @@ import bodyParser from 'body-parser'
 import { sessionConfig } from './config/session.js'
 import expressSession from 'express-session'
 import { createEmailVerificationWorker } from './lib/queues/email-verification/worker.js'
+import { createExpiredSessionCron } from './lib/queues/session/session-cron.js'
 
 const app = express()
 
@@ -29,6 +30,7 @@ app.use((req, res) => {
 })
 app.use(errorMiddleware)
 createEmailVerificationWorker()
+createExpiredSessionCron()
 
 app.listen(Number(env.PORT), env.HOST, (error) => {
   if (error) {
