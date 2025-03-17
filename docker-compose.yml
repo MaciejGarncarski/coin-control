@@ -55,7 +55,6 @@ services:
     depends_on:
       - cache
     networks:
-      - host-network
       - app-network
     build:
       target: prod
