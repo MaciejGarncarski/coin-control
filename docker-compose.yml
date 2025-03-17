@@ -56,6 +56,7 @@ services:
       - cache
     networks:
       - app-network
+      - default
     build:
       target: prod
       dockerfile: ./docker/api.Dockerfile
