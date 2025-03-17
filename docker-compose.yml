@@ -2,8 +2,6 @@ services:
   cache:
     image: redis:6.2-alpine
     restart: always
-    networks:
-      - app-network
     command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     volumes:
       - cache:/data
@@ -18,8 +16,6 @@ services:
       - ./api/src:/app/api/src
       - ./shared:/app/shared
     profiles: [dev]
-    networks:
-      - app-network
     ports:
       - "${API_PORT}:${API_PORT}"
     environment:
@@ -54,9 +50,6 @@ services:
   api:
     depends_on:
       - cache
-    networks:
-      - default
-      - app-network
     build:
       target: prod
       dockerfile: ./docker/api.Dockerfile
@@ -91,10 +84,6 @@ services:
     profiles: [prod]
     ports:
       - "${WEB_PORT}:80"
-
-networks:
-  app-network:
-    driver: bridge
 
 volumes:
   cache:
