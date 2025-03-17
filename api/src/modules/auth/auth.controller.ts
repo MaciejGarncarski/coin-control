@@ -196,15 +196,21 @@ export async function getOTPHandler(req: Request, res: Response) {
       expires_at: true,
     },
     where: {
-      id: req.session.userId,
+      user_id: req.session.userId,
     },
     orderBy: {
       expires_at: 'desc',
     },
   })
 
-  const time = new Date(Number(newestOTP?.expires_at)).getTime()
-  const codeDate = time - 13 * 60 * 1000
+  if (!newestOTP?.expires_at) {
+    throw new ApiError({
+      message: 'Code not found',
+      statusCode: status.TOO_MANY_REQUESTS,
+    })
+  }
+
+  const codeDate = newestOTP.expires_at.getTime() - 13 * 60 * 1000
 
   if (codeDate > Date.now()) {
     throw new ApiError({

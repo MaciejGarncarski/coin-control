@@ -13,8 +13,7 @@ export const GetOtpButton = () => {
 
   const { isPending, mutate, error, reset } = useSendOTP()
 
-  const hasActiveOTPAlready =
-    error instanceof ApiError && error.statusCode === 409
+  const hasActiveOTPAlready = error instanceof ApiError
 
   useEffect(() => {
     if (!hasActiveOTPAlready) {
