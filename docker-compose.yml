@@ -2,8 +2,8 @@ services:
   cache:
     image: redis:6.2-alpine
     restart: always
-    networks:
-      - app_network
+    # networks:
+    #   - app_network
     command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     volumes:
       - cache:/data
@@ -18,8 +18,8 @@ services:
       - ./api/src:/app/api/src
       - ./shared:/app/shared
     profiles: [dev]
-    networks:
-      - app_network
+    # networks:
+    #   - app_network
     ports:
       - "${API_PORT}:${API_PORT}"
     environment:
