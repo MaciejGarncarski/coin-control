@@ -9,7 +9,7 @@ import { showStartMessage } from './utils/start-message.js'
 import bodyParser from 'body-parser'
 import { sessionConfig } from './config/session.js'
 import expressSession from 'express-session'
-import { createEmailVerificationWorker } from '../lib/queues/email-verification/worker.js'
+import { createEmailVerificationWorker } from './lib/queues/email-verification/worker.js'
 
 const app = express()
 

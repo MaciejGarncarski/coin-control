@@ -4,22 +4,25 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "pnpm tsx watch --include '../shared/**/**' --exclude '../shared/**/node_modules' --conditions=development --clear-screen=false  src/app.ts",
+    "dev": "pnpm tsx watch --include '../shared/**/**' --exclude '../shared/**/node_modules' --clear-screen=false  src/app.ts",
     "build": "pnpm tsc --build",
     "start": "pnpm build && node --env-file=.env ./dist/src/app.js",
     "lint": "eslint --fix .",
     "format": "prettier --write --cache .",
     "lint-format": "pnpm lint && pnpm format",
-    "check-types": "pnpm tsc --skipLibCheck --noEmit"
+    "check-types": "pnpm tsc --skipLibCheck --noEmit",
+    "generate-prisma": "pnpm prisma generate"
   },
   "license": "ISC",
   "packageManager": "pnpm@10.6.1",
   "dependencies": {
     "@node-rs/argon2": "^2.0.2",
+    "@prisma/client": "^6.5.0",
     "@shared/zod-schemas": "workspace:*",
     "body-parser": "^1.20.3",
     "bullmq": "^5.43.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^5.0.1",
     "express-session": "^1.18.1",
     "http-status": "^2.1.0",
@@ -29,7 +32,7 @@
     "pino": "^9.6.0",
     "pino-http": "^10.4.0",
     "pino-pretty": "^13.0.0",
-    "postgres": "^3.4.5",
+    "prisma": "^6.5.0",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

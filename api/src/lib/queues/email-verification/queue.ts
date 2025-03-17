@@ -1,5 +1,5 @@
 import { Queue } from 'bullmq'
-import { connection } from '../../../src/lib/redis.js'
+import { connection } from '../../redis.js'
 
 type JobData = {
   userEmail: string

@@ -1,4 +1,11 @@
 packages:
-  - "shared/*"
-  - "api"
-  - "web"
+  - shared/*
+  - api
+  - web
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - prisma
+ignoredBuiltDependencies:
+  - esbuild
+  - msgpackr-extract

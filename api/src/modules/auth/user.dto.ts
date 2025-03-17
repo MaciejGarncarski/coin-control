@@ -1,10 +1,10 @@
 import { type User } from '@shared/zod-schemas'
 
 type UserFromDB = {
-  id: string
   email: string
-  name: string
-  email_verified: boolean
+  id: string
+  email_verified: boolean | null
+  name: string | null
 }
 
 function obfuscateEmail(email: string) {
@@ -29,7 +29,7 @@ export const userDTO = (user: UserFromDB): User => {
   return {
     email: user.email_verified ? user.email : obfuscatedEmail,
     id: user.id,
-    name: user.name,
-    isEmailVerified: user.email_verified,
+    name: user.name || '',
+    isEmailVerified: user.email_verified || false,
   }
 }

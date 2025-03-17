@@ -3,7 +3,7 @@ import { z } from '@shared/zod-schemas'
 import { httpLogger } from '../logger/logger.js'
 
 const envSchema = z.object({
-  DB_URL: z.string().startsWith('postgresql://'),
+  DATABASE_URL: z.string().startsWith('postgresql://'),
   API_SECRET: z.string(),
   HOST: z.string().ip({ version: 'v4' }),
   APP_ORIGIN: z.string().startsWith('http'),

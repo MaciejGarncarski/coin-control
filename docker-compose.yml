@@ -24,7 +24,7 @@ services:
       - PORT=${API_PORT}
       - APP_ORIGIN=${APP_URL}
       - HOST=${HOST}
-      - DB_URL=${DB_URL}
+      - DATABASE_URL=${DATABASE_URL}
       - API_SECRET=${API_SECRET}
       - MAIL_USER=${MAIL_USER}
       - MAIL_PASS=${MAIL_PASS}
@@ -64,7 +64,7 @@ services:
       - PORT=${API_PORT}
       - APP_ORIGIN=${APP_URL}
       - HOST=${HOST}
-      - DB_URL=${DB_URL}
+      - DATABASE_URL=${DATABASE_URL}
       - API_SECRET=${API_SECRET}
       - MAIL_USER=${MAIL_USER}
       - MAIL_PASS=${MAIL_PASS}

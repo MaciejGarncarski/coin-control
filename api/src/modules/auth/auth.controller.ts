@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express'
-import { db } from '../../../lib/db.js'
 import { type LoginMutation, type RegisterMutation } from '@shared/zod-schemas'
 import { status } from 'http-status'
 import type { OTPVerifyMutation } from '@shared/zod-schemas'
@@ -10,7 +9,8 @@ import { userDTO } from './user.dto.js'
 import { generateOTP } from '../../utils/generate-otp.js'
 import { v7 } from 'uuid'
 import ms from 'ms'
-import { emailVerificationQueue } from '../../../lib/queues/email-verification/queue.js'
+import { db } from '../../lib/db.js'
+import { emailVerificationQueue } from '../../lib/queues/email-verification/queue.js'
 
 interface LoginRequest extends Request {
   body: LoginMutation
@@ -19,15 +19,20 @@ interface LoginRequest extends Request {
 export const postLoginHandler = async (req: LoginRequest, res: Response) => {
   const email = req.body.email
 
-  const user = await db`
-    select
-      id, email, password_hash, email_verified, name
-    from users
-    where 
-    email = ${email}
-    `
+  const user = await db.users.findFirst({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+      name: true,
+      password_hash: true,
+      email: true,
+      email_verified: true,
+    },
+  })
 
-  if (!user[0]) {
+  if (!user) {
     throw new ApiError({
       statusCode: status.UNAUTHORIZED,
       message: 'Invalid email or password.',
@@ -35,9 +40,7 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
   }
 
   const password = req.body.password
-  const foundUser = user[0]
-
-  const passwordMatches = await verify(foundUser.password_hash, password)
+  const passwordMatches = await verify(user.password_hash, password)
 
   if (!passwordMatches) {
     throw new ApiError({
@@ -46,28 +49,21 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
     })
   }
 
-  if (foundUser.email_verified === false) {
+  if (user.email_verified === false) {
     req.session.cookie.maxAge = ms('15 minutes')
   }
 
-  req.session.userId = foundUser.id
+  req.session.userId = user.id
 
   const userData = userDTO({
-    email: foundUser.email,
-    email_verified: foundUser.email_verified,
-    id: foundUser.id,
-    name: foundUser.name,
+    email: user.email,
+    email_verified: user.email_verified,
+    id: user.id,
+    name: user.name,
   })
 
   res.status(status.OK).json(userData)
   return
-}
-
-type UserFromDB = {
-  id: string
-  email: string
-  name: string
-  email_verified: boolean
 }
 
 export const getUserHandler = async (req: Request, res: Response) => {
@@ -77,23 +73,26 @@ export const getUserHandler = async (req: Request, res: Response) => {
       statusCode: status.UNAUTHORIZED,
     })
   }
+  const user = await db.users.findFirst({
+    where: {
+      id: req.session.userId,
+    },
+    select: {
+      id: true,
+      email: true,
+      email_verified: true,
+      name: true,
+    },
+  })
 
-  const user = (await db`
-  select
-    id, email, name, email_verified
-  from users
-  where 
-  id = ${req.session.userId}
-  `) as UserFromDB[]
-
-  if (!user[0]) {
+  if (!user) {
     throw new ApiError({
       message: 'User not found.',
       statusCode: status.NOT_FOUND,
     })
   }
 
-  const userData = userDTO(user[0])
+  const userData = userDTO(user)
   res.status(status.OK).json(userData)
 }
 
@@ -135,12 +134,17 @@ export async function registerHandler(req: RegisterRequest, res: Response) {
   }
 
   const expires_at = Date.now() + ms('15 minutes')
-  const otp_uuid = v7()
+  const OTPUuid = v7()
   const OTPCode = generateOTP()
 
-  await db`
-      insert into otp_codes (id, user_id, otp, expires_at) values (${otp_uuid}, ${createdUser.id}, ${OTPCode}, ${expires_at})
-    `
+  await db.otp_codes.create({
+    data: {
+      id: OTPUuid,
+      user_id: createdUser.id,
+      otp: OTPCode,
+      expires_at: new Date(expires_at),
+    },
+  })
 
   emailVerificationQueue.add('verification-email', {
     code: OTPCode,
@@ -160,28 +164,37 @@ export async function getOTPHandler(req: Request, res: Response) {
     })
   }
 
-  const user = await db`
-  select
-    email_verified, email
-  from users
-  where 
-  id = ${req.session.userId}
-  `
+  const user = await db.users.findFirst({
+    where: {
+      id: req.session.userId,
+    },
+    select: {
+      email_verified: true,
+      email: true,
+    },
+  })
 
-  const foundUser = user[0]
-
-  if (!foundUser) {
+  if (!user) {
     throw new ApiError({
       message: 'User not found.',
       statusCode: status.NOT_FOUND,
     })
   }
 
-  const newestOTP = await db`
-    select expires_at from otp_codes where user_id = ${req.session.userId} order by expires_at desc limit 1
-  `
+  const newestOTP = await db.otp_codes.findFirst({
+    select: {
+      expires_at: true,
+    },
+    where: {
+      id: req.session.userId,
+    },
+    orderBy: {
+      expires_at: 'desc',
+    },
+  })
 
-  const codeDate = newestOTP[0]?.expires_at - 13 * 60 * 1000
+  const time = new Date(Number(newestOTP?.expires_at)).getTime()
+  const codeDate = time - 13 * 60 * 1000
 
   if (codeDate > Date.now()) {
     throw new ApiError({
@@ -195,13 +208,18 @@ export async function getOTPHandler(req: Request, res: Response) {
   const otp_uuid = v7()
   const OTPCode = generateOTP()
 
-  await db`
-      insert into otp_codes (id, user_id, otp, expires_at) values (${otp_uuid}, ${req.session.userId}, ${OTPCode}, ${expires_at})
-    `
+  await db.otp_codes.create({
+    data: {
+      expires_at: new Date(expires_at),
+      otp: OTPCode,
+      user_id: req.session.userId,
+      id: otp_uuid,
+    },
+  })
 
   emailVerificationQueue.add('verification-email', {
     code: OTPCode,
-    userEmail: foundUser.email,
+    userEmail: user.email,
   })
 
   res.status(status.OK).json({ message: 'success' })
@@ -220,18 +238,25 @@ export async function verifyOTPHandler(req: VerifyOTPRequest, res: Response) {
     })
   }
 
-  const otp = await db`
-  select id, expires_at from otp_codes where user_id = ${req.session.userId} and otp = ${req.body.code}
-  `
+  const otp = await db.otp_codes.findFirst({
+    where: {
+      user_id: req.session.userId,
+      otp: req.body.code,
+    },
+    select: {
+      id: true,
+      expires_at: true,
+    },
+  })
 
-  if (!otp[0]) {
+  if (!otp) {
     throw new ApiError({
       message: 'Invalid OTP code.',
       statusCode: status.UNAUTHORIZED,
     })
   }
 
-  if (otp[0].expires_at < new Date()) {
+  if (otp.expires_at < new Date()) {
     throw new ApiError({
       message: 'OTP code expired.',
       toastMessage: 'Code expired.',
@@ -239,9 +264,14 @@ export async function verifyOTPHandler(req: VerifyOTPRequest, res: Response) {
     })
   }
 
-  await db`
-    update users set email_verified = true where id = ${req.session.userId}
-  `
+  await db.users.update({
+    data: {
+      email_verified: true,
+    },
+    where: {
+      id: req.session.userId,
+    },
+  })
 
   res.status(status.OK).json({ message: 'success' })
 }
