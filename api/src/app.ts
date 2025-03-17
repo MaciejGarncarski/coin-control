@@ -11,6 +11,7 @@ import { sessionConfig } from './config/session.js'
 import expressSession from 'express-session'
 import { createEmailVerificationWorker } from './lib/queues/email-verification/worker.js'
 import { createExpiredSessionCron } from './lib/queues/session/session-cron.js'
+import helmet from 'helmet'
 
 const app = express()
 
@@ -20,6 +21,7 @@ declare module 'express-session' {
   }
 }
 
+app.use(helmet())
 app.use(bodyParser.json())
 app.use(expressSession(sessionConfig))
 app.use(httpLogger)
