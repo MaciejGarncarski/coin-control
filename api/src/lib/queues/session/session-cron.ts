@@ -1,5 +1,3 @@
-// Create jobs every day at 3:15 (am)
-
 import { Queue, Worker } from 'bullmq'
 import { connection } from '../../redis.js'
 import { httpLogger } from '../../../logger/logger.js'

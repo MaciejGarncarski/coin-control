@@ -24,10 +24,7 @@
   "watchOptions": {
     "watchFile": "useFsEvents",
     "watchDirectory": "useFsEvents",
-    // Don't coalesce watch notification
     "synchronousWatchDirectory": true,
-    // Finally, two additional settings for reducing the amount of possible
-    // files to track  work from these directories
     "excludeDirectories": ["**/node_modules", "dist"]
   }
 }
