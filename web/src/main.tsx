@@ -12,8 +12,11 @@ import {
 } from '@tanstack/react-query'
 import { auth } from '@/routes/__root'
 import { userQueryOptions } from '@/lib/auth'
+import { queryConfig } from '@/lib/react-query'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: queryConfig,
+})
 
 const router = createRouter({
   context: {

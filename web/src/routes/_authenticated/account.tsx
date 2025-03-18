@@ -1,5 +1,4 @@
-import { userQueryOptions } from '@/lib/auth'
-import { useQuery } from '@tanstack/react-query'
+import { useUser } from '@/lib/auth'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/account')({
@@ -8,6 +7,6 @@ export const Route = createFileRoute('/_authenticated/account')({
 })
 
 function RouteComponent() {
-  const user = useQuery(userQueryOptions)
+  const user = useUser({})
   return <div>UserID: {user.data?.id}</div>
 }

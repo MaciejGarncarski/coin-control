@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const OBFUSCATED_EMAIL_REGEX =
-  /^[a-zA-Z0-9]{2}\*+@[a-zA-Z0-9]{2}\*+\.[a-zA-Z]{2,}$/;
+  /\b[a-zA-Z0-9]{1}\*{1,}@([a-zA-Z0-9]{1}\*{1,}\.[a-zA-Z]{2,})\b/;
 
 export const emailSchema = z
   .string()

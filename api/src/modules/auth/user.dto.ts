@@ -8,19 +8,13 @@ type UserFromDB = {
 }
 
 function obfuscateEmail(email: string) {
-  const emailParts = email.split('@')
+  const [username, domain] = email.split('@')
+  const [domainName, domainEnding] = domain ? domain.split('.') : ''
 
-  if (emailParts.length !== 2) {
-    return 'Invalid email address'
-  }
+  const obfuscatedUsername = username?.slice(0, 1) + '*'.repeat(4)
+  const obfuscatedDomainName = domainName?.slice(0, 1) + '*'.repeat(4)
 
-  const localPart = emailParts[0]?.slice(0, 2) + '****'
-  const domainParts = emailParts[1]?.split('.')
-
-  const domainName = domainParts ? domainParts[0]?.slice(0, 2) + '***' : ''
-  const tld = domainParts?.slice(1).join('.')
-
-  return localPart + '@' + domainName + '.' + tld
+  return `${obfuscatedUsername}@${obfuscatedDomainName}.${domainEnding}`
 }
 
 export const userDTO = (user: UserFromDB): User => {
