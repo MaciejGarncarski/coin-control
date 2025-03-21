@@ -25,6 +25,7 @@ import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/spinner'
 import { cn } from '@/lib/utils'
 import { InputPassword } from '@/components/ui/input-password'
+import { ThemeSwitcher } from '@/features/layout/comoponents/theme-switcher'
 
 export const LoginPage = () => {
   const loginMutation = useLoginMutation()
@@ -38,7 +39,7 @@ export const LoginPage = () => {
   })
 
   return (
-    <main className="flex h-screen flex-col items-center justify-center gap-4">
+    <>
       <Card className="w-[20rem] md:w-[25rem]">
         <CardHeader>
           <CardTitle>Login</CardTitle>
@@ -96,7 +97,7 @@ export const LoginPage = () => {
               />
               <p className="text-muted-foreground text-sm">
                 Forgot password? Click{' '}
-                <Link to="/auth/reset-password" className="text-foreground">
+                <Link to="/auth/forgot-password" className="text-foreground">
                   here.
                 </Link>
               </p>
@@ -108,6 +109,7 @@ export const LoginPage = () => {
           </Form>
         </CardContent>
       </Card>
-    </main>
+      <ThemeSwitcher />
+    </>
   )
 }

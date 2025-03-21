@@ -25,6 +25,7 @@ services:
     environment:
       - PORT=${API_PORT}
       - APP_ORIGIN=${APP_URL}
+      - API_URL=${API_URL}
       - HOST=${HOST}
       - DATABASE_URL=${DATABASE_URL}
       - API_SECRET=${API_SECRET}
@@ -67,6 +68,7 @@ services:
     environment:
       - PORT=${API_PORT}
       - APP_ORIGIN=${APP_URL}
+      - API_URL=${API_URL}
       - HOST=${HOST}
       - DATABASE_URL=${DATABASE_URL}
       - API_SECRET=${API_SECRET}

@@ -18,5 +18,9 @@ export const Route = createFileRoute('/_not_authenticated')({
 })
 
 function RouteComponent() {
-  return <Outlet />
+  return (
+    <main className="flex h-screen flex-col items-center justify-center gap-4">
+      <Outlet />
+    </main>
+  )
 }

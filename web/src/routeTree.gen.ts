@@ -15,9 +15,10 @@ import { Route as NotauthenticatedRouteImport } from './routes/_not_authenticate
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedAccountImport } from './routes/_authenticated/account'
-import { Route as NotauthenticatedAuthResetPasswordImport } from './routes/_not_authenticated/auth/reset-password'
 import { Route as NotauthenticatedAuthRegisterImport } from './routes/_not_authenticated/auth/register'
+import { Route as NotauthenticatedAuthPasswordResetImport } from './routes/_not_authenticated/auth/password-reset'
 import { Route as NotauthenticatedAuthLoginImport } from './routes/_not_authenticated/auth/login'
+import { Route as NotauthenticatedAuthForgotPasswordImport } from './routes/_not_authenticated/auth/forgot-password'
 
 // Create/Update Routes
 
@@ -43,17 +44,17 @@ const AuthenticatedAccountRoute = AuthenticatedAccountImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
-const NotauthenticatedAuthResetPasswordRoute =
-  NotauthenticatedAuthResetPasswordImport.update({
-    id: '/auth/reset-password',
-    path: '/auth/reset-password',
-    getParentRoute: () => NotauthenticatedRouteRoute,
-  } as any)
-
 const NotauthenticatedAuthRegisterRoute =
   NotauthenticatedAuthRegisterImport.update({
     id: '/auth/register',
     path: '/auth/register',
+    getParentRoute: () => NotauthenticatedRouteRoute,
+  } as any)
+
+const NotauthenticatedAuthPasswordResetRoute =
+  NotauthenticatedAuthPasswordResetImport.update({
+    id: '/auth/password-reset',
+    path: '/auth/password-reset',
     getParentRoute: () => NotauthenticatedRouteRoute,
   } as any)
 
@@ -62,6 +63,13 @@ const NotauthenticatedAuthLoginRoute = NotauthenticatedAuthLoginImport.update({
   path: '/auth/login',
   getParentRoute: () => NotauthenticatedRouteRoute,
 } as any)
+
+const NotauthenticatedAuthForgotPasswordRoute =
+  NotauthenticatedAuthForgotPasswordImport.update({
+    id: '/auth/forgot-password',
+    path: '/auth/forgot-password',
+    getParentRoute: () => NotauthenticatedRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -95,6 +103,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_not_authenticated/auth/forgot-password': {
+      id: '/_not_authenticated/auth/forgot-password'
+      path: '/auth/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof NotauthenticatedAuthForgotPasswordImport
+      parentRoute: typeof NotauthenticatedRouteImport
+    }
     '/_not_authenticated/auth/login': {
       id: '/_not_authenticated/auth/login'
       path: '/auth/login'
@@ -102,18 +117,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotauthenticatedAuthLoginImport
       parentRoute: typeof NotauthenticatedRouteImport
     }
+    '/_not_authenticated/auth/password-reset': {
+      id: '/_not_authenticated/auth/password-reset'
+      path: '/auth/password-reset'
+      fullPath: '/auth/password-reset'
+      preLoaderRoute: typeof NotauthenticatedAuthPasswordResetImport
+      parentRoute: typeof NotauthenticatedRouteImport
+    }
     '/_not_authenticated/auth/register': {
       id: '/_not_authenticated/auth/register'
       path: '/auth/register'
       fullPath: '/auth/register'
       preLoaderRoute: typeof NotauthenticatedAuthRegisterImport
-      parentRoute: typeof NotauthenticatedRouteImport
-    }
-    '/_not_authenticated/auth/reset-password': {
-      id: '/_not_authenticated/auth/reset-password'
-      path: '/auth/reset-password'
-      fullPath: '/auth/reset-password'
-      preLoaderRoute: typeof NotauthenticatedAuthResetPasswordImport
       parentRoute: typeof NotauthenticatedRouteImport
     }
   }
@@ -135,16 +150,19 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface NotauthenticatedRouteRouteChildren {
+  NotauthenticatedAuthForgotPasswordRoute: typeof NotauthenticatedAuthForgotPasswordRoute
   NotauthenticatedAuthLoginRoute: typeof NotauthenticatedAuthLoginRoute
+  NotauthenticatedAuthPasswordResetRoute: typeof NotauthenticatedAuthPasswordResetRoute
   NotauthenticatedAuthRegisterRoute: typeof NotauthenticatedAuthRegisterRoute
-  NotauthenticatedAuthResetPasswordRoute: typeof NotauthenticatedAuthResetPasswordRoute
 }
 
 const NotauthenticatedRouteRouteChildren: NotauthenticatedRouteRouteChildren = {
+  NotauthenticatedAuthForgotPasswordRoute:
+    NotauthenticatedAuthForgotPasswordRoute,
   NotauthenticatedAuthLoginRoute: NotauthenticatedAuthLoginRoute,
+  NotauthenticatedAuthPasswordResetRoute:
+    NotauthenticatedAuthPasswordResetRoute,
   NotauthenticatedAuthRegisterRoute: NotauthenticatedAuthRegisterRoute,
-  NotauthenticatedAuthResetPasswordRoute:
-    NotauthenticatedAuthResetPasswordRoute,
 }
 
 const NotauthenticatedRouteRouteWithChildren =
@@ -156,18 +174,20 @@ export interface FileRoutesByFullPath {
   '': typeof NotauthenticatedRouteRouteWithChildren
   '/account': typeof AuthenticatedAccountRoute
   '/': typeof AuthenticatedIndexRoute
+  '/auth/forgot-password': typeof NotauthenticatedAuthForgotPasswordRoute
   '/auth/login': typeof NotauthenticatedAuthLoginRoute
+  '/auth/password-reset': typeof NotauthenticatedAuthPasswordResetRoute
   '/auth/register': typeof NotauthenticatedAuthRegisterRoute
-  '/auth/reset-password': typeof NotauthenticatedAuthResetPasswordRoute
 }
 
 export interface FileRoutesByTo {
   '': typeof NotauthenticatedRouteRouteWithChildren
   '/account': typeof AuthenticatedAccountRoute
   '/': typeof AuthenticatedIndexRoute
+  '/auth/forgot-password': typeof NotauthenticatedAuthForgotPasswordRoute
   '/auth/login': typeof NotauthenticatedAuthLoginRoute
+  '/auth/password-reset': typeof NotauthenticatedAuthPasswordResetRoute
   '/auth/register': typeof NotauthenticatedAuthRegisterRoute
-  '/auth/reset-password': typeof NotauthenticatedAuthResetPasswordRoute
 }
 
 export interface FileRoutesById {
@@ -176,9 +196,10 @@ export interface FileRoutesById {
   '/_not_authenticated': typeof NotauthenticatedRouteRouteWithChildren
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_not_authenticated/auth/forgot-password': typeof NotauthenticatedAuthForgotPasswordRoute
   '/_not_authenticated/auth/login': typeof NotauthenticatedAuthLoginRoute
+  '/_not_authenticated/auth/password-reset': typeof NotauthenticatedAuthPasswordResetRoute
   '/_not_authenticated/auth/register': typeof NotauthenticatedAuthRegisterRoute
-  '/_not_authenticated/auth/reset-password': typeof NotauthenticatedAuthResetPasswordRoute
 }
 
 export interface FileRouteTypes {
@@ -187,26 +208,29 @@ export interface FileRouteTypes {
     | ''
     | '/account'
     | '/'
+    | '/auth/forgot-password'
     | '/auth/login'
+    | '/auth/password-reset'
     | '/auth/register'
-    | '/auth/reset-password'
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
     | '/account'
     | '/'
+    | '/auth/forgot-password'
     | '/auth/login'
+    | '/auth/password-reset'
     | '/auth/register'
-    | '/auth/reset-password'
   id:
     | '__root__'
     | '/_authenticated'
     | '/_not_authenticated'
     | '/_authenticated/account'
     | '/_authenticated/'
+    | '/_not_authenticated/auth/forgot-password'
     | '/_not_authenticated/auth/login'
+    | '/_not_authenticated/auth/password-reset'
     | '/_not_authenticated/auth/register'
-    | '/_not_authenticated/auth/reset-password'
   fileRoutesById: FileRoutesById
 }
 
@@ -244,9 +268,10 @@ export const routeTree = rootRoute
     "/_not_authenticated": {
       "filePath": "_not_authenticated/route.tsx",
       "children": [
+        "/_not_authenticated/auth/forgot-password",
         "/_not_authenticated/auth/login",
-        "/_not_authenticated/auth/register",
-        "/_not_authenticated/auth/reset-password"
+        "/_not_authenticated/auth/password-reset",
+        "/_not_authenticated/auth/register"
       ]
     },
     "/_authenticated/account": {
@@ -257,16 +282,20 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/index.tsx",
       "parent": "/_authenticated"
     },
+    "/_not_authenticated/auth/forgot-password": {
+      "filePath": "_not_authenticated/auth/forgot-password.tsx",
+      "parent": "/_not_authenticated"
+    },
     "/_not_authenticated/auth/login": {
       "filePath": "_not_authenticated/auth/login.tsx",
       "parent": "/_not_authenticated"
     },
-    "/_not_authenticated/auth/register": {
-      "filePath": "_not_authenticated/auth/register.tsx",
+    "/_not_authenticated/auth/password-reset": {
+      "filePath": "_not_authenticated/auth/password-reset.tsx",
       "parent": "/_not_authenticated"
     },
-    "/_not_authenticated/auth/reset-password": {
-      "filePath": "_not_authenticated/auth/reset-password.tsx",
+    "/_not_authenticated/auth/register": {
+      "filePath": "_not_authenticated/auth/register.tsx",
       "parent": "/_not_authenticated"
     }
   }

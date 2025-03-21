@@ -1,8 +1,12 @@
 import type { Request, Response } from 'express'
 import { type LoginMutation, type RegisterMutation } from '@shared/zod-schemas'
 import { status } from 'http-status'
-import type { OTPVerifyMutation } from '@shared/zod-schemas'
-import { verify } from '@node-rs/argon2'
+import type {
+  ForgotPasswordEmailMutation,
+  OTPVerifyMutation,
+  ResetPasswordMutation,
+} from '@shared/zod-schemas'
+import { hash, verify } from '@node-rs/argon2'
 import { registerUser } from './auth.service.js'
 import { ApiError } from '../../lib/api-error.js'
 import { userDTO } from './user.dto.js'
@@ -11,6 +15,8 @@ import { v7 } from 'uuid'
 import ms from 'ms'
 import { db } from '../../lib/db.js'
 import { emailVerificationQueue } from '../../lib/queues/email-verification/queue.js'
+import { createHash } from 'node:crypto'
+import { resetPasswordLinkQueue } from '../../lib/queues/reset-password-link/queue.js'
 
 interface LoginRequest extends Request {
   body: LoginMutation
@@ -146,8 +152,8 @@ export async function registerHandler(req: RegisterRequest, res: Response) {
     },
   })
 
-  emailVerificationQueue.add(
-    'verification-email',
+  await emailVerificationQueue.add(
+    `verification-email-${OTPUuid}`,
     {
       code: OTPCode,
       userEmail: req.body.email,
@@ -233,8 +239,8 @@ export async function getOTPHandler(req: Request, res: Response) {
     },
   })
 
-  emailVerificationQueue.add(
-    'verification-email',
+  await emailVerificationQueue.add(
+    `verification-email-${otp_uuid}`,
     {
       code: OTPCode,
       userEmail: user.email,
@@ -306,6 +312,120 @@ export async function verifyOTPHandler(req: VerifyOTPRequest, res: Response) {
         id: otp.id,
       },
     })
+  })
+
+  res.status(status.OK).json({ message: 'success' })
+}
+interface GetPasswordLinkRequest extends Request {
+  body: ForgotPasswordEmailMutation
+}
+
+export async function forgotPasswordLinkHandler(
+  req: GetPasswordLinkRequest,
+  res: Response,
+) {
+  const email = req.body.email
+
+  const foundUser = await db.users.findFirst({
+    where: {
+      email: email,
+    },
+    select: {
+      id: true,
+    },
+  })
+
+  if (!foundUser?.id) {
+    // send fake resopnse so attacker does not know if email exists.
+    res.status(status.OK).json({ message: 'success' })
+    return
+  }
+
+  const passwordCodeId = v7()
+  const expiresAt = new Date().getTime() + ms('15 minutes')
+  const resetCode = createHash('sha512').update(v7()).digest('hex').slice(0, 48)
+
+  await db.reset_password_codes.create({
+    data: {
+      id: passwordCodeId,
+      expires_at: new Date(expiresAt),
+      user_id: foundUser.id,
+      reset_code: resetCode,
+    },
+  })
+
+  await resetPasswordLinkQueue.add(`reset-password-link-${passwordCodeId}`, {
+    passwordResetCode: resetCode,
+    userEmail: email,
+  })
+
+  res.status(status.OK).json({ message: 'success' })
+}
+
+interface ResetPasswordRequest extends Request {
+  body: ResetPasswordMutation
+}
+
+export async function resetPasswordHandler(
+  req: ResetPasswordRequest,
+  res: Response,
+) {
+  const resetPasswordToken = req.body.resetToken
+  const password = req.body.password
+
+  const codeFromDb = await db.reset_password_codes.findFirst({
+    where: {
+      reset_code: resetPasswordToken,
+      used: false,
+    },
+  })
+
+  if (!codeFromDb?.expires_at) {
+    throw new ApiError({
+      message: 'Invalid reset token',
+      toastMessage: 'Invalid reset token.',
+      statusCode: status.BAD_REQUEST,
+    })
+  }
+
+  if (codeFromDb?.expires_at < new Date()) {
+    throw new ApiError({
+      message: 'Invalid reset token',
+      toastMessage: 'Code expired!',
+      statusCode: status.BAD_REQUEST,
+    })
+  }
+
+  await db.$transaction(async (tx) => {
+    const userId = await tx.reset_password_codes.update({
+      where: {
+        id: codeFromDb.id,
+        reset_code: resetPasswordToken,
+      },
+      data: {
+        used: true,
+      },
+      select: {
+        user_id: true,
+      },
+    })
+
+    if (!userId) {
+      throw new Error('User not found.')
+    }
+
+    const hashedPassword = await hash(password)
+
+    const updatedUser = await tx.users.update({
+      where: {
+        id: userId.user_id,
+      },
+      data: {
+        password_hash: hashedPassword,
+      },
+    })
+
+    return updatedUser
   })
 
   res.status(status.OK).json({ message: 'success' })

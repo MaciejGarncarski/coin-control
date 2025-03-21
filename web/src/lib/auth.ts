@@ -17,10 +17,6 @@ export const getUser = async () => {
     schema: userSchema,
   })
 
-  if (!response) {
-    return null
-  }
-
   return response
 }
 

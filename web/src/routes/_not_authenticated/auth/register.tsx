@@ -28,7 +28,7 @@ import {
 } from '@shared/zod-schemas'
 import { InputPassword } from '@/components/ui/input-password'
 import { useRegisterMutation } from '@/features/auth/login/api/register'
-import { ApiError } from '@/utils/api-error'
+import { ApiError } from '@maciekdev/fetcher'
 
 export const Route = createFileRoute('/_not_authenticated/auth/register')({
   component: RouteComponent,
@@ -47,7 +47,7 @@ function RouteComponent() {
   })
 
   return (
-    <main className="flex h-screen items-center justify-center">
+    <>
       <Card className="w-[20rem] md:w-[25rem]">
         <CardHeader>
           <CardTitle>Register</CardTitle>
@@ -141,6 +141,6 @@ function RouteComponent() {
           </Form>
         </CardContent>
       </Card>
-    </main>
+    </>
   )
 }

@@ -1,7 +1,7 @@
 import { Spinner } from '@/components/spinner'
 import { Button } from '@/components/ui/button'
 import { useSendOTP } from '@/features/auth/verify-email/api/use-send-otp'
-import { ApiError } from '@/utils/api-error'
+import { ApiError } from '@maciekdev/fetcher'
 import { Mail } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 

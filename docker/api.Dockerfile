@@ -7,6 +7,7 @@ ARG PNPM_VERSION=10.6.1
 FROM node:${NODE_VERSION}-alpine as base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
 RUN corepack enable
 
 # dev

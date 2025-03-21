@@ -12,6 +12,7 @@ import expressSession from 'express-session'
 import { createEmailVerificationWorker } from './lib/queues/email-verification/worker.js'
 import { createExpiredSessionCron } from './lib/queues/session/session-cron.js'
 import helmet from 'helmet'
+import { createResetPasswordLinkQueue } from './lib/queues/reset-password-link/worker.js'
 
 const app = express()
 
@@ -22,16 +23,17 @@ declare module 'express-session' {
 }
 
 app.use(helmet())
+app.use(corsMiddleware())
 app.use(bodyParser.json())
 app.use(expressSession(sessionConfig))
 app.use(httpLogger)
-app.use(corsMiddleware())
 app.use(router())
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' })
 })
 app.use(errorMiddleware)
 createEmailVerificationWorker()
+createResetPasswordLinkQueue()
 createExpiredSessionCron()
 
 app.listen(Number(env.PORT), env.HOST, (error) => {

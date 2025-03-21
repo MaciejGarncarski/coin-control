@@ -30,8 +30,9 @@ export function errorMiddleware(
   }
 
   const responseMessage: TApiError = {
-    message: errorMessage,
+    message: 'Internal server error.',
     statusCode: req.statusCode || 500,
+    additionalMessage: errorMessage,
     stack: isProd ? undefined : error.stack,
   }
 

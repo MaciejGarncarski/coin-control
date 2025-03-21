@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { emailSchema } from "./user.js";
 
 export const loginMutationSchema = z.object({
   email: z.string().email({ message: "Invalid email." }),
@@ -41,3 +42,44 @@ export const OTPVerifyMutationSchema = z.object({
 });
 
 export type OTPVerifyMutation = z.infer<typeof OTPVerifyMutationSchema>;
+
+export const forgotPasswordEmailMutationSchema = z.object({
+  email: emailSchema,
+});
+
+export type ForgotPasswordEmailMutation = z.infer<
+  typeof forgotPasswordEmailMutationSchema
+>;
+
+export const resetPasswordFormSchema = z
+  .object({
+    password: z
+      .string()
+      .min(4, { message: "Password is too short." })
+      .max(128, { message: "Password is too long." }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"],
+  });
+
+export type ResetPasswordForm = z.infer<typeof resetPasswordFormSchema>;
+
+export const resetPasswordCodeSchema = z.string().length(48);
+
+export const resetPasswordMutationSchema = z
+  .object({
+    password: z
+      .string()
+      .min(4, { message: "Password is too short." })
+      .max(128, { message: "Password is too long." }),
+    confirmPassword: z.string(),
+    resetToken: resetPasswordCodeSchema,
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"],
+  });
+
+export type ResetPasswordMutation = z.infer<typeof resetPasswordMutationSchema>;
