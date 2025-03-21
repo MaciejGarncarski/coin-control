@@ -43,10 +43,8 @@ export const ForgotPasswordPage = () => {
     router.history.back()
   }
 
-  const navigateToForgotPassword = () => {
-    navigate({
-      to: '/auth/forgot-password',
-    })
+  const resetMutation = () => {
+    sendResetPasswordLink.reset()
   }
 
   const navigateToHomePage = () => {
@@ -100,7 +98,7 @@ export const ForgotPasswordPage = () => {
               type="button"
               variant="secondary"
               size="sm"
-              onClick={navigateToForgotPassword}>
+              onClick={resetMutation}>
               Start over
             </Button>
           </div>

@@ -13,6 +13,7 @@ import { createEmailVerificationWorker } from './lib/queues/email-verification/w
 import { createExpiredSessionCron } from './lib/queues/session/session-cron.js'
 import helmet from 'helmet'
 import { createResetPasswordLinkQueue } from './lib/queues/reset-password-link/worker.js'
+import { limiter } from './config/rate-limit.js'
 
 const app = express()
 
@@ -27,6 +28,7 @@ app.use(corsMiddleware())
 app.use(bodyParser.json())
 app.use(expressSession(sessionConfig))
 app.use(httpLogger)
+app.use(limiter)
 app.use(router())
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' })

@@ -18,13 +18,24 @@ import {
   verifyOTPHandler,
 } from './auth.controller.js'
 import { validateData } from '../../middlewares/validator.js'
+import { authLimiter } from '../../config/rate-limit.js'
 
 const route = Router()
 
 export const authRoutes = (app: Router) => {
   app.use('/auth', route)
-  route.post('/login', validateData(loginMutationSchema), postLoginHandler)
-  route.post('/register', validateData(registerMutationSchema), registerHandler)
+  route.post(
+    '/login',
+    validateData(loginMutationSchema),
+    authLimiter,
+    postLoginHandler,
+  )
+  route.post(
+    '/register',
+    validateData(registerMutationSchema),
+    authLimiter,
+    registerHandler,
+  )
 
   route.get('/me', getUserHandler)
   route.delete('/me', logoutHandler)
@@ -33,18 +44,21 @@ export const authRoutes = (app: Router) => {
   route.post(
     '/verify-otp',
     validateData(OTPVerifyMutationSchema),
+    authLimiter,
     verifyOTPHandler,
   )
 
   route.post(
     '/forgot-password-link',
     validateData(forgotPasswordEmailMutationSchema),
+    authLimiter,
     forgotPasswordLinkHandler,
   )
 
   route.post(
     '/reset-password',
     validateData(resetPasswordMutationSchema),
+    authLimiter,
     resetPasswordHandler,
   )
 }
