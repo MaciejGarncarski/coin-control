@@ -28,11 +28,10 @@ FROM base AS build
 COPY . /app
 WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm "--filter=@shared/zod-schemas" build
-RUN pnpm -filter "api" generate-prisma
+RUN pnpm "--filter=@shared/*" build
+RUN pnpm --filter "api" generate-prisma
 RUN pnpm --filter=api build
 RUN pnpm deploy --filter=api --prod /prod/api
-RUN pnpm deploy "--filter=@shared/zod-schemas" --prod /prod/shared/zod-schemas
 
 # prod
 FROM base AS prod

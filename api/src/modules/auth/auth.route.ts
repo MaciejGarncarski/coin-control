@@ -18,7 +18,14 @@ import {
   verifyOTPHandler,
 } from './auth.controller.js'
 import { validateData } from '../../middlewares/validator.js'
-import { authLimiter } from '../../config/rate-limit.js'
+import rateLimit from 'express-rate-limit'
+
+const authLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
 
 const route = Router()
 

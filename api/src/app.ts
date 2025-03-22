@@ -9,11 +9,11 @@ import { showStartMessage } from './utils/start-message.js'
 import bodyParser from 'body-parser'
 import { sessionConfig } from './config/session.js'
 import expressSession from 'express-session'
-import { createEmailVerificationWorker } from './lib/queues/email-verification/worker.js'
-import { createExpiredSessionCron } from './lib/queues/session/session-cron.js'
+import { createExpiredSessionCron } from './lib/queues/session-cron.js'
 import helmet from 'helmet'
-import { createResetPasswordLinkQueue } from './lib/queues/reset-password-link/worker.js'
 import { limiter } from './config/rate-limit.js'
+import { createEmailVerificationWorker } from './lib/queues/email-verification.js'
+import { createResetPasswordLinkQueue } from './lib/queues/reset-passwor-link.js'
 
 const app = express()
 

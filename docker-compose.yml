@@ -8,6 +8,16 @@ services:
     volumes:
       - cache:/data
 
+  react-email:
+    build:
+      target: dev
+      dockerfile: ./docker/react-email.Dockerfile
+    profiles: [dev]
+    volumes:
+      - ./shared:/app/shared
+    ports:
+      - 3003:3000
+
   api-dev:
     depends_on:
       - cache

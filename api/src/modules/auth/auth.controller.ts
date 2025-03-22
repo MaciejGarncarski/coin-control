@@ -14,9 +14,9 @@ import { generateOTP } from '../../utils/generate-otp.js'
 import { v7 } from 'uuid'
 import ms from 'ms'
 import { db } from '../../lib/db.js'
-import { emailVerificationQueue } from '../../lib/queues/email-verification/queue.js'
 import { createHash } from 'node:crypto'
-import { resetPasswordLinkQueue } from '../../lib/queues/reset-password-link/queue.js'
+import { emailVerificationQueue } from '../../lib/queues/email-verification.js'
+import { resetPasswordLinkQueue } from '../../lib/queues/reset-passwor-link.js'
 
 interface LoginRequest extends Request {
   body: LoginMutation
@@ -139,7 +139,7 @@ export async function registerHandler(req: RegisterRequest, res: Response) {
     })
   }
 
-  const expires_at = Date.now() + ms('15 minutes')
+  const expires_at = Date.now() + ms('5 minutes')
   const OTPUuid = v7()
   const OTPCode = generateOTP()
 
@@ -216,7 +216,7 @@ export async function getOTPHandler(req: Request, res: Response) {
     })
   }
 
-  const codeDate = newestOTP.expires_at.getTime() - 13 * 60 * 1000
+  const codeDate = newestOTP.expires_at.getTime() - ms('3 minutes')
 
   if (codeDate > Date.now()) {
     throw new ApiError({
@@ -226,7 +226,7 @@ export async function getOTPHandler(req: Request, res: Response) {
     })
   }
 
-  const expires_at = Date.now() + ms('15 minutes')
+  const expires_at = Date.now() + ms('5 minutes')
   const otp_uuid = v7()
   const OTPCode = generateOTP()
 
@@ -342,7 +342,7 @@ export async function forgotPasswordLinkHandler(
   }
 
   const passwordCodeId = v7()
-  const expiresAt = new Date().getTime() + ms('15 minutes')
+  const expiresAt = new Date().getTime() + ms('5 minutes')
   const resetCode = createHash('sha512').update(v7()).digest('hex').slice(0, 48)
 
   await db.reset_password_codes.create({

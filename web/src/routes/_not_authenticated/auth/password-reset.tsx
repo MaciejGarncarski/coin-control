@@ -8,7 +8,7 @@ const resetPasswordSearchSchema = z.object({
 
 export const Route = createFileRoute('/_not_authenticated/auth/password-reset')(
   {
-    component: RouteComponent,
+    component: PasswordResetPage,
     validateSearch: (search): z.infer<typeof resetPasswordSearchSchema> => {
       const parsed = resetPasswordSearchSchema.safeParse(search)
 
@@ -36,7 +36,3 @@ export const Route = createFileRoute('/_not_authenticated/auth/password-reset')(
     },
   },
 )
-
-function RouteComponent() {
-  return <PasswordResetPage />
-}

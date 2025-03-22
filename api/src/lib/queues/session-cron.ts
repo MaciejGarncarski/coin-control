@@ -1,7 +1,7 @@
 import { Queue, Worker } from 'bullmq'
-import { connection } from '../../redis.js'
-import { httpLogger } from '../../../logger/logger.js'
-import { db } from '../../db.js'
+import { connection } from '../redis.js'
+import { httpLogger } from '../../logger/logger.js'
+import { db } from '../db.js'
 
 export const expiredSessionQueue = new Queue('expired-session', {
   connection: connection,

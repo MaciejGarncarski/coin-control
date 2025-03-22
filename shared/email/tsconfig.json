@@ -12,13 +12,20 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "jsx": "react-jsx",
 
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "NodeNext",
     "outDir": "dist",
     "sourceMap": true,
-
+    "declaration": true,
+    "composite": true,
+    "jsx": "react-jsx",
+    "declarationMap": true,
     "lib": ["es2022"]
+  },
+  "watchOptions": {
+    "watchFile": "useFsEvents",
+    "watchDirectory": "useFsEvents",
+    "synchronousWatchDirectory": true,
+    "excludeDirectories": ["**/node_modules", "dist"]
   }
 }

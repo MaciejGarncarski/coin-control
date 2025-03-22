@@ -1,0 +1,25 @@
+{
+  "name": "@shared/email",
+  "private": "true",
+  "author": "Maciej Garncarski",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "dev": "email dev",
+    "build": "pnpm tsc"
+  },
+  "packageManager": "pnpm@10.6.1",
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.12",
+    "react-email": "3.0.7"
+  },
+  "dependencies": {
+    "@react-email/components": "0.0.34",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.8.2"
+  }
+}

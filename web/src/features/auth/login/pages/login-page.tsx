@@ -97,7 +97,9 @@ export const LoginPage = () => {
               />
               <p className="text-muted-foreground text-sm">
                 Forgot password? Click{' '}
-                <Link to="/auth/forgot-password" className="text-foreground">
+                <Link
+                  to="/auth/forgot-password"
+                  className="text-foreground underline">
                   here.
                 </Link>
               </p>

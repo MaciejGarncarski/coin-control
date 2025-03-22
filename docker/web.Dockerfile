@@ -33,7 +33,7 @@ ENV NODE_ENV="production"
 RUN pnpm "--filter=@shared/zod-schemas" build
 RUN pnpm --filter=web build
 RUN pnpm deploy --filter=web --prod /prod/web
-RUN pnpm deploy "--filter=@shared/zod-schemas" --prod /prod/shared/zod-schemas
+
 FROM nginx:alpine AS prod
 WORKDIR /app
 COPY nginx.conf /etc/nginx/conf.d/default.conf
