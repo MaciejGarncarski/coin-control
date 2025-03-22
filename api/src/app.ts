@@ -15,7 +15,6 @@ import { limiter } from './config/rate-limit.js'
 import { createEmailVerificationWorker } from './lib/queues/email-verification.js'
 import { createResetPasswordLinkQueue } from './lib/queues/reset-password-link.js'
 import { createResetPasswordNotificationQueue } from './lib/queues/reset-password-notification.js'
-import { type Request, type Response } from 'express'
 
 const app = express()
 
@@ -31,11 +30,6 @@ app.use(corsMiddleware())
 app.use(bodyParser.json())
 app.use(expressSession(sessionConfig))
 app.use(httpLogger)
-//will delete later
-app.get('/ip', (request: Request, response: Response) => {
-  response.send(request.ip)
-  return
-})
 app.use(limiter)
 app.use(router())
 app.use((req, res) => {
