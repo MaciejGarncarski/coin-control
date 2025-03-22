@@ -61,9 +61,18 @@ export const ForgotPasswordPage = () => {
   })
 
   const onSubmit: SubmitHandler<ForgotPasswordEmailMutation> = ({ email }) => {
-    sendResetPasswordLink.mutate({
-      email: email,
-    })
+    sendResetPasswordLink.mutate(
+      {
+        email: email,
+      },
+      {
+        onSettled: () => {
+          emailForm.reset({
+            email: '',
+          })
+        },
+      },
+    )
   }
 
   if (sendResetPasswordLink.isSuccess) {

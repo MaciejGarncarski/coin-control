@@ -5,12 +5,12 @@ import { pino } from 'pino'
 const pinoEnvOptions: Record<'development' | 'production', Options> = {
   development: {
     logger: pino({
-      enabled: false,
+      enabled: true,
       transport: {
         target: 'pino-pretty',
         options: {
           translateTime: 'HH:MM:ss Z',
-          ignore: 'pid,hostname,req.headers,req.remoteAddress,req.remotePort',
+          ignore: 'pid,hostname,req.remoteAddress,req.remotePort',
         },
       },
     }),

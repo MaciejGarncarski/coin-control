@@ -19,10 +19,25 @@ import {
 } from './auth.controller.js'
 import { validateData } from '../../middlewares/validator.js'
 import rateLimit from 'express-rate-limit'
+import ms from 'ms'
 
 const authLimiter = rateLimit({
-  windowMs: 5 * 60 * 1000,
+  windowMs: ms('3 minutes'),
+  limit: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+const otpLimiter = rateLimit({
+  windowMs: ms('3 minutes'),
   limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+const emailLimiter = rateLimit({
+  windowMs: ms('5 minutes'),
+  limit: 3,
   standardHeaders: true,
   legacyHeaders: false,
 })
@@ -51,21 +66,21 @@ export const authRoutes = (app: Router) => {
   route.post(
     '/verify-otp',
     validateData(OTPVerifyMutationSchema),
-    authLimiter,
+    otpLimiter,
     verifyOTPHandler,
   )
 
   route.post(
     '/forgot-password-link',
     validateData(forgotPasswordEmailMutationSchema),
-    authLimiter,
+    emailLimiter,
     forgotPasswordLinkHandler,
   )
 
   route.post(
     '/reset-password',
     validateData(resetPasswordMutationSchema),
-    authLimiter,
+    otpLimiter,
     resetPasswordHandler,
   )
 }

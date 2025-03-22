@@ -1,6 +1,6 @@
 import {
   Body,
-  Button,
+  CodeInline,
   Container,
   Head,
   Heading,
@@ -13,38 +13,38 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-interface ResetPasswordEmailProps {
-  resetToken?: string;
+interface ResetPasswordNotificationEmailProps {
   baseUrl: string;
+  createdAt: string;
 }
 
-export const ResetPasswordEmail = ({
-  resetToken,
+export const ResetPasswordNotificationEmail = ({
   baseUrl,
-}: ResetPasswordEmailProps) => (
+  createdAt,
+}: ResetPasswordNotificationEmailProps) => (
   <Html>
     <Head />
     <Body style={main}>
       <Preview>Reset password for CoinControl</Preview>
       <Container style={container}>
         <Heading>CoinControl</Heading>
-        <Heading style={heading}>Reset password for CoinControl.</Heading>
-        <Section style={buttonContainer}>
+        <Section>
           <Text style={paragraph}>
-            This link will only be valid for the next 5 minutes.
+            You updated the password for your CoinControl account on{" "}
+            <CodeInline style={codeSmall}>{createdAt}</CodeInline>.
           </Text>
-          <Button
-            style={button}
-            href={`${baseUrl}/auth/password-reset?reset_token=${resetToken}`}
-          >
-            Reset password
-          </Button>
+          <Text style={paragraph}>
+            If this was you, then no further action is required.
+          </Text>
+          <Text style={paragraph}>
+            However if you did NOT perform this password change, please{" "}
+            <Link href={`${baseUrl}/auth/forgot-password`}>
+              reset your account password
+            </Link>{" "}
+            immediately.
+          </Text>
+          <Hr style={hr} />
         </Section>
-        <Text style={paragraph}>If button does not work, copy this link:</Text>
-        <Text style={codeSmall}>
-          {`${baseUrl}/auth/password-reset?reset_token=${resetToken}`}
-        </Text>
-        <Hr style={hr} />
         <Link href={baseUrl} style={reportLink}>
           CoinControl
         </Link>
@@ -53,12 +53,12 @@ export const ResetPasswordEmail = ({
   </Html>
 );
 
-ResetPasswordEmail.PreviewProps = {
-  resetToken: "tt226-5398x",
+ResetPasswordNotificationEmail.PreviewProps = {
+  createdAt: "today",
   baseUrl: "http://localhost:3000",
-} as ResetPasswordEmailProps;
+} as ResetPasswordNotificationEmailProps;
 
-export default ResetPasswordEmail;
+export default ResetPasswordNotificationEmail;
 
 const main = {
   backgroundColor: "#ffffff",
@@ -72,15 +72,6 @@ const container = {
   maxWidth: "560px",
 };
 
-const heading = {
-  fontSize: "24px",
-  letterSpacing: "-0.5px",
-  lineHeight: "1.3",
-  fontWeight: "400",
-  color: "#484848",
-  padding: "17px 0 0",
-};
-
 const paragraph = {
   margin: "0 0 15px",
   fontSize: "15px",
@@ -90,18 +81,6 @@ const paragraph = {
 
 const buttonContainer = {
   padding: "27px 0 27px",
-};
-
-const button = {
-  backgroundColor: "#5e6ad2",
-  borderRadius: "3px",
-  fontWeight: "600",
-  color: "#fff",
-  fontSize: "15px",
-  textDecoration: "none",
-  textAlign: "center" as const,
-  display: "block",
-  padding: "11px 23px",
 };
 
 const reportLink = {

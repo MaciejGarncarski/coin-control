@@ -13,7 +13,9 @@ import { createExpiredSessionCron } from './lib/queues/session-cron.js'
 import helmet from 'helmet'
 import { limiter } from './config/rate-limit.js'
 import { createEmailVerificationWorker } from './lib/queues/email-verification.js'
-import { createResetPasswordLinkQueue } from './lib/queues/reset-passwor-link.js'
+import { createResetPasswordLinkQueue } from './lib/queues/reset-password-link.js'
+import { createResetPasswordNotificationQueue } from './lib/queues/reset-password-notification.js'
+import { type Request, type Response } from 'express'
 
 const app = express()
 
@@ -23,11 +25,17 @@ declare module 'express-session' {
   }
 }
 
+app.set('trust proxy', 1)
 app.use(helmet())
 app.use(corsMiddleware())
 app.use(bodyParser.json())
 app.use(expressSession(sessionConfig))
 app.use(httpLogger)
+//will delete later
+app.get('/ip', (request: Request, response: Response) => {
+  response.send(request.ip)
+  return
+})
 app.use(limiter)
 app.use(router())
 app.use((req, res) => {
@@ -36,6 +44,7 @@ app.use((req, res) => {
 app.use(errorMiddleware)
 createEmailVerificationWorker()
 createResetPasswordLinkQueue()
+createResetPasswordNotificationQueue()
 createExpiredSessionCron()
 
 app.listen(Number(env.PORT), env.HOST, (error) => {

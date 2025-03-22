@@ -16,7 +16,8 @@ import ms from 'ms'
 import { db } from '../../lib/db.js'
 import { createHash } from 'node:crypto'
 import { emailVerificationQueue } from '../../lib/queues/email-verification.js'
-import { resetPasswordLinkQueue } from '../../lib/queues/reset-passwor-link.js'
+import { resetPasswordLinkQueue } from '../../lib/queues/reset-password-link.js'
+import { resetPasswordNotificationQueue } from '../../lib/queues/reset-password-notification.js'
 
 interface LoginRequest extends Request {
   body: LoginMutation
@@ -396,7 +397,7 @@ export async function resetPasswordHandler(
     })
   }
 
-  await db.$transaction(async (tx) => {
+  const user = await db.$transaction(async (tx) => {
     const userId = await tx.reset_password_codes.update({
       where: {
         id: codeFromDb.id,
@@ -427,6 +428,16 @@ export async function resetPasswordHandler(
 
     return updatedUser
   })
+
+  const timestamp = Date.now()
+
+  await resetPasswordNotificationQueue.add(
+    `reset-password-notification-${codeFromDb.id}`,
+    {
+      createdAt: timestamp,
+      userEmail: user.email,
+    },
+  )
 
   res.status(status.OK).json({ message: 'success' })
 }
