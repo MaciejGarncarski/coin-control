@@ -4,7 +4,7 @@ ARG NODE_VERSION=22.14.0
 ARG PNPM_VERSION=10.6.1
 
 # base
-FROM node:${NODE_VERSION}-alpine as base
+FROM node:${NODE_VERSION}-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable

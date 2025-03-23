@@ -5,7 +5,7 @@ ARG PNPM_VERSION=10.4.1
 ARG VITE_API_URL
 
 # base
-FROM node:${NODE_VERSION}-alpine as base
+FROM node:${NODE_VERSION}-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
