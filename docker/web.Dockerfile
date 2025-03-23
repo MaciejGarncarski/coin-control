@@ -24,7 +24,7 @@ CMD [ "pnpm", "--filter", "web", "dev" ]
 # build prod
 FROM base AS build
 ARG VITE_API_URL
-ENV VITE_API_URL=${VITE_API_URL?vite_api_url_not_set}
+ENV VITE_API_URL=${VITE_API_URL}
 COPY . /app
 WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
