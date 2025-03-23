@@ -130,14 +130,13 @@ services:
     environment:
       - VITE_PORT=${WEB_PORT}
       - VITE_API_URL=${API_URL}
-      - VITE_APP_URL=${APP_URL}
   web:
+    image: ghcr.io/maciejgarncarski/coin-control-web:latest
     container_name: coin-control-web-prod
     build:
       dockerfile: ./docker/web.Dockerfile
       args:
         VITE_API_URL: ${API_URL}
-        VITE_PORT: ${WEB_PORT}
         NODE_ENV: production
     depends_on:
       - api
