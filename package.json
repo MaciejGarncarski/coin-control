@@ -7,10 +7,15 @@
     "lint": "pnpm run -r lint",
     "format": "pnpm run -r format",
     "lint-format": "pnpm run -r lint-format",
-    "check-types": "pnpm run -r check-types"
+    "check-types": "pnpm run -r check-types",
+    "prepare": "husky",
+    "commitlint": "commitlint --edit"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "eslint": "^9.23.0",
+    "husky": "^9.1.7",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2"
   },
