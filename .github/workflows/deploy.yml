@@ -28,18 +28,18 @@ jobs:
         run: |
           docker buildx build \
             --push \
-            --tag ghcr.io/${{ github.repository }}/coin-control-api:latest \
-            --tag ghcr.io/${{ github.repository }}/coin-control-api:${{ github.sha }} \
+            --tag ghcr.io/maciejgarncarski/coin-control-api:latest \
+            --tag ghcr.io/maciejgarncarski/coin-control-api:${{ github.sha }} \
             -f docker/api.Dockerfile .
 
           docker buildx build \
             --push \
-            --tag ghcr.io/${{ github.repository }}/coin-control-web:latest \
-            --tag ghcr.io/${{ github.repository }}/coin-control-web:${{ github.sha }} \
+            --tag ghcr.io/maciejgarncarski/coin-control-web:latest \
+            --tag ghcr.io/maciejgarncarski/coin-control-web:${{ github.sha }} \
             -f docker/web.Dockerfile .
 
           docker buildx build \
             --push \
-            --tag ghcr.io/${{ github.repository }}/coin-control-worker:latest \
-            --tag ghcr.io/${{ github.repository }}/coin-control-worker:${{ github.sha }} \
+            --tag ghcr.io/maciejgarncarski/coin-control-worker:latest \
+            --tag ghcr.io/maciejgarncarski/coin-control-worker:${{ github.sha }} \
             -f docker/worker.Dockerfile .
