@@ -17,7 +17,7 @@ COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY web ./web
 COPY shared ./shared
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
-ENV NODE_ENV development
+ENV NODE_ENV="development"
 EXPOSE ${PORT}
 CMD [ "pnpm", "--filter", "web", "dev" ]
 

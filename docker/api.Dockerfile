@@ -16,7 +16,7 @@ COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY api ./api
 COPY shared ./shared
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install 
-ENV NODE_ENV=development
+ENV NODE_ENV="development"
 EXPOSE ${PORT}
 RUN pnpm --filter "api" generate-prisma
 CMD [ "pnpm", "--filter", "api", "dev" ]
@@ -36,5 +36,5 @@ FROM base AS prod
 COPY --from=build /prod/api /prod/api
 WORKDIR /prod/api
 EXPOSE ${PORT}
-ENV NODE_ENV=production
+ENV NODE_ENV="production"
 CMD ["node", "./dist/src/app.js"]

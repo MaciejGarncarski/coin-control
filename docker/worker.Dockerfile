@@ -16,7 +16,7 @@ COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY worker ./worker
 COPY shared ./shared
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
-ENV NODE_ENV development
+ENV NODE_ENV="development"
 RUN pnpm --filter "worker" generate-prisma
 CMD [ "pnpm", "--filter", "worker", "dev" ]
 
@@ -35,5 +35,5 @@ FROM base AS prod
 COPY --from=build /prod/worker /prod/worker
 WORKDIR /prod/worker
 EXPOSE ${PORT}
-ENV NODE_ENV production
+ENV NODE_ENV="production"
 CMD ["node", "./dist/app.js"]
