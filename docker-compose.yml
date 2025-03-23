@@ -20,6 +20,7 @@ services:
 
   worker-dev:
     image: ghcr.io/maciejgarncarski/coin-control-worker:latest
+    container_name: coin-control-worker-dev
     build:
       target: dev
       dockerfile: ./docker/worker.Dockerfile
@@ -42,6 +43,7 @@ services:
 
   worker:
     image: ghcr.io/maciejgarncarski/coin-control-worker:latest
+    container_name: coin-control-worker-prod
     build:
       target: prod
       dockerfile: ./docker/worker.Dockerfile
@@ -61,6 +63,7 @@ services:
 
   api-dev:
     image: ghcr.io/maciejgarncarski/coin-control-api:latest
+    container_name: coin-control-api-dev
     depends_on:
       - cache
       - worker-dev
@@ -88,6 +91,7 @@ services:
 
   api:
     image: ghcr.io/maciejgarncarski/coin-control-api:latest
+    container_name: coin-control-api-prod
     depends_on:
       - cache
       - worker
@@ -114,6 +118,7 @@ services:
 
   web-dev:
     image: ghcr.io/maciejgarncarski/coin-control-web:latest
+    container_name: coin-control-web-dev
     build:
       target: dev
       dockerfile: ./docker/web.Dockerfile
@@ -131,6 +136,7 @@ services:
       - VITE_APP_URL=${APP_URL}
   web:
     image: ghcr.io/maciejgarncarski/coin-control-web:latest
+    container_name: coin-control-web-prod
     build:
       dockerfile: ./docker/web.Dockerfile
       args:
