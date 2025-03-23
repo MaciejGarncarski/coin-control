@@ -169,7 +169,7 @@ export async function registerHandler(req: RegisterRequest, res: Response) {
   )
 
   req.session.userId = createdUser.id
-  res.status(status.OK).json(createdUser)
+  res.status(status.ACCEPTED).json(createdUser)
   return
 }
 
@@ -255,7 +255,7 @@ export async function getOTPHandler(req: Request, res: Response) {
     },
   )
 
-  res.status(status.OK).json({ message: 'success' })
+  res.status(status.ACCEPTED).json({ message: 'success' })
   return
 }
 
@@ -338,7 +338,7 @@ export async function forgotPasswordLinkHandler(
 
   if (!foundUser?.id) {
     // send fake resopnse so attacker does not know if email exists.
-    res.status(status.OK).json({ message: 'success' })
+    res.status(status.ACCEPTED).json({ message: 'success' })
     return
   }
 
@@ -360,7 +360,7 @@ export async function forgotPasswordLinkHandler(
     userEmail: email,
   })
 
-  res.status(status.OK).json({ message: 'success' })
+  res.status(status.ACCEPTED).json({ message: 'success' })
 }
 
 interface ResetPasswordRequest extends Request {
@@ -439,5 +439,5 @@ export async function resetPasswordHandler(
     },
   )
 
-  res.status(status.OK).json({ message: 'success' })
+  res.status(status.ACCEPTED).json({ message: 'success' })
 }

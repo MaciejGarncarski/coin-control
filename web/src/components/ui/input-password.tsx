@@ -12,7 +12,7 @@ function InputPassword({
   const [showPassword, setShowPassword] = React.useState(false)
 
   return (
-    <span className="relative flex items-center gap-2">
+    <span className="relative">
       <input
         type={showPassword ? 'text' : 'password'}
         data-slot="input"
@@ -27,7 +27,7 @@ function InputPassword({
       <Button
         type="button"
         variant="outline"
-        className="h-full"
+        className="absolute top-0 right-0 h-full rounded-l-none"
         size="sm"
         onClick={() => setShowPassword((prev) => !prev)}
         disabled={disabled}>

@@ -36,6 +36,7 @@ export const ForgotPasswordPage = () => {
     if (!canGoBack) {
       navigate({
         to: '/',
+        viewTransition: true,
       })
       return
     }
@@ -50,6 +51,7 @@ export const ForgotPasswordPage = () => {
   const navigateToHomePage = () => {
     navigate({
       to: '/',
+      viewTransition: true,
     })
   }
 
@@ -77,7 +79,7 @@ export const ForgotPasswordPage = () => {
 
   if (sendResetPasswordLink.isSuccess) {
     return (
-      <Card className="w-[20rem] items-center justify-center gap-2 md:w-[23rem]">
+      <Card className="w-[20rem] items-center justify-center gap-2 md:w-[22rem] md:py-10">
         <CardHeader>
           <CardTitle>
             <div className="flex items-center justify-center gap-2 pb-2">
@@ -117,7 +119,7 @@ export const ForgotPasswordPage = () => {
   }
 
   return (
-    <Card className="w-[20rem] items-center justify-center gap-2 md:w-[23rem]">
+    <Card className="w-[20rem] items-center justify-center gap-4 md:w-[23rem] md:py-8">
       <CardHeader>
         <CardTitle>
           <div className="flex items-center justify-center gap-2 pb-2">
@@ -137,7 +139,7 @@ export const ForgotPasswordPage = () => {
         <Form {...emailForm}>
           <form
             onSubmit={emailForm.handleSubmit(onSubmit)}
-            className="flex flex-col gap-4">
+            className="flex flex-col gap-6">
             <FormField
               control={emailForm.control}
               name="email"
@@ -154,23 +156,23 @@ export const ForgotPasswordPage = () => {
                     </FormControl>
                   </div>
                   <FormMessage />
-                  <div className="mx-auto flex w-full items-center justify-between gap-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={goBack}>
-                      Go back
-                    </Button>
-
-                    <Button type="submit" size="sm">
-                      <Mail />
-                      Send link
-                    </Button>
-                  </div>
                 </FormItem>
               )}
             />
+            <div className="mx-auto flex w-full items-center justify-between gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={goBack}>
+                Go back
+              </Button>
+
+              <Button type="submit" size="sm">
+                <Mail />
+                Send link
+              </Button>
+            </div>
           </form>
         </Form>
       </CardContent>

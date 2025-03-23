@@ -44,12 +44,17 @@ export const LoginPage = () => {
         <CardHeader>
           <CardTitle>Login</CardTitle>
           <CardDescription>
-            Login to <span className="font-semibold">CoinControl</span> or
-            register{' '}
-            <Link to="/auth/register" className="text-foreground underline">
-              here
-            </Link>
-            .
+            <div className="flex items-center justify-between gap-4">
+              <p>
+                Login to <span className="font-semibold">CoinControl</span> or
+                register{' '}
+                <Link to="/auth/register" className="text-foreground underline">
+                  here
+                </Link>
+                .
+              </p>
+              <ThemeSwitcher />
+            </div>
           </CardDescription>
           {loginMutation.isError && (
             <Alert variant={'destructive'} className={cn('bg-card mt-3')}>
@@ -95,7 +100,7 @@ export const LoginPage = () => {
                   </FormItem>
                 )}
               />
-              <p className="text-muted-foreground text-sm">
+              <p className="bg-background text-muted-foreground text-sm">
                 Forgot password? Click{' '}
                 <Link
                   to="/auth/forgot-password"
@@ -111,7 +116,6 @@ export const LoginPage = () => {
           </Form>
         </CardContent>
       </Card>
-      <ThemeSwitcher />
     </>
   )
 }

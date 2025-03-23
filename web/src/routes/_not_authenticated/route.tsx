@@ -11,6 +11,7 @@ export const Route = createFileRoute('/_not_authenticated')({
     if (isLoggedIn) {
       throw redirect({
         to: '/',
+        viewTransition: true,
       })
     }
   },

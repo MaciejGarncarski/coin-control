@@ -45,12 +45,17 @@ export function RegisterPage() {
         <CardHeader>
           <CardTitle>Register</CardTitle>
           <CardDescription>
-            Register to <span className="font-semibold">CoinControl</span> or
-            login{' '}
-            <Link to="/auth/login" className="text-foreground underline">
-              here
-            </Link>
-            .
+            <div className="flex items-center justify-between gap-4">
+              <p>
+                Register to <span className="font-semibold">CoinControl</span>{' '}
+                or login{' '}
+                <Link to="/auth/login" className="text-foreground underline">
+                  here
+                </Link>
+                .
+              </p>
+              <ThemeSwitcher />
+            </div>
           </CardDescription>
           {registerMutation.isError &&
             registerMutation.error instanceof ApiError && (
@@ -76,7 +81,7 @@ export function RegisterPage() {
                     fullName,
                   }),
               )}
-              className="flex flex-col gap-6">
+              className="flex flex-col gap-4 md:gap-6">
               <FormField
                 name="email"
                 control={form.control}
@@ -142,7 +147,6 @@ export function RegisterPage() {
           </Form>
         </CardContent>
       </Card>
-      <ThemeSwitcher />
     </>
   )
 }
