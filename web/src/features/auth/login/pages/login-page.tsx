@@ -1,6 +1,6 @@
 import { useLoginMutation } from '@/features/auth/login/api/login'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { loginMutationSchema, type LoginMutation } from '@shared/zod-schemas'
+import { loginMutationSchema, type LoginMutation } from '@shared/schemas'
 import { useForm } from 'react-hook-form'
 import {
   Card,

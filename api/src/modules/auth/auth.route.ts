@@ -6,7 +6,7 @@ import {
   OTPVerifyMutationSchema,
   registerMutationSchema,
   resetPasswordMutationSchema,
-} from '@shared/zod-schemas'
+} from '@shared/schemas'
 import {
   forgotPasswordLinkHandler,
   getOTPHandler,

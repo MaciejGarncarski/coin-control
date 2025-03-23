@@ -1,5 +1,5 @@
 import { fetcher } from '@/lib/fetcher'
-import { type ForgotPasswordEmailMutation } from '@shared/zod-schemas'
+import { type ForgotPasswordEmailMutation } from '@shared/schemas'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 

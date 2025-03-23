@@ -1,6 +1,6 @@
 {
   "private": "true",
-  "name": "@shared/zod-schemas",
+  "name": "@shared/schemas",
   "author": "Maciej Garncarski",
   "type": "module",
   "version": "1.0.0",

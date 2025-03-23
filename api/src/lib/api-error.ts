@@ -1,4 +1,4 @@
-import type { ApiError as TApiError } from '@shared/zod-schemas'
+import type { ApiError as TApiError } from '@shared/schemas'
 
 export class ApiError extends Error {
   statusCode?: number

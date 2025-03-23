@@ -14,3 +14,9 @@ export * from "./auth.js";
 export * from "./user.js";
 
 export { z } from "zod";
+
+export type {
+  EmailVerificationJob,
+  ResetPasswordLinkJob,
+  ResetPasswordNotificationJob,
+} from "./workers.js";

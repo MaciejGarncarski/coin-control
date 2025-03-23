@@ -4,7 +4,7 @@ import {
   createFetcherInstance,
   type CreateFetcherOptions,
 } from '@maciekdev/fetcher'
-import { apiErrorSchema } from '@shared/zod-schemas'
+import { apiErrorSchema } from '@shared/schemas'
 import { toast } from 'sonner'
 
 const fetcherConfig: CreateFetcherOptions = {

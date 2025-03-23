@@ -1,11 +1,11 @@
 import type { Request, Response } from 'express'
-import { type LoginMutation, type RegisterMutation } from '@shared/zod-schemas'
+import { type LoginMutation, type RegisterMutation } from '@shared/schemas'
 import { status } from 'http-status'
 import type {
   ForgotPasswordEmailMutation,
   OTPVerifyMutation,
   ResetPasswordMutation,
-} from '@shared/zod-schemas'
+} from '@shared/schemas'
 import { hash, verify } from '@node-rs/argon2'
 import { registerUser } from './auth.service.js'
 import { ApiError } from '../../lib/api-error.js'

@@ -1,4 +1,4 @@
-import type { ApiError } from '@shared/zod-schemas'
+import type { ApiError } from '@shared/schemas'
 import status from 'http-status'
 
 export const INTERNAL_SERVER_ERROR: ApiError = {

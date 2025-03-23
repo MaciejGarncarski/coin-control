@@ -4,7 +4,7 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp'
 import { useForm, type SubmitHandler } from 'react-hook-form'
-import { z } from '@shared/zod-schemas'
+import { z } from '@shared/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useVerifyOTP } from '@/features/auth/verify-email/api/use-verify-otp'
 import { Button } from '@/components/ui/button'

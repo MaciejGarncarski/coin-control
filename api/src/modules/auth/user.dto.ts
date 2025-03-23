@@ -1,4 +1,4 @@
-import { type User } from '@shared/zod-schemas'
+import { type User } from '@shared/schemas'
 
 type UserFromDB = {
   email: string

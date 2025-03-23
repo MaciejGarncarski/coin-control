@@ -1,10 +1,12 @@
 packages:
   - shared/*
+  - worker
   - api
   - web
+
 onlyBuiltDependencies:
-  - '@prisma/client'
-  - '@prisma/engines'
+  - "@prisma/client"
+  - "@prisma/engines"
   - prisma
 ignoredBuiltDependencies:
   - esbuild

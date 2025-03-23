@@ -18,9 +18,49 @@ services:
     ports:
       - 3003:3000
 
+  worker-dev:
+    build:
+      target: dev
+      dockerfile: ./docker/worker.Dockerfile
+    volumes:
+      - ./worker/src:/app/worker/src
+      - ./shared:/app/shared
+    profiles: [dev]
+    depends_on:
+      - cache
+    networks:
+      - app-network
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - APP_ORIGIN=${APP_URL}
+      - MAIL_USER=${MAIL_USER}
+      - MAIL_PASS=${MAIL_PASS}
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+
+  worker:
+    build:
+      target: prod
+      dockerfile: ./docker/worker.Dockerfile
+    profiles: [prod]
+    depends_on:
+      - cache
+    networks:
+      - app-network
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - APP_ORIGIN=${APP_URL}
+      - MAIL_USER=${MAIL_USER}
+      - MAIL_PASS=${MAIL_PASS}
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+
   api-dev:
     depends_on:
       - cache
+      - worker-dev
     build:
       target: dev
       dockerfile: ./docker/api.Dockerfile
@@ -39,8 +79,6 @@ services:
       - HOST=${HOST}
       - DATABASE_URL=${DATABASE_URL}
       - API_SECRET=${API_SECRET}
-      - MAIL_USER=${MAIL_USER}
-      - MAIL_PASS=${MAIL_PASS}
       - REDIS_HOST=cache
       - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
@@ -65,6 +103,7 @@ services:
   api:
     depends_on:
       - cache
+      - worker
     networks:
       - app-network
     build:
@@ -82,8 +121,6 @@ services:
       - HOST=${HOST}
       - DATABASE_URL=${DATABASE_URL}
       - API_SECRET=${API_SECRET}
-      - MAIL_USER=${MAIL_USER}
-      - MAIL_PASS=${MAIL_PASS}
       - REDIS_HOST=cache
       - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81

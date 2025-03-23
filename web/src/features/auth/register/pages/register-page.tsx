@@ -21,10 +21,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import {
-  registerMutationSchema,
-  type RegisterMutation,
-} from '@shared/zod-schemas'
+import { registerMutationSchema, type RegisterMutation } from '@shared/schemas'
 import { InputPassword } from '@/components/ui/input-password'
 import { useRegisterMutation } from '@/features/auth/register/api/register'
 import { ApiError } from '@maciekdev/fetcher'

@@ -21,7 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import {
   resetPasswordFormSchema,
   type ResetPasswordForm,
-} from '@shared/zod-schemas'
+} from '@shared/schemas'
 import { useCanGoBack, useNavigate, useRouter } from '@tanstack/react-router'
 import { KeySquare } from 'lucide-react'
 import { useForm, type SubmitHandler } from 'react-hook-form'

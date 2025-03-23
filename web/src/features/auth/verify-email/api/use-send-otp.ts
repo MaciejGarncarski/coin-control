@@ -1,6 +1,6 @@
 import { userQueryOptions } from '@/lib/auth'
 import { fetcher } from '@/lib/fetcher'
-import { OTPResponeSchema } from '@shared/zod-schemas'
+import { OTPResponeSchema } from '@shared/schemas'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 

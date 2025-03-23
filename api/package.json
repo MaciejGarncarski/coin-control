@@ -20,7 +20,7 @@
     "@prisma/client": "^6.5.0",
     "@react-email/render": "1.0.5",
     "@shared/email": "workspace:*",
-    "@shared/zod-schemas": "workspace:*",
+    "@shared/schemas": "workspace:*",
     "body-parser": "^1.20.3",
     "bullmq": "^5.43.1",
     "cors": "^2.8.5",

@@ -1,5 +1,5 @@
 import { fetcher } from '@/lib/fetcher'
-import { userSchema, type RegisterMutation } from '@shared/zod-schemas'
+import { userSchema, type RegisterMutation } from '@shared/schemas'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouteContext } from '@tanstack/react-router'

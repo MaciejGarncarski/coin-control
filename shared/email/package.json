@@ -8,7 +8,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "email dev",
-    "build": "pnpm tsc"
+    "build": "rm -rf dist && tsc -b"
   },
   "packageManager": "pnpm@10.6.1",
   "devDependencies": {

@@ -1,4 +1,4 @@
-import { z, type ApiError } from '@shared/zod-schemas'
+import { z, type ApiError } from '@shared/schemas'
 import type { NextFunction, Request, Response } from 'express'
 import { status } from 'http-status'
 

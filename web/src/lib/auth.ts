@@ -1,7 +1,7 @@
 import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
 import { fetcher } from '@/lib/fetcher'
 import type { QueryConfig } from '@/lib/react-query'
-import { userSchema } from '@shared/zod-schemas'
+import { userSchema } from '@shared/schemas'
 import {
   queryOptions,
   useMutation,

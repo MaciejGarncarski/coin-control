@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from 'express'
 
 import { isProd } from '../config/consatnts.js'
 import { ApiError } from '../lib/api-error.js'
-import type { ApiError as TApiError } from '@shared/zod-schemas'
+import type { ApiError as TApiError } from '@shared/schemas'
 
 export function errorMiddleware(
   error: Error,
