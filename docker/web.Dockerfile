@@ -13,9 +13,9 @@ RUN corepack enable
 # dev
 FROM base AS dev
 WORKDIR /app
+COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY web ./web
 COPY shared ./shared
-COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 ENV NODE_ENV development
 EXPOSE ${PORT}
@@ -27,12 +27,13 @@ ARG VITE_API_URL
 ENV VITE_API_URL=${VITE_API_URL}
 COPY . /app
 WORKDIR /app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install --frozen-lockfile
 ARG NODE_ENV="production"
 ENV NODE_ENV="production"
-RUN pnpm "--filter=@shared/schemas" build
-RUN pnpm --filter=web build
-RUN pnpm deploy --filter=web --prod /prod/web
+RUN pnpm "--filter=@shared/schemas" build && \
+    pnpm --filter=web build && \
+    pnpm deploy --filter=web --prod /prod/web
+
 
 FROM nginx:alpine AS prod
 WORKDIR /app

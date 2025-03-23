@@ -12,10 +12,10 @@ RUN corepack enable
 # dev
 FROM base AS dev
 WORKDIR /app
+COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY api ./api
 COPY shared ./shared
-COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install 
 ENV NODE_ENV=development
 EXPOSE ${PORT}
 RUN pnpm --filter "api" generate-prisma
@@ -25,11 +25,11 @@ CMD [ "pnpm", "--filter", "api", "dev" ]
 FROM base AS build
 COPY . /app
 WORKDIR /app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm "--filter=@shared/*" build
-RUN pnpm --filter "api" generate-prisma
-RUN pnpm --filter=api build
-RUN pnpm deploy --filter=api --prod /prod/api
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install --frozen-lockfile
+RUN pnpm "--filter=@shared/*" build && \
+    pnpm --filter "api" generate-prisma && \
+    pnpm --filter=api build && \
+    pnpm deploy --filter=api --prod /prod/api
 
 # prod
 FROM base AS prod
