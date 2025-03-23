@@ -19,7 +19,6 @@ services:
       - 3003:3000
 
   worker-dev:
-    image: ghcr.io/maciejgarncarski/coin-control-worker:latest
     container_name: coin-control-worker-dev
     build:
       target: dev
@@ -62,7 +61,6 @@ services:
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
 
   api-dev:
-    image: ghcr.io/maciejgarncarski/coin-control-api:latest
     container_name: coin-control-api-dev
     depends_on:
       - cache
@@ -117,7 +115,6 @@ services:
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
 
   web-dev:
-    image: ghcr.io/maciejgarncarski/coin-control-web:latest
     container_name: coin-control-web-dev
     build:
       target: dev
@@ -135,7 +132,6 @@ services:
       - VITE_API_URL=${API_URL}
       - VITE_APP_URL=${APP_URL}
   web:
-    image: ghcr.io/maciejgarncarski/coin-control-web:latest
     container_name: coin-control-web-prod
     build:
       dockerfile: ./docker/web.Dockerfile

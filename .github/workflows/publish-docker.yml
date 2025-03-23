@@ -38,13 +38,6 @@ jobs:
           docker buildx build \
             --push \
             --target prod \
-            --tag ghcr.io/maciejgarncarski/coin-control-web:latest \
-            --tag ghcr.io/maciejgarncarski/coin-control-web:${{ github.sha }} \
-            -f docker/web.Dockerfile .
-
-          docker buildx build \
-            --push \
-            --target prod \
             --tag ghcr.io/maciejgarncarski/coin-control-worker:latest \
             --tag ghcr.io/maciejgarncarski/coin-control-worker:${{ github.sha }} \
             -f docker/worker.Dockerfile .
