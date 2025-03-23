@@ -19,6 +19,7 @@ services:
       - 3003:3000
 
   worker-dev:
+    image: ghcr.io/maciejgarncarski/coin-control-worker:latest
     build:
       target: dev
       dockerfile: ./docker/worker.Dockerfile
@@ -40,6 +41,7 @@ services:
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
 
   worker:
+    image: ghcr.io/maciejgarncarski/coin-control-worker:latest
     build:
       target: prod
       dockerfile: ./docker/worker.Dockerfile
@@ -58,6 +60,7 @@ services:
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
 
   api-dev:
+    image: ghcr.io/maciejgarncarski/coin-control-api:latest
     depends_on:
       - cache
       - worker-dev
@@ -83,24 +86,8 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
 
-  web-dev:
-    build:
-      target: dev
-      dockerfile: ./docker/web.Dockerfile
-    depends_on:
-      - api-dev
-    volumes:
-      - ./web/src:/app/web/src
-      - ./shared:/app/shared
-    profiles: [dev]
-    ports:
-      - "${WEB_PORT}:${WEB_PORT}"
-    environment:
-      - VITE_PORT=${WEB_PORT}
-      - VITE_API_URL=${API_URL}
-      - VITE_APP_URL=${APP_URL}
-
   api:
+    image: ghcr.io/maciejgarncarski/coin-control-api:latest
     depends_on:
       - cache
       - worker
@@ -125,7 +112,25 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
 
+  web-dev:
+    image: ghcr.io/maciejgarncarski/coin-control-web:latest
+    build:
+      target: dev
+      dockerfile: ./docker/web.Dockerfile
+    depends_on:
+      - api-dev
+    volumes:
+      - ./web/src:/app/web/src
+      - ./shared:/app/shared
+    profiles: [dev]
+    ports:
+      - "${WEB_PORT}:${WEB_PORT}"
+    environment:
+      - VITE_PORT=${WEB_PORT}
+      - VITE_API_URL=${API_URL}
+      - VITE_APP_URL=${APP_URL}
   web:
+    image: ghcr.io/maciejgarncarski/coin-control-web:latest
     build:
       dockerfile: ./docker/web.Dockerfile
       args:
