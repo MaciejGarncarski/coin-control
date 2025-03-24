@@ -65,7 +65,7 @@ export const VerifyEmailPage = () => {
   }
 
   return (
-    <main className="mx-auto -mt-3 flex h-screen w-[20rem] flex-col items-center justify-center gap-2 md:w-[23rem]">
+    <main className="mx-auto -mt-8 flex h-screen w-[20rem] flex-col items-center justify-center gap-2 md:w-[23rem]">
       <div className="flex w-full justify-end">
         <ThemeSwitcher withText />
       </div>

@@ -79,7 +79,7 @@ export const ForgotPasswordPage = () => {
 
   if (sendResetPasswordLink.isSuccess) {
     return (
-      <Card className="w-full px-10">
+      <Card className="w-full px-6 py-10 md:px-10">
         <CardHeader>
           <CardTitle>
             <div className="flex items-center justify-center gap-2 pb-2">
@@ -89,7 +89,7 @@ export const ForgotPasswordPage = () => {
           </CardTitle>
           <CardDescription className="text-center">
             <div className="mx-auto flex flex-col items-center justify-center gap-4 text-pretty">
-              <p className="mx-auto inline-block max-w-[80%] text-center">
+              <p className="text-center text-balance">
                 If the email address is valid you will receive reset password
                 link.
               </p>
@@ -119,7 +119,7 @@ export const ForgotPasswordPage = () => {
   }
 
   return (
-    <Card className="w-full px-6 md:px-10">
+    <Card className="w-full px-6 py-10 md:px-10">
       <CardHeader>
         <CardTitle>
           <div className="flex items-center justify-center gap-2 pb-2">

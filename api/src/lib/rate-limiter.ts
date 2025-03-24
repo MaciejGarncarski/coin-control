@@ -5,7 +5,6 @@ import status from 'http-status'
 export const createRateLimiter = (options: Partial<Options>) => {
   return rateLimit({
     message: {
-      toastMessage: 'Too many requests, please try again later.',
       message: 'Too many requests, please try again later.',
     },
     standardHeaders: true,

@@ -27,8 +27,8 @@ function InputPassword({
       <Button
         type="button"
         variant="outline"
-        className="absolute top-0 right-0 h-full rounded-l-none"
-        size="sm"
+        className="absolute top-1 right-1 h-7 w-7 border-transparent bg-transparent shadow-none"
+        size="icon"
         onClick={() => setShowPassword((prev) => !prev)}
         disabled={disabled}>
         {showPassword && !disabled ? (
