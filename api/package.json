@@ -22,7 +22,7 @@
     "@shared/email": "workspace:*",
     "@shared/schemas": "workspace:*",
     "body-parser": "^1.20.3",
-    "bullmq": "^5.44.3",
+    "bullmq": "^5.44.4",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.0.1",

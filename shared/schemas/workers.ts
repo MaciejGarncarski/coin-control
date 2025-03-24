@@ -1,14 +1,14 @@
 export type ResetPasswordLinkJob = {
-  userEmail: string;
-  passwordResetCode: string;
-};
+  userEmail: string
+  passwordResetCode: string
+}
 
 export type ResetPasswordNotificationJob = {
-  userEmail: string;
-  createdAt: number;
-};
+  userEmail: string
+  createdAt: number
+}
 
 export type EmailVerificationJob = {
-  userEmail: string;
-  code: string;
-};
+  userEmail: string
+  code: string
+}

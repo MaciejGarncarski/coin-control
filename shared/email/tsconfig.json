@@ -22,6 +22,7 @@
     "declarationMap": true,
     "lib": ["es2022"]
   },
+  "exclude": ["*.mjs", "node_modules", "dist"],
   "watchOptions": {
     "watchFile": "useFsEvents",
     "watchDirectory": "useFsEvents",

@@ -8,12 +8,17 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc -b",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "lint": "eslint --fix .",
+    "format": "prettier --write --cache .",
+    "lint-format": "pnpm lint && pnpm format",
+    "check-types": "pnpm tsc --skipLibCheck --noEmit"
   },
   "dependencies": {
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@shared/eslint-prettier": "workspace:*",
     "typescript": "^5.8.2"
   },
   "packageManager": "pnpm@10.6.1"
