@@ -205,8 +205,8 @@ importers:
         specifier: ^4.1.3
         version: 4.1.3(react-hook-form@7.54.2(react@19.0.0))
       '@maciekdev/fetcher':
-        specifier: ^1.3.0
-        version: 1.3.0(zod@3.24.2)
+        specifier: ^1.3.1
+        version: 1.3.1(zod@3.24.2)
       '@radix-ui/react-alert-dialog':
         specifier: ^1.1.6
         version: 1.1.6(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1114,8 +1114,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@maciekdev/fetcher@1.3.0':
-    resolution: {integrity: sha512-JyumwaLnFN3EBslBKVNEX0PE8A0VMq+/NoJe888vliWJBU9Pq1V/ouid+ei4JegZe2r5zZRDs9A+nSKY0n/tcA==}
+  '@maciekdev/fetcher@1.3.1':
+    resolution: {integrity: sha512-8i1n6W3RDGKp7p9zsdlnXHwaY4fYj5qCHvF8FWbp9b+wxhMQr7fVRLVfjycWSR+oPApnYQ2nHmtMKbOIMUtFug==}
     engines: {node: '>=18.0'}
     peerDependencies:
       zod: ^3.24.2
@@ -5862,7 +5862,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@maciekdev/fetcher@1.3.0(zod@3.24.2)':
+  '@maciekdev/fetcher@1.3.1(zod@3.24.2)':
     dependencies:
       zod: 3.24.2
 

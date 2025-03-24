@@ -27,12 +27,12 @@ app.use(corsMiddleware())
 app.use(bodyParser.json())
 app.use(expressSession(sessionConfig))
 app.use(httpLogger)
-app.use(limiter)
 app.use(router())
+app.use(limiter)
+app.use(errorMiddleware)
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' })
 })
-app.use(errorMiddleware)
 createExpiredSessionCron()
 
 app.listen(Number(env.PORT), env.HOST, (error) => {

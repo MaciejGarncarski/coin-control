@@ -5,7 +5,7 @@ import { pino } from 'pino'
 const pinoEnvOptions: Record<'development' | 'production', Options> = {
   development: {
     logger: pino({
-      enabled: true,
+      enabled: false,
       transport: {
         target: 'pino-pretty',
         options: {

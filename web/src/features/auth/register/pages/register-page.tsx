@@ -57,7 +57,7 @@ export function RegisterPage() {
             <Alert variant={'destructive'} className="animate-in fade-in mt-3">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                {registerMutation.error.toastMessage}
+                {registerMutation.error.message}
               </AlertDescription>
             </Alert>
           )}

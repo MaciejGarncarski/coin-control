@@ -18,28 +18,24 @@ import {
   verifyOTPHandler,
 } from './auth.controller.js'
 import { validateData } from '../../middlewares/validator.js'
-import rateLimit from 'express-rate-limit'
 import ms from 'ms'
+import { createRateLimiter } from '../../lib/rate-limiter.js'
 
-const authLimiter = rateLimit({
+const authLimiter = createRateLimiter({
   windowMs: ms('3 minutes'),
   limit: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
 })
 
-const otpLimiter = rateLimit({
+const otpLimiter = createRateLimiter({
   windowMs: ms('3 minutes'),
   limit: 5,
   standardHeaders: true,
   legacyHeaders: false,
 })
 
-const emailLimiter = rateLimit({
+const emailLimiter = createRateLimiter({
   windowMs: ms('5 minutes'),
   limit: 3,
-  standardHeaders: true,
-  legacyHeaders: false,
 })
 
 const route = Router()
