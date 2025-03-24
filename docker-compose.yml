@@ -36,11 +36,6 @@ services:
 
   worker-dev:
     container_name: coin-control-worker-dev
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "-G", "http://localhost:3005"]
-      interval: 30s
-      timeout: 10s
-      retries: 30
     build:
       target: dev
       dockerfile: ./docker/worker.Dockerfile
@@ -64,11 +59,7 @@ services:
   worker:
     image: ghcr.io/maciejgarncarski/coin-control-worker:latest
     container_name: coin-control-worker-prod
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "-G", "http://localhost:3005"]
-      interval: 30s
-      timeout: 10s
-      retries: 30
+    pull_policy: always
     build:
       target: prod
       dockerfile: ./docker/worker.Dockerfile
@@ -116,6 +107,7 @@ services:
 
   api:
     image: ghcr.io/maciejgarncarski/coin-control-api:latest
+    pull_policy: always
     container_name: coin-control-api-prod
     depends_on:
       - cache
@@ -159,6 +151,7 @@ services:
       - VITE_API_URL=${API_URL}
   web:
     image: ghcr.io/maciejgarncarski/coin-control-web:latest
+    pull_policy: always
     container_name: coin-control-web-prod
     build:
       dockerfile: ./docker/web.Dockerfile
