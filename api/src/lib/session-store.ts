@@ -46,6 +46,7 @@ class PostgresSessionStore extends session.Store {
           data,
           expire_at: new Date(expiresAt),
           sid,
+          user_id: sessionData.userId,
         },
         update: {
           data,

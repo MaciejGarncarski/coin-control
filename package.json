@@ -8,6 +8,7 @@
     "format": "pnpm run -r format",
     "lint-format": "pnpm run -r lint-format",
     "check-types": "pnpm run -r check-types",
+    "generate-prisma": "pnpm run -r generate-prisma",
     "prepare": "husky",
     "commitlint": "commitlint --edit"
   },

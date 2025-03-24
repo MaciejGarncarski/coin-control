@@ -457,6 +457,12 @@ export async function resetPasswordHandler(
       },
     })
 
+    await tx.sessions.deleteMany({
+      where: {
+        user_id: user.id,
+      },
+    })
+
     return updatedUser
   })
 
