@@ -12,7 +12,7 @@
   },
   "packageManager": "pnpm@10.6.1",
   "devDependencies": {
-    "@types/node": "^22.13.12",
+    "@types/node": "^22.13.13",
     "@types/react": "^19.0.12",
     "react-email": "3.0.7"
   },
