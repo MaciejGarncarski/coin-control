@@ -22,8 +22,8 @@ jobs:
             appname: maciejgarncarski/coin-control-web
             image: ghcr.io/maciejgarncarski/coin-control-web
             build_args: |
-              VITE_API_URL="https://api-coincontrol.maciej-garncarski.pl"
-              NODE_ENV="production"
+              VITE_API_URL=https://api-coincontrol.maciej-garncarski.pl
+              NODE_ENV=production
 
     permissions:
       contents: read

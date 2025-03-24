@@ -2,7 +2,7 @@ import { z } from '@shared/schemas'
 
 const createEnv = () => {
   const EnvSchema = z.object({
-    API_URL: z.string().min(1),
+    API_URL: z.string().min(1).startsWith('http'),
   })
 
   const envVars = Object.entries(import.meta.env).reduce<
