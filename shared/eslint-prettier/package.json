@@ -13,15 +13,15 @@
   },
   "packageManager": "pnpm@10.6.1",
   "dependencies": {
-    "@eslint/js": "^9.21.0",
-    "@tanstack/eslint-plugin-query": "^5.66.1",
-    "@tanstack/eslint-plugin-router": "^1.112.18",
+    "@eslint/js": "^9.23.0",
+    "@tanstack/eslint-plugin-query": "^5.68.0",
+    "@tanstack/eslint-plugin-router": "^1.114.12",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-testing-library": "^7.1.1",
     "eslint-plugin-unused-imports": "^4.1.4",
-    "typescript-eslint": "^8.24.1"
+    "typescript-eslint": "^8.27.0"
   },
   "peerDependencies": {
     "eslint": "^9.22.0",

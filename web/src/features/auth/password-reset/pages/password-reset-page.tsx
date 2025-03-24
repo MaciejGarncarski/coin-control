@@ -73,7 +73,7 @@ export const PasswordResetPage = () => {
   }
 
   return (
-    <Card>
+    <Card className="w-full px-10">
       <CardHeader>
         <CardTitle>
           <div className="flex items-center justify-center gap-2 pb-2">

@@ -2,7 +2,7 @@ import { Spinner } from '@/components/spinner'
 import { Button } from '@/components/ui/button'
 import { useSendOTP } from '@/features/auth/verify-email/api/use-send-otp'
 import { ApiError } from '@maciekdev/fetcher'
-import { Mail } from 'lucide-react'
+import { Check, Mail } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 const WAIT_TIMEOUT = 1000 * 60 * 2
@@ -45,7 +45,8 @@ export const GetOtpButton = () => {
         variant={'outline'}
         type="button"
         disabled={isDisabled || isPending}>
-        Code already sent.
+        <Check />
+        Code sent.
       </Button>
     )
   }
@@ -66,7 +67,7 @@ export const GetOtpButton = () => {
     <Button
       type="button"
       size="sm"
-      variant={'default'}
+      variant={'secondary'}
       onClick={sendCode}
       disabled={hasActiveOTPAlready || isPending}>
       {isPending ? <Spinner /> : <Mail />}

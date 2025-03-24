@@ -165,6 +165,13 @@ export async function registerHandler(req: RegisterRequest, res: Response) {
         type: 'exponential',
         delay: 1000,
       },
+      removeOnComplete: {
+        age: 3600,
+        count: 1000,
+      },
+      removeOnFail: {
+        age: 24 * 3600,
+      },
     },
   )
 
@@ -251,6 +258,13 @@ export async function getOTPHandler(req: Request, res: Response) {
       backoff: {
         type: 'exponential',
         delay: 1000,
+      },
+      removeOnComplete: {
+        age: 3600,
+        count: 1000,
+      },
+      removeOnFail: {
+        age: 24 * 3600,
       },
     },
   )
@@ -355,10 +369,27 @@ export async function forgotPasswordLinkHandler(
     },
   })
 
-  await resetPasswordLinkQueue.add(`reset-password-link-${passwordCodeId}`, {
-    passwordResetCode: resetCode,
-    userEmail: email,
-  })
+  await resetPasswordLinkQueue.add(
+    `reset-password-link-${passwordCodeId}`,
+    {
+      passwordResetCode: resetCode,
+      userEmail: email,
+    },
+    {
+      attempts: 3,
+      backoff: {
+        type: 'exponential',
+        delay: 1000,
+      },
+      removeOnComplete: {
+        age: 3600,
+        count: 1000,
+      },
+      removeOnFail: {
+        age: 24 * 3600,
+      },
+    },
+  )
 
   res.status(status.ACCEPTED).json({ message: 'success' })
 }
@@ -436,6 +467,20 @@ export async function resetPasswordHandler(
     {
       createdAt: timestamp,
       userEmail: user.email,
+    },
+    {
+      attempts: 3,
+      backoff: {
+        type: 'exponential',
+        delay: 1000,
+      },
+      removeOnComplete: {
+        age: 3600,
+        count: 1000,
+      },
+      removeOnFail: {
+        age: 24 * 3600,
+      },
     },
   )
 

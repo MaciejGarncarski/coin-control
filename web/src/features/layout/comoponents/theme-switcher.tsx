@@ -9,13 +9,19 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useTheme } from '@/features/layout/comoponents/theme-provider'
 
-export function ThemeSwitcher() {
+type ThemeSwitcherProps = {
+  withText?: boolean
+}
+
+export function ThemeSwitcher({ withText = false }: ThemeSwitcherProps) {
   const { setTheme, theme } = useTheme()
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size={withText ? 'sm' : 'icon'}>
+          {withText ? <span>Theme</span> : null}
+
           {theme === 'light' && <Sun className="h-[1.2rem] w-[1.2rem]" />}
           {theme === 'dark' && <Moon className="h-[1.2rem] w-[1.2rem]" />}
           {theme === 'system' && <SunMoon className="h-[1.2rem] w-[1.2rem]" />}

@@ -1,3 +1,4 @@
+import { ThemeSwitcher } from '@/features/layout/comoponents/theme-switcher'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_not_authenticated')({
@@ -20,7 +21,10 @@ export const Route = createFileRoute('/_not_authenticated')({
 
 function RouteComponent() {
   return (
-    <main className="flex h-screen flex-col items-center justify-center gap-4">
+    <main className="mx-auto -mt-3 flex h-screen w-[20rem] flex-col items-center justify-center gap-2 md:w-[25rem]">
+      <div className="flex w-full justify-end">
+        <ThemeSwitcher withText />
+      </div>
       <Outlet />
     </main>
   )

@@ -2,6 +2,21 @@ services:
   cache:
     image: redis:6.2-alpine
     container_name: coin-control-cache
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "redis-cli",
+          "-a",
+          "eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81",
+          "--raw",
+          "incr",
+          "ping",
+        ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
     restart: always
     networks:
       - app-network
@@ -21,6 +36,11 @@ services:
 
   worker-dev:
     container_name: coin-control-worker-dev
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "-G", "http://localhost:3005"]
+      interval: 30s
+      timeout: 10s
+      retries: 30
     build:
       target: dev
       dockerfile: ./docker/worker.Dockerfile
@@ -44,6 +64,11 @@ services:
   worker:
     image: ghcr.io/maciejgarncarski/coin-control-worker:latest
     container_name: coin-control-worker-prod
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "-G", "http://localhost:3005"]
+      interval: 30s
+      timeout: 10s
+      retries: 30
     build:
       target: prod
       dockerfile: ./docker/worker.Dockerfile
@@ -63,6 +88,7 @@ services:
 
   api-dev:
     container_name: coin-control-api-dev
+    tty: true
     depends_on:
       - cache
       - worker-dev

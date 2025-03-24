@@ -1,5 +1,5 @@
 import { render } from "@react-email/render";
-import { VerifyEmail } from "@shared/email";
+import { EmailVerification } from "@shared/email";
 import { Worker } from "bullmq";
 import { env } from "../env.js";
 import { mailer } from "../mailer.js";
@@ -12,17 +12,20 @@ export const createEmailVerificationWorker = () => {
     async (job) => {
       const [emailHTML, emailText] = await Promise.all([
         render(
-          VerifyEmail({ otpCode: job.data.code, baseUrl: env.APP_ORIGIN })
+          EmailVerification({ otpCode: job.data.code, baseUrl: env.APP_ORIGIN })
         ),
         render(
-          VerifyEmail({ otpCode: job.data.code, baseUrl: env.APP_ORIGIN }),
+          EmailVerification({
+            otpCode: job.data.code,
+            baseUrl: env.APP_ORIGIN,
+          }),
           { plainText: true }
         ),
       ]);
 
       await mailer.sendMail({
         to: job.data.userEmail,
-        subject: "CoinControl | Email verification",
+        subject: `CoinControl | Verification code ${job.data.code}`,
         html: emailHTML,
         text: emailText,
       });

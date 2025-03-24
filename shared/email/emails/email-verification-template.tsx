@@ -11,12 +11,15 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-interface VerifyEmailProps {
+interface EmailVerificationProps {
   otpCode?: string;
   baseUrl: string;
 }
 
-export const VerifyEmail = ({ otpCode, baseUrl }: VerifyEmailProps) => (
+export const EmailVerification = ({
+  otpCode,
+  baseUrl,
+}: EmailVerificationProps) => (
   <Html>
     <Head />
     <Body style={main}>
@@ -37,12 +40,12 @@ export const VerifyEmail = ({ otpCode, baseUrl }: VerifyEmailProps) => (
   </Html>
 );
 
-VerifyEmail.PreviewProps = {
+EmailVerification.PreviewProps = {
   otpCode: "tt226-5398x",
   baseUrl: "http://localhost:3000",
-} as VerifyEmailProps;
+} as EmailVerificationProps;
 
-export default VerifyEmail;
+export default EmailVerification;
 
 const main = {
   backgroundColor: "#ffffff",

@@ -79,7 +79,7 @@ export const ForgotPasswordPage = () => {
 
   if (sendResetPasswordLink.isSuccess) {
     return (
-      <Card className="w-[20rem] items-center justify-center gap-2 md:w-[22rem] md:py-10">
+      <Card className="w-full px-10">
         <CardHeader>
           <CardTitle>
             <div className="flex items-center justify-center gap-2 pb-2">
@@ -97,7 +97,7 @@ export const ForgotPasswordPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="mt-4 flex gap-4">
+          <div className="flex justify-center gap-4">
             <Button
               type="button"
               variant="default"
@@ -119,7 +119,7 @@ export const ForgotPasswordPage = () => {
   }
 
   return (
-    <Card className="w-[20rem] items-center justify-center gap-4 md:w-[23rem] md:py-8">
+    <Card className="w-full px-10">
       <CardHeader>
         <CardTitle>
           <div className="flex items-center justify-center gap-2 pb-2">

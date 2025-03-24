@@ -29,6 +29,8 @@ import { userQueryOptions } from '@/lib/auth'
 import { useQuery } from '@tanstack/react-query'
 import { MailWarning } from 'lucide-react'
 import { LogoutButton } from '@/components/logout-button'
+import { ThemeSwitcher } from '@/features/layout/comoponents/theme-switcher'
+import { Separator } from '@/components/ui/separator'
 
 const OTPFormSchema = z.object({
   otpCode: z.string().length(6, {
@@ -63,8 +65,12 @@ export const VerifyEmailPage = () => {
   }
 
   return (
-    <main className="flex h-screen flex-col items-center justify-center">
-      <Card className="w-[20rem] items-center justify-center gap-8 md:w-[23rem]">
+    <main className="mx-auto -mt-3 flex h-screen w-[20rem] flex-col items-center justify-center gap-2 md:w-[23rem]">
+      <div className="flex w-full justify-end">
+        <ThemeSwitcher withText />
+      </div>
+
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>
             <div className="flex items-center justify-center gap-2 pb-2">
@@ -73,7 +79,7 @@ export const VerifyEmailPage = () => {
             </div>
           </CardTitle>
           <CardDescription className="text-center">
-            <div className="mx-auto flex flex-col items-center justify-center gap-4 text-pretty">
+            <div className="mx-auto flex flex-col items-center justify-center gap-3 text-pretty">
               <p className="mx-auto inline-block max-w-[80%] text-center">
                 Click on the button below to send an verification code to{' '}
                 <span className="font-semibold">{user.data?.email}</span>
@@ -90,6 +96,7 @@ export const VerifyEmailPage = () => {
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-col gap-4">
+              <Separator />
               <FormField
                 control={form.control}
                 name="otpCode"
