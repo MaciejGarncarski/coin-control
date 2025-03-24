@@ -23,7 +23,7 @@ import ms from 'ms'
 
 const authLimiter = rateLimit({
   windowMs: ms('3 minutes'),
-  limit: 30,
+  limit: 10,
   standardHeaders: true,
   legacyHeaders: false,
 })

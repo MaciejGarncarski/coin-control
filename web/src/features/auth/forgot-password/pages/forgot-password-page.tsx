@@ -119,7 +119,7 @@ export const ForgotPasswordPage = () => {
   }
 
   return (
-    <Card className="w-full px-10">
+    <Card className="w-full px-6 md:px-10">
       <CardHeader>
         <CardTitle>
           <div className="flex items-center justify-center gap-2 pb-2">
@@ -128,8 +128,8 @@ export const ForgotPasswordPage = () => {
           </div>
         </CardTitle>
         <CardDescription className="text-center">
-          <div className="mx-auto flex flex-col items-center justify-center gap-4 text-pretty">
-            <p className="mx-auto inline-block max-w-[80%] text-center">
+          <div className="flex flex-col items-center justify-center gap-4 text-pretty">
+            <p className="inline-block text-center text-balance">
               Enter your email and we&apos;ll send you a password reset link.
             </p>
           </div>

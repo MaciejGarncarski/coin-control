@@ -15,6 +15,7 @@ import { Route as NotauthenticatedRouteImport } from './routes/_not_authenticate
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedAccountImport } from './routes/_authenticated/account'
+import { Route as NotauthenticatedAuthIndexImport } from './routes/_not_authenticated/auth/index'
 import { Route as NotauthenticatedAuthRegisterImport } from './routes/_not_authenticated/auth/register'
 import { Route as NotauthenticatedAuthPasswordResetImport } from './routes/_not_authenticated/auth/password-reset'
 import { Route as NotauthenticatedAuthLoginImport } from './routes/_not_authenticated/auth/login'
@@ -42,6 +43,12 @@ const AuthenticatedAccountRoute = AuthenticatedAccountImport.update({
   id: '/account',
   path: '/account',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+
+const NotauthenticatedAuthIndexRoute = NotauthenticatedAuthIndexImport.update({
+  id: '/auth/',
+  path: '/auth/',
+  getParentRoute: () => NotauthenticatedRouteRoute,
 } as any)
 
 const NotauthenticatedAuthRegisterRoute =
@@ -131,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotauthenticatedAuthRegisterImport
       parentRoute: typeof NotauthenticatedRouteImport
     }
+    '/_not_authenticated/auth/': {
+      id: '/_not_authenticated/auth/'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof NotauthenticatedAuthIndexImport
+      parentRoute: typeof NotauthenticatedRouteImport
+    }
   }
 }
 
@@ -154,6 +168,7 @@ interface NotauthenticatedRouteRouteChildren {
   NotauthenticatedAuthLoginRoute: typeof NotauthenticatedAuthLoginRoute
   NotauthenticatedAuthPasswordResetRoute: typeof NotauthenticatedAuthPasswordResetRoute
   NotauthenticatedAuthRegisterRoute: typeof NotauthenticatedAuthRegisterRoute
+  NotauthenticatedAuthIndexRoute: typeof NotauthenticatedAuthIndexRoute
 }
 
 const NotauthenticatedRouteRouteChildren: NotauthenticatedRouteRouteChildren = {
@@ -163,6 +178,7 @@ const NotauthenticatedRouteRouteChildren: NotauthenticatedRouteRouteChildren = {
   NotauthenticatedAuthPasswordResetRoute:
     NotauthenticatedAuthPasswordResetRoute,
   NotauthenticatedAuthRegisterRoute: NotauthenticatedAuthRegisterRoute,
+  NotauthenticatedAuthIndexRoute: NotauthenticatedAuthIndexRoute,
 }
 
 const NotauthenticatedRouteRouteWithChildren =
@@ -178,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof NotauthenticatedAuthLoginRoute
   '/auth/password-reset': typeof NotauthenticatedAuthPasswordResetRoute
   '/auth/register': typeof NotauthenticatedAuthRegisterRoute
+  '/auth': typeof NotauthenticatedAuthIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -188,6 +205,7 @@ export interface FileRoutesByTo {
   '/auth/login': typeof NotauthenticatedAuthLoginRoute
   '/auth/password-reset': typeof NotauthenticatedAuthPasswordResetRoute
   '/auth/register': typeof NotauthenticatedAuthRegisterRoute
+  '/auth': typeof NotauthenticatedAuthIndexRoute
 }
 
 export interface FileRoutesById {
@@ -200,6 +218,7 @@ export interface FileRoutesById {
   '/_not_authenticated/auth/login': typeof NotauthenticatedAuthLoginRoute
   '/_not_authenticated/auth/password-reset': typeof NotauthenticatedAuthPasswordResetRoute
   '/_not_authenticated/auth/register': typeof NotauthenticatedAuthRegisterRoute
+  '/_not_authenticated/auth/': typeof NotauthenticatedAuthIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -212,6 +231,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/password-reset'
     | '/auth/register'
+    | '/auth'
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
@@ -221,6 +241,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/password-reset'
     | '/auth/register'
+    | '/auth'
   id:
     | '__root__'
     | '/_authenticated'
@@ -231,6 +252,7 @@ export interface FileRouteTypes {
     | '/_not_authenticated/auth/login'
     | '/_not_authenticated/auth/password-reset'
     | '/_not_authenticated/auth/register'
+    | '/_not_authenticated/auth/'
   fileRoutesById: FileRoutesById
 }
 
@@ -271,7 +293,8 @@ export const routeTree = rootRoute
         "/_not_authenticated/auth/forgot-password",
         "/_not_authenticated/auth/login",
         "/_not_authenticated/auth/password-reset",
-        "/_not_authenticated/auth/register"
+        "/_not_authenticated/auth/register",
+        "/_not_authenticated/auth/"
       ]
     },
     "/_authenticated/account": {
@@ -296,6 +319,10 @@ export const routeTree = rootRoute
     },
     "/_not_authenticated/auth/register": {
       "filePath": "_not_authenticated/auth/register.tsx",
+      "parent": "/_not_authenticated"
+    },
+    "/_not_authenticated/auth/": {
+      "filePath": "_not_authenticated/auth/index.tsx",
       "parent": "/_not_authenticated"
     }
   }
