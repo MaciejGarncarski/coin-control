@@ -13,10 +13,13 @@ jobs:
       matrix:
         include:
           - dockerfile: ./docker/api.Dockerfile
+            appname: maciejgarncarski/coin-control-api
             image: ghcr.io/maciejgarncarski/coin-control-api
           - dockerfile: ./docker/worker.Dockerfile
+            appname: maciejgarncarski/coin-control-worker
             image: ghcr.io/maciejgarncarski/coin-control-worker
           - dockerfile: ./docker/web.Dockerfile
+            appname: maciejgarncarski/coin-control-web
             image: ghcr.io/maciejgarncarski/coin-control-web
             build_args: |
               VITE_API_URL="https://api-coincontrol.maciej-garncarski.pl"
@@ -55,5 +58,5 @@ jobs:
           build-args: ${{ matrix.build_args }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=registry,ref=${{ matrix.appname }}:buildcache
+          cache-to: type=registry,ref=${{ matrix.appname }}:buildcache,mode=max
