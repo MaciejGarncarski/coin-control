@@ -1,6 +1,6 @@
+import { pino } from 'pino'
 import type { Options } from 'pino-http'
 import { pinoHttp } from 'pino-http'
-import { pino } from 'pino'
 
 const pinoEnvOptions: Record<'development' | 'production', Options> = {
   development: {

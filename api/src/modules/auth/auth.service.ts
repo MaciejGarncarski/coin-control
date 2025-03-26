@@ -1,10 +1,11 @@
-import type { RegisterMutation } from '@shared/schemas'
 import { hash } from '@node-rs/argon2'
-import { v7 } from 'uuid'
-import { ApiError } from '../../lib/api-error.js'
+import type { RegisterMutation } from '@shared/schemas'
 import status from 'http-status'
-import { userDTO } from './user.dto.js'
+import { v7 } from 'uuid'
+
+import { ApiError } from '../../lib/api-error.js'
 import { db } from '../../lib/db.js'
+import { userDTO } from './user.dto.js'
 
 type UserFromDB = {
   id: string

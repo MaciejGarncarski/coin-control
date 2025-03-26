@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as CookiePolicyImport } from './routes/cookie-policy'
 import { Route as NotauthenticatedRouteImport } from './routes/_not_authenticated/route'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
@@ -22,6 +23,12 @@ import { Route as NotauthenticatedAuthLoginImport } from './routes/_not_authenti
 import { Route as NotauthenticatedAuthForgotPasswordImport } from './routes/_not_authenticated/auth/forgot-password'
 
 // Create/Update Routes
+
+const CookiePolicyRoute = CookiePolicyImport.update({
+  id: '/cookie-policy',
+  path: '/cookie-policy',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const NotauthenticatedRouteRoute = NotauthenticatedRouteImport.update({
   id: '/_not_authenticated',
@@ -94,6 +101,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof NotauthenticatedRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/cookie-policy': {
+      id: '/cookie-policy'
+      path: '/cookie-policy'
+      fullPath: '/cookie-policy'
+      preLoaderRoute: typeof CookiePolicyImport
       parentRoute: typeof rootRoute
     }
     '/_authenticated/account': {
@@ -188,6 +202,7 @@ const NotauthenticatedRouteRouteWithChildren =
 
 export interface FileRoutesByFullPath {
   '': typeof NotauthenticatedRouteRouteWithChildren
+  '/cookie-policy': typeof CookiePolicyRoute
   '/account': typeof AuthenticatedAccountRoute
   '/': typeof AuthenticatedIndexRoute
   '/auth/forgot-password': typeof NotauthenticatedAuthForgotPasswordRoute
@@ -199,6 +214,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '': typeof NotauthenticatedRouteRouteWithChildren
+  '/cookie-policy': typeof CookiePolicyRoute
   '/account': typeof AuthenticatedAccountRoute
   '/': typeof AuthenticatedIndexRoute
   '/auth/forgot-password': typeof NotauthenticatedAuthForgotPasswordRoute
@@ -212,6 +228,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_not_authenticated': typeof NotauthenticatedRouteRouteWithChildren
+  '/cookie-policy': typeof CookiePolicyRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_not_authenticated/auth/forgot-password': typeof NotauthenticatedAuthForgotPasswordRoute
@@ -225,6 +242,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | ''
+    | '/cookie-policy'
     | '/account'
     | '/'
     | '/auth/forgot-password'
@@ -235,6 +253,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
+    | '/cookie-policy'
     | '/account'
     | '/'
     | '/auth/forgot-password'
@@ -246,6 +265,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/_not_authenticated'
+    | '/cookie-policy'
     | '/_authenticated/account'
     | '/_authenticated/'
     | '/_not_authenticated/auth/forgot-password'
@@ -259,11 +279,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   NotauthenticatedRouteRoute: typeof NotauthenticatedRouteRouteWithChildren
+  CookiePolicyRoute: typeof CookiePolicyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   NotauthenticatedRouteRoute: NotauthenticatedRouteRouteWithChildren,
+  CookiePolicyRoute: CookiePolicyRoute,
 }
 
 export const routeTree = rootRoute
@@ -277,7 +299,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/_authenticated",
-        "/_not_authenticated"
+        "/_not_authenticated",
+        "/cookie-policy"
       ]
     },
     "/_authenticated": {
@@ -296,6 +319,9 @@ export const routeTree = rootRoute
         "/_not_authenticated/auth/register",
         "/_not_authenticated/auth/"
       ]
+    },
+    "/cookie-policy": {
+      "filePath": "cookie-policy.tsx"
     },
     "/_authenticated/account": {
       "filePath": "_authenticated/account.tsx",

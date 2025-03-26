@@ -1,3 +1,12 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ApiError } from '@maciekdev/fetcher'
+import { type RegisterMutation, registerMutationSchema } from '@shared/schemas'
+import { Link } from '@tanstack/react-router'
+import { AlertCircle } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -13,18 +22,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { Link } from '@tanstack/react-router'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { registerMutationSchema, type RegisterMutation } from '@shared/schemas'
 import { InputPassword } from '@/components/ui/input-password'
 import { useRegisterMutation } from '@/features/auth/register/api/register'
-import { ApiError } from '@maciekdev/fetcher'
 
 export function RegisterPage() {
   const registerMutation = useRegisterMutation()

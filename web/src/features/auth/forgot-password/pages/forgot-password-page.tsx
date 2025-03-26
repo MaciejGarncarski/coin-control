@@ -1,3 +1,12 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  type ForgotPasswordEmailMutation,
+  forgotPasswordEmailMutationSchema,
+} from '@shared/schemas'
+import { useCanGoBack, useNavigate, useRouter } from '@tanstack/react-router'
+import { LockKeyhole, Mail, MailCheck } from 'lucide-react'
+import { type SubmitHandler, useForm } from 'react-hook-form'
+
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -16,15 +25,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useSendPasswordResetLink } from '@/features/auth/forgot-password/api/use-send-password-reset'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  forgotPasswordEmailMutationSchema,
-  type ForgotPasswordEmailMutation,
-} from '@shared/schemas'
-import { useCanGoBack, useNavigate, useRouter } from '@tanstack/react-router'
-import { LockKeyhole, Mail, MailCheck } from 'lucide-react'
-import { useForm, type SubmitHandler } from 'react-hook-form'
 
 export const ForgotPasswordPage = () => {
   const sendResetPasswordLink = useSendPasswordResetLink()

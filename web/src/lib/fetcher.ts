@@ -1,4 +1,3 @@
-import { env } from '@/config/env'
 import {
   ApiError,
   createFetcherInstance,
@@ -6,6 +5,8 @@ import {
 } from '@maciekdev/fetcher'
 import { apiErrorSchema } from '@shared/schemas'
 import { toast } from 'sonner'
+
+import { env } from '@/config/env'
 
 const fetcherConfig: CreateFetcherOptions = {
   baseURL: env.API_URL,

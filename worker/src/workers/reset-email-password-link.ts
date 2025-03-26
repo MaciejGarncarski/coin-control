@@ -1,10 +1,11 @@
-import { Worker } from 'bullmq'
-import { mailer } from '../mailer.js'
-import { ResetPasswordEmail } from '@shared/email'
 import { render } from '@react-email/render'
-import { env } from '../env.js'
-import { connection } from '../redis.js'
+import { ResetPasswordEmail } from '@shared/email'
 import type { ResetPasswordLinkJob } from '@shared/schemas'
+import { Worker } from 'bullmq'
+
+import { env } from '../env.js'
+import { mailer } from '../mailer.js'
+import { connection } from '../redis.js'
 
 export const createResetPasswordLinkWorker = () => {
   const worker = new Worker<ResetPasswordLinkJob>(

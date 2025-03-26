@@ -1,6 +1,3 @@
-import { VerifyEmailPage } from '@/features/auth/verify-email/pages/verify-email'
-import { Layout } from '@/features/layout/comoponents/layout'
-import { userQueryOptions } from '@/lib/auth'
 import { useQuery } from '@tanstack/react-query'
 import {
   createFileRoute,
@@ -8,6 +5,11 @@ import {
   redirect,
   useRouteContext,
 } from '@tanstack/react-router'
+
+import { VerifyEmailPage } from '@/features/auth/verify-email/pages/verify-email'
+import { CookieBanner } from '@/features/cookie-banner/comopnents/cookie-banner'
+import { Layout } from '@/features/layout/comoponents/layout'
+import { userQueryOptions } from '@/lib/auth'
 
 export const Route = createFileRoute('/_authenticated')({
   component: App,
@@ -42,6 +44,7 @@ function App() {
   return (
     <Layout>
       <Outlet />
+      <CookieBanner />
     </Layout>
   )
 }

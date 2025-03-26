@@ -1,7 +1,7 @@
+import { Link } from '@tanstack/react-router'
+
 import { useIsMobile } from '@/components/hooks/use-mobile'
 import { LogoutButton } from '@/components/logout-button'
-
-import { Link } from '@tanstack/react-router'
 
 export function DesktopNavbar() {
   const isMobile = useIsMobile()

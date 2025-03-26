@@ -1,7 +1,8 @@
-import { fetcher } from '@/lib/fetcher'
 import { type ForgotPasswordEmailMutation } from '@shared/schemas'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
+
+import { fetcher } from '@/lib/fetcher'
 
 export const useSendPasswordResetLink = () => {
   return useMutation({

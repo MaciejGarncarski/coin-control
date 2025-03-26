@@ -1,13 +1,19 @@
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from '@/components/ui/input-otp'
-import { useForm, type SubmitHandler } from 'react-hook-form'
-import { z } from '@shared/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useVerifyOTP } from '@/features/auth/verify-email/api/use-verify-otp'
+import { z } from '@shared/schemas'
+import { useQuery } from '@tanstack/react-query'
+import { REGEXP_ONLY_DIGITS } from 'input-otp'
+import { MailWarning } from 'lucide-react'
+import { type SubmitHandler, useForm } from 'react-hook-form'
+
+import { LogoutButton } from '@/components/logout-button'
 import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -17,20 +23,15 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { REGEXP_ONLY_DIGITS } from 'input-otp'
-import { GetOtpButton } from '@/features/auth/verify-email/components/get-otp-button'
-import { userQueryOptions } from '@/lib/auth'
-import { useQuery } from '@tanstack/react-query'
-import { MailWarning } from 'lucide-react'
-import { LogoutButton } from '@/components/logout-button'
-import { ThemeSwitcher } from '@/features/layout/comoponents/theme-switcher'
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from '@/components/ui/input-otp'
 import { Separator } from '@/components/ui/separator'
+import { useVerifyOTP } from '@/features/auth/verify-email/api/use-verify-otp'
+import { GetOtpButton } from '@/features/auth/verify-email/components/get-otp-button'
+import { ThemeSwitcher } from '@/features/layout/comoponents/theme-switcher'
+import { userQueryOptions } from '@/lib/auth'
 
 const OTPFormSchema = z.object({
   otpCode: z.string().length(6, {

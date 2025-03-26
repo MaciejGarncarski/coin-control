@@ -1,8 +1,8 @@
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import * as React from 'react'
 
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 function InputPassword({
   className,
@@ -27,7 +27,7 @@ function InputPassword({
       <Button
         type="button"
         variant="outline"
-        className="absolute top-1 right-1 h-7 w-7 border-transparent bg-transparent shadow-none"
+        className="bg-card absolute top-1 right-1 h-7 w-7 border-transparent shadow-none"
         size="icon"
         onClick={() => setShowPassword((prev) => !prev)}
         disabled={disabled}>

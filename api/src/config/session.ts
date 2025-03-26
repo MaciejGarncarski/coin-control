@@ -1,7 +1,8 @@
 import type { SessionOptions } from 'express-session'
-import { env } from './env.js'
-import PostgresSessionStore from '../lib/session-store.js'
 import ms from 'ms'
+
+import PostgresSessionStore from '../lib/session-store.js'
+import { env } from './env.js'
 
 const SessionStore = new PostgresSessionStore()
 

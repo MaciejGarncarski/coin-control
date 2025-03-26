@@ -1,10 +1,11 @@
-import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
-import { fetcher } from '@/lib/fetcher'
 import { ApiError } from '@maciekdev/fetcher'
 import { OTPResponeSchema, type OTPVerifyMutation } from '@shared/schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRef } from 'react'
 import { toast } from 'sonner'
+
+import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
+import { fetcher } from '@/lib/fetcher'
 
 export const useVerifyOTP = () => {
   const queryClient = useQueryClient()

@@ -1,4 +1,5 @@
 import { Queue } from 'bullmq'
+
 import { connection } from '../redis.js'
 
 export const expiredSessionQueue = new Queue('expired-session-remover', {

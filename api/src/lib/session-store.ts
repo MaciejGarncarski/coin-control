@@ -1,5 +1,6 @@
 import session, { type SessionData } from 'express-session'
 import ms from 'ms'
+
 import { db } from './db.js'
 
 class PostgresSessionStore extends session.Store {

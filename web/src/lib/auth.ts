@@ -1,6 +1,3 @@
-import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
-import { fetcher } from '@/lib/fetcher'
-import type { QueryConfig } from '@/lib/react-query'
 import { userSchema } from '@shared/schemas'
 import {
   queryOptions,
@@ -9,6 +6,10 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import { useRouteContext } from '@tanstack/react-router'
+
+import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
+import { fetcher } from '@/lib/fetcher'
+import type { QueryConfig } from '@/lib/react-query'
 
 export const getUser = async () => {
   const response = await fetcher({

@@ -1,5 +1,6 @@
-import { env } from './env.js'
 import { createTransport } from 'nodemailer'
+
+import { env } from './env.js'
 
 export const mailer = createTransport({
   host: 'smtp.gmail.com',

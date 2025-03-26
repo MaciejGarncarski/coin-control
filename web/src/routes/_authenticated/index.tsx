@@ -1,6 +1,7 @@
-import { userQueryOptions } from '@/lib/auth'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
+
+import { userQueryOptions } from '@/lib/auth'
 
 export const Route = createFileRoute('/_authenticated/')({
   component: App,

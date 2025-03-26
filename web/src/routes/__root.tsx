@@ -1,12 +1,13 @@
 import { QueryClient } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import {
   createRootRouteWithContext,
   HeadContent,
   Outlet,
 } from '@tanstack/react-router'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { Toaster } from 'sonner'
 import { lazy } from 'react'
+import { Toaster } from 'sonner'
+
 import { ThemeProvider } from '@/features/layout/comoponents/theme-provider'
 
 export const auth: Auth = {
@@ -49,7 +50,7 @@ const RootComponent = () => {
         <Outlet />
       </ThemeProvider>
       <Toaster position="bottom-right" />
-      <ReactQueryDevtools buttonPosition="bottom-left" />
+      <ReactQueryDevtools buttonPosition="bottom-right" />
       <LazyRouterDevtools position="bottom-left" />
     </>
   )

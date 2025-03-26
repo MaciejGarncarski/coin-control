@@ -1,8 +1,9 @@
+import { type ReactNode } from '@tanstack/react-router'
+import { Coins } from 'lucide-react'
+
 import { DesktopNavbar } from '@/features/layout/comoponents/desktop-navbar'
 import { MobileNavbar } from '@/features/layout/comoponents/mobile-navbar'
 import { ThemeSwitcher } from '@/features/layout/comoponents/theme-switcher'
-import { type ReactNode } from '@tanstack/react-router'
-import { Coins } from 'lucide-react'
 
 export function Layout({ children }: { children: ReactNode }) {
   return (

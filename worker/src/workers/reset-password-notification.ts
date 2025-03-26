@@ -1,10 +1,11 @@
-import { Worker } from 'bullmq'
-import { mailer } from '../mailer.js'
 import { render } from '@react-email/render'
-import { env } from '../env.js'
-import { connection } from '../redis.js'
 import { ResetPasswordNotificationEmail } from '@shared/email'
 import type { ResetPasswordNotificationJob } from '@shared/schemas'
+import { Worker } from 'bullmq'
+
+import { env } from '../env.js'
+import { mailer } from '../mailer.js'
+import { connection } from '../redis.js'
 
 const formatter = Intl.DateTimeFormat('en', {
   dateStyle: 'short',

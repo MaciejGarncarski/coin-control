@@ -1,7 +1,12 @@
-import { useLoginMutation } from '@/features/auth/login/api/login'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { loginMutationSchema, type LoginMutation } from '@shared/schemas'
+import { type LoginMutation, loginMutationSchema } from '@shared/schemas'
+import { Link } from '@tanstack/react-router'
+import { AlertCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+
+import { Spinner } from '@/components/spinner'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -17,14 +22,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Link } from '@tanstack/react-router'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import { AlertCircle } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { Spinner } from '@/components/spinner'
-import { cn } from '@/lib/utils'
 import { InputPassword } from '@/components/ui/input-password'
+import { useLoginMutation } from '@/features/auth/login/api/login'
+import { cn } from '@/lib/utils'
 
 export const LoginPage = () => {
   const loginMutation = useLoginMutation()

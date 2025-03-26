@@ -1,5 +1,7 @@
-import { ThemeSwitcher } from '@/features/layout/comoponents/theme-switcher'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
+
+import { CookieBanner } from '@/features/cookie-banner/comopnents/cookie-banner'
+import { ThemeSwitcher } from '@/features/layout/comoponents/theme-switcher'
 
 export const Route = createFileRoute('/_not_authenticated')({
   beforeLoad: async ({ context }) => {
@@ -26,6 +28,7 @@ function RouteComponent() {
         <ThemeSwitcher withText />
       </div>
       <Outlet />
+      <CookieBanner />
     </main>
   )
 }

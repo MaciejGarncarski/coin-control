@@ -1,9 +1,9 @@
-import { fetcher } from '@/lib/fetcher'
-import { userSchema, type RegisterMutation } from '@shared/schemas'
-
+import { type RegisterMutation, userSchema } from '@shared/schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouteContext } from '@tanstack/react-router'
 import { toast } from 'sonner'
+
+import { fetcher } from '@/lib/fetcher'
 
 export const useRegisterMutation = () => {
   const queryClient = useQueryClient()

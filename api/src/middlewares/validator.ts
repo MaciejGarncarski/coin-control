@@ -1,4 +1,4 @@
-import { z, type ApiError } from '@shared/schemas'
+import { type ApiError, z } from '@shared/schemas'
 import type { NextFunction, Request, Response } from 'express'
 import { status } from 'http-status'
 

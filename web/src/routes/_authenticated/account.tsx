@@ -1,5 +1,6 @@
-import { useUser } from '@/lib/auth'
 import { createFileRoute } from '@tanstack/react-router'
+
+import { useUser } from '@/lib/auth'
 
 export const Route = createFileRoute('/_authenticated/account')({
   component: RouteComponent,

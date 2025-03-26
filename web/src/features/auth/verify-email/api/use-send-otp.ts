@@ -1,8 +1,9 @@
-import { userQueryOptions } from '@/lib/auth'
-import { fetcher } from '@/lib/fetcher'
 import { OTPResponeSchema } from '@shared/schemas'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
+
+import { userQueryOptions } from '@/lib/auth'
+import { fetcher } from '@/lib/fetcher'
 
 export const useSendOTP = () => {
   const user = useQuery(userQueryOptions)

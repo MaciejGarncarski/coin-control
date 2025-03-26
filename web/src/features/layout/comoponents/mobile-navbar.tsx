@@ -1,3 +1,7 @@
+import { Link } from '@tanstack/react-router'
+import { Coins, Menu } from 'lucide-react'
+import { useState } from 'react'
+
 import { useIsMobile } from '@/components/hooks/use-mobile'
 import { LogoutButton } from '@/components/logout-button'
 import { Button } from '@/components/ui/button'
@@ -8,9 +12,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { Link } from '@tanstack/react-router'
-import { Coins, Menu } from 'lucide-react'
-import { useState } from 'react'
 
 export function MobileNavbar() {
   const [isOpen, setIsOpen] = useState(false)

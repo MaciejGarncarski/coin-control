@@ -1,9 +1,9 @@
+import type { ApiError as TApiError } from '@shared/schemas'
 import type { NextFunction, Request, Response } from 'express'
+import status from 'http-status'
 
 import { isProd } from '../config/consatnts.js'
 import { ApiError } from '../lib/api-error.js'
-import type { ApiError as TApiError } from '@shared/schemas'
-import status from 'http-status'
 
 export function errorMiddleware(
   error: Error,

@@ -1,3 +1,13 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  type ResetPasswordForm,
+  resetPasswordFormSchema,
+} from '@shared/schemas'
+import { useCanGoBack, useNavigate, useRouter } from '@tanstack/react-router'
+import { KeySquare } from 'lucide-react'
+import { type SubmitHandler, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -17,15 +27,6 @@ import {
 import { InputPassword } from '@/components/ui/input-password'
 import { useResetPassword } from '@/features/auth/password-reset/api/use-reset-password'
 import { Route } from '@/routes/_not_authenticated/auth/password-reset'
-import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  resetPasswordFormSchema,
-  type ResetPasswordForm,
-} from '@shared/schemas'
-import { useCanGoBack, useNavigate, useRouter } from '@tanstack/react-router'
-import { KeySquare } from 'lucide-react'
-import { useForm, type SubmitHandler } from 'react-hook-form'
-import { toast } from 'sonner'
 
 export const PasswordResetPage = () => {
   const resetPasswordMutation = useResetPassword()

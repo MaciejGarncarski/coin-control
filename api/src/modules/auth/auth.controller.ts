@@ -1,23 +1,25 @@
-import type { Request, Response } from 'express'
-import { type LoginMutation, type RegisterMutation } from '@shared/schemas'
-import { status } from 'http-status'
+import { createHash } from 'node:crypto'
+
+import { hash, verify } from '@node-rs/argon2'
 import type {
   ForgotPasswordEmailMutation,
   OTPVerifyMutation,
   ResetPasswordMutation,
 } from '@shared/schemas'
-import { hash, verify } from '@node-rs/argon2'
-import { registerUser } from './auth.service.js'
-import { ApiError } from '../../lib/api-error.js'
-import { userDTO } from './user.dto.js'
-import { generateOTP } from '../../utils/generate-otp.js'
-import { v7 } from 'uuid'
+import { type LoginMutation, type RegisterMutation } from '@shared/schemas'
+import type { Request, Response } from 'express'
+import { status } from 'http-status'
 import ms from 'ms'
+import { v7 } from 'uuid'
+
+import { ApiError } from '../../lib/api-error.js'
 import { db } from '../../lib/db.js'
-import { createHash } from 'node:crypto'
 import { emailVerificationQueue } from '../../lib/queues/email-verification.js'
 import { resetPasswordLinkQueue } from '../../lib/queues/reset-password-link.js'
 import { resetPasswordNotificationQueue } from '../../lib/queues/reset-password-notification.js'
+import { generateOTP } from '../../utils/generate-otp.js'
+import { registerUser } from './auth.service.js'
+import { userDTO } from './user.dto.js'
 
 interface LoginRequest extends Request {
   body: LoginMutation

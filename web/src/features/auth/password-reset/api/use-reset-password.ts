@@ -1,8 +1,9 @@
-import { fetcher } from '@/lib/fetcher'
 import type { ResetPasswordMutation } from '@shared/schemas'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
+
+import { fetcher } from '@/lib/fetcher'
 
 export function useResetPassword() {
   const navigate = useNavigate()

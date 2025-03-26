@@ -1,18 +1,19 @@
-import { StrictMode, useEffect } from 'react'
-import ReactDOM from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
-
-import { routeTree } from './routeTree.gen'
-
 import './styles.css'
+
 import {
   QueryClient,
   QueryClientProvider,
   useQuery,
 } from '@tanstack/react-query'
-import { auth } from '@/routes/__root'
+import { createRouter, RouterProvider } from '@tanstack/react-router'
+import { StrictMode, useEffect } from 'react'
+import ReactDOM from 'react-dom/client'
+
 import { userQueryOptions } from '@/lib/auth'
 import { queryConfig } from '@/lib/react-query'
+import { auth } from '@/routes/__root'
+
+import { routeTree } from './routeTree.gen'
 
 const queryClient = new QueryClient({
   defaultOptions: queryConfig,

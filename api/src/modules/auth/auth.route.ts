@@ -1,5 +1,3 @@
-import { Router } from 'express'
-
 import {
   forgotPasswordEmailMutationSchema,
   loginMutationSchema,
@@ -7,6 +5,11 @@ import {
   registerMutationSchema,
   resetPasswordMutationSchema,
 } from '@shared/schemas'
+import { Router } from 'express'
+import ms from 'ms'
+
+import { createRateLimiter } from '../../lib/rate-limiter.js'
+import { validateData } from '../../middlewares/validator.js'
 import {
   forgotPasswordLinkHandler,
   getOTPHandler,
@@ -17,9 +20,6 @@ import {
   resetPasswordHandler,
   verifyOTPHandler,
 } from './auth.controller.js'
-import { validateData } from '../../middlewares/validator.js'
-import ms from 'ms'
-import { createRateLimiter } from '../../lib/rate-limiter.js'
 
 const authLimiter = createRateLimiter({
   windowMs: ms('3 minutes'),

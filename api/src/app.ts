@@ -1,17 +1,18 @@
+import bodyParser from 'body-parser'
 import express from 'express'
+import expressSession from 'express-session'
+import helmet from 'helmet'
 
 import { env } from './config/env.js'
+import { limiter } from './config/rate-limit.js'
+import { sessionConfig } from './config/session.js'
+import { createExpiredSessionCron } from './lib/queues/session-cron.js'
 import { httpLogger } from './logger/logger.js'
 import { corsMiddleware } from './middlewares/cors.js'
 import { errorMiddleware } from './middlewares/error.js'
+import { notFoundMiddleware } from './middlewares/not-found.js'
 import { router } from './modules/router.js'
 import { showStartMessage } from './utils/start-message.js'
-import bodyParser from 'body-parser'
-import { sessionConfig } from './config/session.js'
-import expressSession from 'express-session'
-import { createExpiredSessionCron } from './lib/queues/session-cron.js'
-import helmet from 'helmet'
-import { limiter } from './config/rate-limit.js'
 
 const app = express()
 
@@ -30,9 +31,7 @@ app.use(httpLogger)
 app.use(router())
 app.use(limiter)
 app.use(errorMiddleware)
-app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' })
-})
+app.use(notFoundMiddleware)
 createExpiredSessionCron()
 
 app.listen(Number(env.PORT), env.HOST, (error) => {
