@@ -8,8 +8,6 @@ import {
 import { lazy } from 'react'
 import { Toaster } from 'sonner'
 
-import { ThemeProvider } from '@/features/layout/comoponents/theme-provider'
-
 export const auth: Auth = {
   status: 'loggedOut',
   isEmailVerified: false,
@@ -46,12 +44,10 @@ const RootComponent = () => {
   return (
     <>
       <HeadContent />
-      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-        <Outlet />
-      </ThemeProvider>
+      <Outlet />
       <Toaster position="bottom-right" />
       <ReactQueryDevtools buttonPosition="bottom-right" />
-      <LazyRouterDevtools position="bottom-left" />
+      <LazyRouterDevtools position="bottom-right" />
     </>
   )
 }

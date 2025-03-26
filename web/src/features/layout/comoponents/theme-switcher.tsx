@@ -7,14 +7,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useTheme } from '@/features/layout/comoponents/theme-provider'
+import { useThemeStore } from '@/features/layout/comoponents/theme-provider'
 
 type ThemeSwitcherProps = {
   withText?: boolean
 }
 
 export function ThemeSwitcher({ withText = false }: ThemeSwitcherProps) {
-  const { setTheme, theme } = useTheme()
+  const theme = useThemeStore((s) => s.theme)
+  const setTheme = useThemeStore((s) => s.setTheme)
 
   return (
     <DropdownMenu>

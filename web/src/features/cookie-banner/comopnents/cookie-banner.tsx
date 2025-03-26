@@ -23,8 +23,8 @@ export const CookieBanner = () => {
   }
 
   return (
-    <div className="fixed bottom-2 left-3 md:bottom-4 md:left-4">
-      <Alert className="max-w-[22rem]">
+    <div className="fixed bottom-4 left-[50%] -translate-x-[50%] md:bottom-4 md:left-4 md:translate-x-0">
+      <Alert className="w-[22rem] md:w-auto">
         <Cookie className="h-4 w-4" />
         <AlertTitle>Cookies</AlertTitle>
         <AlertDescription>

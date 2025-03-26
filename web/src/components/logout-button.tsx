@@ -3,6 +3,7 @@ import { useLogoutMutation } from '@/lib/auth'
 
 type Props = {
   size?: 'sm' | 'default' | 'lg' | 'icon'
+  className?: string
   variant?:
     | 'default'
     | 'destructive'
@@ -15,6 +16,7 @@ type Props = {
 export const LogoutButton = ({
   size = 'default',
   variant = 'default',
+  className,
 }: Props) => {
   const logoutMutation = useLogoutMutation()
 
@@ -23,6 +25,7 @@ export const LogoutButton = ({
       variant={variant}
       size={size}
       type="button"
+      className={className}
       onClick={() => logoutMutation.mutate()}>
       Logout
     </Button>

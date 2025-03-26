@@ -3,7 +3,6 @@ import { Coins, Menu } from 'lucide-react'
 import { useState } from 'react'
 
 import { useIsMobile } from '@/components/hooks/use-mobile'
-import { LogoutButton } from '@/components/logout-button'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -12,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { UserMenu } from '@/features/layout/comoponents/user-menu'
 
 export function MobileNavbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -26,7 +26,7 @@ export function MobileNavbar() {
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left">
+      <SheetContent side="left" aria-describedby={undefined}>
         <SheetHeader>
           <SheetTitle>
             <p className="flex gap-2">
@@ -35,7 +35,7 @@ export function MobileNavbar() {
             </p>
           </SheetTitle>
         </SheetHeader>
-        <nav className="p-4">
+        <nav className="flex h-full flex-col p-4">
           <ul>
             <li>
               <Link to="/">Home</Link>
@@ -44,7 +44,9 @@ export function MobileNavbar() {
               <Link to="/account">account</Link>
             </li>
           </ul>
-          <LogoutButton />
+          <div className="mt-auto">
+            <UserMenu />
+          </div>
         </nav>
       </SheetContent>
     </Sheet>

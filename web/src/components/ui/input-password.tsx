@@ -27,7 +27,7 @@ function InputPassword({
       <Button
         type="button"
         variant="outline"
-        className="bg-card absolute top-1 right-1 h-7 w-7 border-transparent shadow-none"
+        className="bg-card absolute top-1 right-1 h-7 w-7"
         size="icon"
         onClick={() => setShowPassword((prev) => !prev)}
         disabled={disabled}>
