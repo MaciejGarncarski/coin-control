@@ -37,7 +37,7 @@ function App() {
     return null
   }
 
-  if (!routeContext.auth.isEmailVerified) {
+  if (!routeContext.auth?.isEmailVerified) {
     return <VerifyEmailPage />
   }
 

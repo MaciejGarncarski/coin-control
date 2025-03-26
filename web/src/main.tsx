@@ -51,8 +51,8 @@ const MainApp = () => {
       context={{
         auth: {
           ...auth,
-          status: userAuthenticated.data?.id ? 'loggedIn' : 'loggedOut',
-          isEmailVerified: userAuthenticated.data?.isEmailVerified || false,
+          status: userAuthenticated?.data?.id ? 'loggedIn' : 'loggedOut',
+          isEmailVerified: userAuthenticated?.data?.isEmailVerified || false,
         },
       }}
     />
