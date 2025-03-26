@@ -12,15 +12,18 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 type Props = {
+  side?: 'top' | 'right' | 'bottom' | 'left'
   triggerComponent: ReactNode
 }
 
-export function UserDropdown({ triggerComponent }: Props) {
+export function UserDropdown({ triggerComponent, side = 'right' }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{triggerComponent}</DropdownMenuTrigger>
-      <DropdownMenuContent className="mb-4 w-32" side="right" sideOffset={20}>
-        <DropdownMenuLabel>My account</DropdownMenuLabel>
+      <DropdownMenuContent className="w-32" side={side} sideOffset={10}>
+        <DropdownMenuLabel className="font-semibold">
+          My account
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>Profile</DropdownMenuItem>

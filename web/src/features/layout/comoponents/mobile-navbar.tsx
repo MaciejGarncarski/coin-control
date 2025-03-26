@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { rotues } from '@/constants/routes'
 import { UserMenu } from '@/features/layout/comoponents/user-menu'
 
 export function MobileNavbar() {
@@ -22,11 +23,11 @@ export function MobileNavbar() {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button type="button" size="icon">
+        <Button type="button" size="icon" variant={'outline'}>
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" aria-describedby={undefined}>
+      <SheetContent side="left" aria-describedby={undefined} className="gap-4">
         <SheetHeader>
           <SheetTitle>
             <p className="flex gap-2">
@@ -35,19 +36,26 @@ export function MobileNavbar() {
             </p>
           </SheetTitle>
         </SheetHeader>
-        <nav className="flex h-full flex-col p-4">
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/account">account</Link>
-            </li>
-          </ul>
-          <div className="mt-auto">
-            <UserMenu />
-          </div>
+        <nav className="text-muted-foreground ml-8 flex flex-col gap-8 text-lg">
+          {rotues.map(({ text, url }) => {
+            return (
+              <ul key={text}>
+                <li>
+                  <Link
+                    to={url}
+                    activeProps={{
+                      className: 'text-foreground',
+                    }}>
+                    {text}
+                  </Link>
+                </li>
+              </ul>
+            )
+          })}
         </nav>
+        <div className="mt-auto p-2">
+          <UserMenu />
+        </div>
       </SheetContent>
     </Sheet>
   )
