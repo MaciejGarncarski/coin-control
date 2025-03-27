@@ -2,7 +2,7 @@ name: Publish Docker Images
 
 on:
   workflow_run:
-    workflows: ["Lint & format"]
+    workflows: [lint-format]
     types:
       - completed
 

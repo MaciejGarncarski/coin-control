@@ -1,4 +1,4 @@
-name: Lint & format
+name: lint-format
 
 on:
   push:
@@ -31,12 +31,3 @@ jobs:
 
       - name: Check types
         run: pnpm -r lint-format
-
-      - name: Commit and push changes
-        if: ${{ success() }}
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "actions@github.com"
-          git add .
-          git commit -m "Automated formatting by GitHub Actions" || echo "No changes to commit"
-          git push origin HEAD:${{ github.ref_name }} # Push to the same branch
