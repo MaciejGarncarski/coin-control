@@ -1,11 +1,10 @@
 import { render } from '@react-email/render'
 import { EmailVerification } from '@shared/email'
+import { redisClient, Worker } from '@shared/queues'
 import type { EmailVerificationJob } from '@shared/schemas'
-import { Worker } from 'bullmq'
 
 import { env } from '../env.js'
 import { mailer } from '../mailer.js'
-import { connection } from '../redis.js'
 
 export const createEmailVerificationWorker = () => {
   const worker = new Worker<EmailVerificationJob>(
@@ -37,7 +36,7 @@ export const createEmailVerificationWorker = () => {
       return { success: true }
     },
     {
-      connection: connection,
+      connection: redisClient,
     },
   )
 

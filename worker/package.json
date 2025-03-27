@@ -16,9 +16,8 @@
     "@prisma/client": "^6.5.0",
     "@react-email/render": "1.0.5",
     "@shared/email": "workspace:*",
+    "@shared/queues": "workspace:*",
     "@shared/schemas": "workspace:*",
-    "bullmq": "^5.44.4",
-    "ioredis": "^5.6.0",
     "nodemailer": "^6.10.0",
     "prisma": "^6.5.0",
     "typescript": "^5.8.2",
@@ -26,7 +25,7 @@
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
-    "@types/node": "^22.13.13",
+    "@types/node": "^22.13.14",
     "@types/nodemailer": "^6.4.17",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"

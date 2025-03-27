@@ -1,4 +1,4 @@
-import type { ApiError } from '@shared/schemas/index.js'
+import type { ApiError } from '@shared/schemas'
 import type { Request, Response } from 'express'
 import status from 'http-status'
 

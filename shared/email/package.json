@@ -4,11 +4,11 @@
   "author": "Maciej Garncarski",
   "type": "module",
   "version": "1.0.0",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
   "scripts": {
     "dev": "email dev",
-    "build": "rm -rf dist && tsc -b",
+    "build": "pnpm tsc -b",
     "lint": "eslint --fix .",
     "format": "prettier --write --cache .",
     "lint-format": "pnpm lint && pnpm format",
@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
-    "@types/node": "^22.13.13",
+    "@types/node": "^22.13.14",
     "@types/react": "^19.0.12",
     "react-email": "3.0.7"
   }

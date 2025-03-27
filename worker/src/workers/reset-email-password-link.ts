@@ -1,11 +1,10 @@
 import { render } from '@react-email/render'
 import { ResetPasswordEmail } from '@shared/email'
+import { redisClient, Worker } from '@shared/queues'
 import type { ResetPasswordLinkJob } from '@shared/schemas'
-import { Worker } from 'bullmq'
 
 import { env } from '../env.js'
 import { mailer } from '../mailer.js'
-import { connection } from '../redis.js'
 
 export const createResetPasswordLinkWorker = () => {
   const worker = new Worker<ResetPasswordLinkJob>(
@@ -39,7 +38,7 @@ export const createResetPasswordLinkWorker = () => {
       return { success: true }
     },
     {
-      connection: connection,
+      connection: redisClient,
     },
   )
 

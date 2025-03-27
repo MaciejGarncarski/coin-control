@@ -1,7 +1,6 @@
-import { Worker } from 'bullmq'
+import { redisClient, Worker } from '@shared/queues'
 
 import { db } from '../db.js'
-import { connection } from '../redis.js'
 
 export const createExpiredSessionRemoverWorker = () => {
   const worker = new Worker(
@@ -18,7 +17,7 @@ export const createExpiredSessionRemoverWorker = () => {
 
       return deletedCount
     },
-    { connection },
+    { connection: redisClient },
   )
 
   worker.on('completed', (job) => {

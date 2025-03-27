@@ -1,11 +1,10 @@
 import { render } from '@react-email/render'
 import { ResetPasswordNotificationEmail } from '@shared/email'
+import { redisClient, Worker } from '@shared/queues'
 import type { ResetPasswordNotificationJob } from '@shared/schemas'
-import { Worker } from 'bullmq'
 
 import { env } from '../env.js'
 import { mailer } from '../mailer.js'
-import { connection } from '../redis.js'
 
 const formatter = Intl.DateTimeFormat('en', {
   dateStyle: 'short',
@@ -46,7 +45,7 @@ export const createResetPasswordNotificationWorker = () => {
       return { success: true }
     },
     {
-      connection: connection,
+      connection: redisClient,
     },
   )
 

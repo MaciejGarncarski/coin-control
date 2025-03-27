@@ -1,9 +1,7 @@
-import { Queue } from 'bullmq'
-
-import { connection } from '../redis.js'
+import { Queue, redisClient } from '@shared/queues'
 
 export const expiredSessionQueue = new Queue('expired-session-remover', {
-  connection: connection,
+  connection: redisClient,
 })
 
 export const createExpiredSessionCron = async () => {

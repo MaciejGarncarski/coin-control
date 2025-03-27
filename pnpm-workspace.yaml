@@ -4,6 +4,10 @@ packages:
   - api
   - web
 
+catalogs:
+  prisma:
+    prisma: latest
+
 onlyBuiltDependencies:
   - "@prisma/client"
   - "@prisma/engines"

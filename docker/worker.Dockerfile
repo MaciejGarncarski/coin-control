@@ -37,4 +37,4 @@ COPY --from=build /prod/worker /prod/worker
 WORKDIR /prod/worker
 EXPOSE ${PORT}
 ENV NODE_ENV="production"
-CMD ["node", "./dist/app.js"]
+CMD ["node", "./dist/src/app.js"]

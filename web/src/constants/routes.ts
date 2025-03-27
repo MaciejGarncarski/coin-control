@@ -9,15 +9,11 @@ export const rotues = [
     url: '/',
   },
   {
-    text: 'Spendings',
-    url: '/spendings',
+    text: 'Transactions',
+    url: '/transactions',
   },
   {
     text: 'Budgets',
     url: '/budgets',
-  },
-  {
-    text: 'Incomes',
-    url: '/incomes',
   },
 ] satisfies RoutesData

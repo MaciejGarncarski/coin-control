@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 
 import { LogoutButton } from '@/components/logout-button'
@@ -21,20 +22,20 @@ export function UserDropdown({ triggerComponent, side = 'right' }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{triggerComponent}</DropdownMenuTrigger>
       <DropdownMenuContent className="w-32" side={side} sideOffset={10}>
-        <DropdownMenuLabel className="font-semibold">
-          My account
-        </DropdownMenuLabel>
+        <DropdownMenuLabel className="font-semibold">Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/account">Profile</Link>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className="p-0">
+          <DropdownMenuItem asChild>
             <LogoutButton
               variant="ghost"
               size="sm"
-              className="h-full w-full justify-start p-0 px-2 py-1.5 text-left hover:bg-transparent"
+              className="w-full justify-start text-left"
             />
           </DropdownMenuItem>
         </DropdownMenuGroup>

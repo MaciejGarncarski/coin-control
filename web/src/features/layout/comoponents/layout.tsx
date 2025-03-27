@@ -13,7 +13,7 @@ export function Layout({ children }: { children: ReactNode }) {
   const isMobile = useIsMobile()
 
   return (
-    <div className={cn(!isMobile && 'flex')}>
+    <div className={cn(!isMobile && 'flex', 'bg-background')}>
       <div className={cn('flex w-full flex-col')}>
         <header className="bg-background/30 sticky top-0 flex h-16 w-full items-center justify-start gap-4 border-b px-4 backdrop-blur-md md:px-12">
           <MobileNavbar />
@@ -25,7 +25,6 @@ export function Layout({ children }: { children: ReactNode }) {
                   CoinControl
                 </h1>
               </Link>
-
               <nav className="text-muted-foreground ml-8 flex gap-8 text-sm">
                 {rotues.map(({ text, url }) => {
                   return (

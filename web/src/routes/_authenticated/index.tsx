@@ -14,5 +14,9 @@ function App() {
     return null
   }
 
-  return <div>home</div>
+  return (
+    <div>
+      <div className="grid grid-cols-4"></div>
+    </div>
+  )
 }
