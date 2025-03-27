@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useThemeStore } from '@/features/layout/comoponents/theme-provider'
+import { useThemeStore } from '@/features/layout/comoponents/theme-state'
 
 type ThemeSwitcherProps = {
   withText?: boolean

@@ -35,7 +35,7 @@ export function UserDropdown({ triggerComponent, side = 'right' }: Props) {
             <LogoutButton
               variant="ghost"
               size="sm"
-              className="w-full justify-start text-left"
+              className="w-full justify-start text-left font-normal"
             />
           </DropdownMenuItem>
         </DropdownMenuGroup>

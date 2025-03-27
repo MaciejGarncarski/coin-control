@@ -1,7 +1,7 @@
 import { Settings } from 'lucide-react'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { UserAvatar } from '@/components/user-avatar'
 import { UserDropdown } from '@/features/layout/comoponents/user-dropdown'
 import { useUser } from '@/lib/auth'
 import { cn } from '@/lib/utils'
@@ -18,10 +18,7 @@ export const UserMenu = () => {
       className={cn(
         'bg-background flex h-14 items-center gap-3 overflow-hidden rounded-md border px-3 py-2 shadow',
       )}>
-      <Avatar>
-        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
+      <UserAvatar userId="" />
 
       <div className="text-sm">
         <p>{user.data.name}</p>

@@ -1,8 +1,8 @@
 import { Link, type ReactNode } from '@tanstack/react-router'
-import { DollarSign } from 'lucide-react'
+import { Coins } from 'lucide-react'
 
 import { useIsMobile } from '@/components/hooks/use-mobile'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
+import { UserAvatar } from '@/components/user-avatar'
 import { rotues } from '@/constants/routes'
 import { MobileNavbar } from '@/features/layout/comoponents/mobile-navbar'
 import { ThemeSwitcher } from '@/features/layout/comoponents/theme-switcher'
@@ -15,26 +15,36 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <div className={cn(!isMobile && 'flex', 'bg-background')}>
       <div className={cn('flex w-full flex-col')}>
-        <header className="bg-background/30 sticky top-0 flex h-16 w-full items-center justify-start gap-4 border-b px-4 backdrop-blur-md md:px-12">
+        <header className="bg-background/40 sticky top-0 flex h-16 w-full items-center justify-start gap-4 border-b px-4 backdrop-blur md:gap-1 lg:gap-12 lg:px-12">
           <MobileNavbar />
-          {isMobile ? null : (
+          {isMobile ? (
+            <h1 className="mx-auto flex gap-2">
+              <Coins />
+              CoinControl
+            </h1>
+          ) : (
             <>
               <Link to="/">
                 <h1 className="flex items-center gap-2 text-xl font-semibold">
-                  <DollarSign />
+                  <Coins />
                   CoinControl
                 </h1>
               </Link>
-              <nav className="text-muted-foreground ml-8 flex gap-8 text-sm">
-                {rotues.map(({ text, url }) => {
+              <nav className="text-muted-foreground ml-2 flex gap-0 text-sm lg:ml-8 lg:gap-10">
+                {rotues.map(({ text, url, icon: Icon }) => {
                   return (
                     <ul key={text}>
                       <li>
                         <Link
                           to={url}
+                          className="flex items-center gap-2 rounded-md px-3 py-1 transition-all"
+                          inactiveProps={{
+                            className: 'border border-transparent',
+                          }}
                           activeProps={{
-                            className: 'text-foreground',
+                            className: 'text-foreground bg-muted border shadow',
                           }}>
+                          <Icon className="size-4" />
                           {text}
                         </Link>
                       </li>
@@ -45,19 +55,14 @@ export function Layout({ children }: { children: ReactNode }) {
             </>
           )}
 
-          <div className="ml-auto flex items-center gap-4">
+          <div className="flex items-center gap-4 md:ml-auto">
             <ThemeSwitcher />
             {!isMobile && (
               <UserDropdown
                 side="bottom"
                 triggerComponent={
                   <button type="button">
-                    <Avatar>
-                      <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        alt="You"
-                      />
-                    </Avatar>
+                    <UserAvatar userId="" />
                   </button>
                 }
               />

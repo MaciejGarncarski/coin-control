@@ -36,16 +36,18 @@ export function MobileNavbar() {
             </p>
           </SheetTitle>
         </SheetHeader>
-        <nav className="text-muted-foreground ml-8 flex flex-col gap-8 text-lg">
-          {rotues.map(({ text, url }) => {
+        <nav className="text-muted-foreground mx-4 flex flex-col gap-14 py-10 text-xl">
+          {rotues.map(({ icon: Icon, text, url }) => {
             return (
               <ul key={text}>
                 <li>
                   <Link
                     to={url}
+                    className="flex gap-4 rounded-md px-4 py-3"
                     activeProps={{
-                      className: 'text-foreground',
+                      className: 'text-foreground bg-muted border shadow',
                     }}>
+                    <Icon />
                     {text}
                   </Link>
                 </li>

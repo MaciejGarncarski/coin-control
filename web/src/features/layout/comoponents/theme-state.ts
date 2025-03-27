@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+import { transitionManager } from '@/utils/transition-manager'
+
 type Theme = 'dark' | 'light' | 'system'
 
 type ThemeProviderState = {
@@ -14,6 +16,8 @@ export const useThemeStore = create<ThemeProviderState>()(
       return {
         theme: get()?.theme || 'system',
         setTheme: (newTheme) => {
+          const transitions = transitionManager()
+          transitions.disable()
           const root = window.document.documentElement
 
           root.classList.remove('light', 'dark')
@@ -26,11 +30,12 @@ export const useThemeStore = create<ThemeProviderState>()(
               : 'light'
 
             root.classList.add(systemTheme)
+            window.requestAnimationFrame(transitions.enable)
             return set({ theme: newTheme })
           }
 
           root.classList.add(newTheme)
-
+          window.requestAnimationFrame(transitions.enable)
           return set({ theme: newTheme })
         },
       }

@@ -63,6 +63,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     ],
   }),
   pendingComponent: () => <div>Loading...</div>,
+  notFoundComponent: () => <p>Not found!</p>,
   pendingMinMs: 0,
   pendingMs: 0,
   component: () => <RootComponent />,
