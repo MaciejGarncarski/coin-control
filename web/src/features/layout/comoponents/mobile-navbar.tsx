@@ -58,7 +58,7 @@ export function MobileNavbar() {
             )
           })}
         </nav>
-        <div className="mt-auto p-2">
+        <div className="mt-auto mb-4 p-2">
           <UserMenu />
         </div>
       </SheetContent>

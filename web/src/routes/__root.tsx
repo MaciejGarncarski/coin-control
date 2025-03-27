@@ -8,6 +8,8 @@ import {
 import { lazy } from 'react'
 import { Toaster } from 'sonner'
 
+import { NotFoundPage } from '@/features/layout/pages/not-found'
+
 export const auth: Auth = {
   status: 'loggedOut',
   isEmailVerified: false,
@@ -63,7 +65,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     ],
   }),
   pendingComponent: () => <div>Loading...</div>,
-  notFoundComponent: () => <p>Not found!</p>,
+  notFoundComponent: NotFoundPage,
   pendingMinMs: 0,
   pendingMs: 0,
   component: () => <RootComponent />,
