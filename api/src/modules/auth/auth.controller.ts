@@ -444,7 +444,7 @@ export async function resetPasswordHandler(
       },
     })
 
-    if (!userId) {
+    if (!userId.user_id) {
       throw new Error('User not found.')
     }
 
@@ -461,7 +461,7 @@ export async function resetPasswordHandler(
 
     await tx.sessions.deleteMany({
       where: {
-        user_id: user.id,
+        user_id: userId.user_id,
       },
     })
 
