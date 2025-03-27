@@ -1,13 +1,12 @@
 name: Lint & format
 
 on:
-  workflow_run:
-    workflows: ["Check types"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
 
 jobs:
-  publish:
+  lint-format:
     runs-on: ubuntu-latest
 
     steps:
