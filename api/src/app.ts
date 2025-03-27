@@ -6,7 +6,7 @@ import helmet from 'helmet'
 import { env } from './config/env.js'
 import { limiter } from './config/rate-limit.js'
 import { sessionConfig } from './config/session.js'
-import { createExpiredSessionCron } from './lib/queues/session-cron.js'
+import { setupCron } from './lib/queues/setup-cron.js'
 import { httpLogger } from './logger/logger.js'
 import { corsMiddleware } from './middlewares/cors.js'
 import { errorMiddleware } from './middlewares/error.js'
@@ -32,7 +32,8 @@ app.use(router())
 app.use(limiter)
 app.use(errorMiddleware)
 app.use(notFoundMiddleware)
-createExpiredSessionCron()
+
+setupCron()
 
 app.listen(Number(env.PORT), env.HOST, (error) => {
   if (error) {

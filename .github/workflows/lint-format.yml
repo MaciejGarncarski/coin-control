@@ -1,0 +1,43 @@
+name: Lint & format
+
+on:
+  workflow_run:
+    workflows: ["Check types"]
+    types:
+      - completed
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Check types
+        run: pnpm -r lint-format
+
+      - name: Commit and push changes
+        if: ${{ success() }}
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Automated formatting by GitHub Actions" || echo "No changes to commit"
+          git push origin HEAD:${{ github.ref_name }} # Push to the same branch

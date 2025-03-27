@@ -1,9 +1,10 @@
 name: Publish Docker Images
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Lint & format"]
+    types:
+      - completed
 
 jobs:
   publish:

@@ -30,13 +30,13 @@ export function MobileNavbar() {
       <SheetContent side="left" aria-describedby={undefined} className="gap-4">
         <SheetHeader>
           <SheetTitle>
-            <p className="flex gap-2">
+            <p className="flex gap-2 px-4 py-4">
               <Coins />
               CoinControl
             </p>
           </SheetTitle>
         </SheetHeader>
-        <nav className="text-muted-foreground mx-4 flex flex-col gap-14 py-10 text-xl">
+        <nav className="text-muted-foreground mx-4 flex flex-col gap-10 py-4 text-lg">
           {rotues.map(({ icon: Icon, text, url }) => {
             return (
               <ul key={text}>
@@ -44,6 +44,9 @@ export function MobileNavbar() {
                   <Link
                     to={url}
                     className="flex gap-4 rounded-md px-4 py-3"
+                    inactiveProps={{
+                      className: 'border border-transparent',
+                    }}
                     activeProps={{
                       className: 'text-foreground bg-muted border shadow',
                     }}>
