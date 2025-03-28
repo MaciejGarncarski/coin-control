@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { User } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 import { LogoutButton } from '@/components/logout-button'
@@ -7,7 +8,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
@@ -22,11 +22,12 @@ export function UserDropdown({ triggerComponent, side = 'right' }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{triggerComponent}</DropdownMenuTrigger>
       <DropdownMenuContent className="w-32" side={side} sideOffset={10}>
-        <DropdownMenuLabel className="font-semibold">Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link to="/account">Profile</Link>
+            <Link to="/account">
+              <User />
+              Account
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

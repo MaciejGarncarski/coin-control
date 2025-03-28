@@ -42,16 +42,7 @@ export function RegisterPage() {
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Register</CardTitle>
-        <CardDescription>
-          <p>
-            Register to <span className="font-semibold">CoinControl</span> or
-            login{' '}
-            <Link to="/auth/login" className="text-foreground underline">
-              here
-            </Link>
-            .
-          </p>
-        </CardDescription>
+        <CardDescription>Register to CoinControl</CardDescription>
         {registerMutation.isError &&
           registerMutation.error instanceof ApiError && (
             <Alert variant={'destructive'} className="animate-in fade-in mt-3">
@@ -127,14 +118,19 @@ export function RegisterPage() {
                 </FormItem>
               )}
             />
-            <p className="text-muted-foreground text-sm">
-              Forgot password? Click{' '}
+            <div className="flex items-center justify-between">
               <Link
                 to="/auth/forgot-password"
-                className="text-foreground underline">
-                here.
+                className="text-muted-foreground text-sm underline">
+                Forgot password?
               </Link>
-            </p>
+
+              <Link
+                to="/auth/login"
+                className="text-muted-foreground text-sm underline">
+                Login
+              </Link>
+            </div>
             <Button type="submit">Register</Button>
           </form>
         </Form>

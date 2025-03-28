@@ -42,16 +42,7 @@ export const LoginPage = () => {
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Login</CardTitle>
-        <CardDescription>
-          <p>
-            Login to <span className="font-semibold">CoinControl</span> or
-            register{' '}
-            <Link to="/auth/register" className="text-foreground underline">
-              here
-            </Link>
-            .
-          </p>
-        </CardDescription>
+        <CardDescription>Login to CoinControl</CardDescription>
         {loginMutation.isError && (
           <Alert variant={'destructive'} className={cn('bg-card mt-3')}>
             <AlertCircle className="h-4 w-4" />
@@ -96,14 +87,19 @@ export const LoginPage = () => {
                 </FormItem>
               )}
             />
-            <p className="bg-background text-muted-foreground text-sm">
-              Forgot password? Click{' '}
+            <div className="flex items-center justify-between">
               <Link
                 to="/auth/forgot-password"
-                className="text-foreground underline">
-                here.
+                className="text-muted-foreground text-sm underline">
+                Forgot password?
               </Link>
-            </p>
+
+              <Link
+                to="/auth/register"
+                className="text-muted-foreground text-sm underline">
+                Register
+              </Link>
+            </div>
             <Button type="submit">
               {loginMutation.isPending ? <Spinner /> : null}
               {loginMutation.isPending ? 'Logging in...' : 'Login'}
