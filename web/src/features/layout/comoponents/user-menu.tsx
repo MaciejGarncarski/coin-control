@@ -16,13 +16,13 @@ export const UserMenu = () => {
   return (
     <div
       className={cn(
-        'bg-background flex h-14 items-center gap-3 overflow-hidden rounded-md border px-3 py-2 shadow',
+        'bg-muted flex h-14 items-center gap-3 overflow-hidden rounded-md border px-3 py-2 shadow',
       )}>
       <UserAvatar userId="" />
 
-      <div className="text-sm">
-        <p>{user.data.name}</p>
-        <p className="text-muted-foreground max-w-[21ch] overflow-hidden text-xs overflow-ellipsis">
+      <div className="text-xs">
+        <p className="font-semibold">{user.data.name}</p>
+        <p className="text-muted-foreground max-w-[16ch] overflow-hidden text-xs overflow-ellipsis">
           {user.data.email}
         </p>
       </div>
