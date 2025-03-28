@@ -15,7 +15,7 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <div className={cn(!isMobile && 'flex', 'bg-background')}>
       <div className={cn('flex w-full flex-col')}>
-        <header className="bg-background/40 sticky top-0 flex h-16 w-full items-center justify-start gap-4 border-b px-4 backdrop-blur md:gap-1 lg:gap-12 lg:px-12">
+        <header className="bg-background/40 sticky top-0 flex h-16 w-full items-center justify-start gap-4 border-b px-4 backdrop-blur md:gap-1 lg:gap-12 lg:px-10">
           <MobileNavbar />
           {isMobile ? (
             <h1 className="mx-auto flex gap-2">
@@ -30,7 +30,7 @@ export function Layout({ children }: { children: ReactNode }) {
                   CoinControl
                 </h1>
               </Link>
-              <nav className="text-muted-foreground ml-2 hidden gap-0 text-sm md:flex lg:ml-8 lg:gap-10">
+              <nav className="text-muted-foreground ml-2 hidden gap-0 text-sm md:ml-6 md:flex lg:ml-8 lg:gap-10">
                 {rotues.map(({ text, url, icon: Icon }) => {
                   return (
                     <ul key={text}>
@@ -69,10 +69,9 @@ export function Layout({ children }: { children: ReactNode }) {
             )}
           </div>
         </header>
-        <div className="bg-background flex">
-          <main className="w-full p-12 md:rounded-tl-2xl">{children}</main>
-          <div className="mt-[100rem]">usun to</div>
-        </div>
+        <main className="min-h-[calc(100dvh-4rem)] w-full p-4 md:rounded-tl-2xl md:p-10">
+          {children}
+        </main>
       </div>
     </div>
   )

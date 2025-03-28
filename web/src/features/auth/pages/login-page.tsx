@@ -91,7 +91,7 @@ export const LoginPage = () => {
               <Link
                 to="/auth/forgot-password"
                 className="text-muted-foreground text-sm underline">
-                Forgot password?
+                Forgot your password?
               </Link>
 
               <Link

@@ -42,6 +42,7 @@ const route = Router()
 
 export const authRoutes = (app: Router) => {
   app.use('/auth', route)
+
   route.post(
     '/login',
     validateData(loginMutationSchema),
