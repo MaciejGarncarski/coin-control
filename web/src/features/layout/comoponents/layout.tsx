@@ -25,12 +25,12 @@ export function Layout({ children }: { children: ReactNode }) {
           ) : (
             <>
               <Link to="/">
-                <h1 className="flex items-center gap-2 text-xl font-semibold">
+                <h1 className="hidden items-center gap-2 text-xl font-semibold md:flex">
                   <Coins />
                   CoinControl
                 </h1>
               </Link>
-              <nav className="text-muted-foreground ml-2 flex gap-0 text-sm lg:ml-8 lg:gap-10">
+              <nav className="text-muted-foreground ml-2 hidden gap-0 text-sm md:flex lg:ml-8 lg:gap-10">
                 {rotues.map(({ text, url, icon: Icon }) => {
                   return (
                     <ul key={text}>

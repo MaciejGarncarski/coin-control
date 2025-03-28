@@ -1,9 +1,9 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
-import { CookieBanner } from '@/features/cookie-banner/comopnents/cookie-banner'
+import { CookieBanner } from '@/features/cookies/comopnents/cookie-banner'
 import { ThemeSwitcher } from '@/features/layout/comoponents/theme-switcher'
 
-export const Route = createFileRoute('/_not_authenticated')({
+export const Route = createFileRoute('/_unauthenticated')({
   beforeLoad: async ({ context }) => {
     if (!context.auth?.status) {
       return

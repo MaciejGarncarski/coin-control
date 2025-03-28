@@ -2,7 +2,7 @@ import cors from 'cors'
 
 import { env } from '../config/env.js'
 
-export const corsMiddleware = () => {
+export function corsMiddleware() {
   const middleware = cors({
     origin: env.APP_ORIGIN,
     credentials: true,

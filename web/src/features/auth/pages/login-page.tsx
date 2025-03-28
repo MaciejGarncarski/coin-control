@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { InputPassword } from '@/components/ui/input-password'
-import { useLoginMutation } from '@/features/auth/login/api/login'
+import { useLoginMutation } from '@/features/auth/api/login'
 import { cn } from '@/lib/utils'
 
 export const LoginPage = () => {

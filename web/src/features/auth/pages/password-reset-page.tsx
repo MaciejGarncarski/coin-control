@@ -25,8 +25,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { InputPassword } from '@/components/ui/input-password'
-import { useResetPassword } from '@/features/auth/password-reset/api/use-reset-password'
-import { Route } from '@/routes/_not_authenticated/auth/password-reset'
+import { useResetPassword } from '@/features/auth/api/use-reset-password'
+import { Route } from '@/routes/_unauthenticated/auth/password-reset'
 
 export const PasswordResetPage = () => {
   const resetPasswordMutation = useResetPassword()

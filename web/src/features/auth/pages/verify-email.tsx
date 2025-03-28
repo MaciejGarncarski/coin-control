@@ -28,8 +28,8 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp'
 import { Separator } from '@/components/ui/separator'
-import { useVerifyOTP } from '@/features/auth/verify-email/api/use-verify-otp'
-import { GetOtpButton } from '@/features/auth/verify-email/components/get-otp-button'
+import { useVerifyOTP } from '@/features/auth/api/use-verify-otp'
+import { GetOtpButton } from '@/features/auth/components/get-otp-button'
 import { ThemeSwitcher } from '@/features/layout/comoponents/theme-switcher'
 import { userQueryOptions } from '@/lib/auth'
 

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { Spinner } from '@/components/spinner'
 import { Button } from '@/components/ui/button'
-import { useSendOTP } from '@/features/auth/verify-email/api/use-send-otp'
+import { useSendOTP } from '@/features/auth/api/use-send-otp'
 
 const WAIT_TIMEOUT = 1000 * 60 * 2
 

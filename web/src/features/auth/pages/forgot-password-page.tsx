@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useSendPasswordResetLink } from '@/features/auth/forgot-password/api/use-send-password-reset'
+import { useSendPasswordResetLink } from '@/features/auth/api/use-send-password-reset'
 
 export const ForgotPasswordPage = () => {
   const sendResetPasswordLink = useSendPasswordResetLink()

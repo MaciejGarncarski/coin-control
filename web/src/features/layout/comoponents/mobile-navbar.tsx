@@ -23,7 +23,11 @@ export function MobileNavbar() {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button type="button" size="icon" variant={'outline'}>
+        <Button
+          type="button"
+          size="icon"
+          className="md:hidden"
+          variant={'outline'}>
           <Menu />
         </Button>
       </SheetTrigger>

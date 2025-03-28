@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { InputPassword } from '@/components/ui/input-password'
-import { useRegisterMutation } from '@/features/auth/register/api/register'
+import { useRegisterMutation } from '@/features/auth/api/register'
 
 export function RegisterPage() {
   const registerMutation = useRegisterMutation()

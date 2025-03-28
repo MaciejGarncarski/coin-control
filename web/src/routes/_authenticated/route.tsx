@@ -6,8 +6,8 @@ import {
   useRouteContext,
 } from '@tanstack/react-router'
 
-import { VerifyEmailPage } from '@/features/auth/verify-email/pages/verify-email'
-import { CookieBanner } from '@/features/cookie-banner/comopnents/cookie-banner'
+import { VerifyEmailPage } from '@/features/auth/pages/verify-email'
+import { CookieBanner } from '@/features/cookies/comopnents/cookie-banner'
 import { Layout } from '@/features/layout/comoponents/layout'
 import { userQueryOptions } from '@/lib/auth'
 
