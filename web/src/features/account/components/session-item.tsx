@@ -49,7 +49,7 @@ export const SessionItem = ({ session }: Props) => {
           </span>
           <div className="flex flex-col md:flex-row md:items-center md:gap-4">
             <span className="flex flex-col">
-              <span>
+              <span className="text-sm md:text-base">
                 {session.browser} on {session.os}
               </span>
               <span className="text-muted-foreground text-xs">
