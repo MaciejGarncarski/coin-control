@@ -47,7 +47,7 @@ export const SessionItem = ({ session }: Props) => {
           <span className="bg-background text-muted-foreground rounded-full border p-2 shadow">
             {session.deviceType === 'mobile' ? <Smartphone /> : <Laptop />}
           </span>
-          <div className="flex flex-col md:flex-row md:gap-4">
+          <div className="flex flex-col items-center md:flex-row md:gap-4">
             <span className="flex flex-col">
               <span>
                 {session.browser} on {session.os}
