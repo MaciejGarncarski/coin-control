@@ -1,4 +1,25 @@
 services:
+  database:
+    image: postgres:17.4-alpine
+    container_name: coin-control-database
+    restart: always
+    environment:
+      PGUSER: postgres
+      PGDATABASE: coin_control
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: coin_control
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+    volumes:
+      - coin-control-database-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
   cache:
     image: redis:6.2-alpine
     container_name: coin-control-cache
@@ -39,12 +60,17 @@ services:
     build:
       target: dev
       dockerfile: ./docker/worker.Dockerfile
+      args:
+        - DATABASE_URL=${DATABASE_URL}
     volumes:
       - ./worker/src:/app/worker/src
+      - ./worker/prisma:/app/worker/prisma
+      - ./worker/node_modules:/app/worker/node_modules
       - ./shared:/app/shared
     profiles: [dev]
     depends_on:
       - cache
+      - database
     networks:
       - app-network
     environment:
@@ -63,9 +89,12 @@ services:
     build:
       target: prod
       dockerfile: ./docker/worker.Dockerfile
+      args:
+        - DATABASE_URL=${DATABASE_URL}
     profiles: [prod]
     depends_on:
       - cache
+      - database
     networks:
       - app-network
     environment:
@@ -83,11 +112,16 @@ services:
     depends_on:
       - cache
       - worker-dev
+      - database
     build:
       target: dev
       dockerfile: ./docker/api.Dockerfile
+      args:
+        - DATABASE_URL=${DATABASE_URL}
     volumes:
       - ./api/src:/app/api/src
+      - ./api/prisma:/app/api/prisma
+      - ./api/node_modules:/app/api/node_modules
       - ./shared:/app/shared
     profiles: [dev]
     networks:
@@ -112,11 +146,14 @@ services:
     depends_on:
       - cache
       - worker
+      - database
     networks:
       - app-network
     build:
       target: prod
       dockerfile: ./docker/api.Dockerfile
+      args:
+        - DATABASE_URL=${DATABASE_URL}
     profiles: [prod]
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -172,4 +209,7 @@ networks:
 
 volumes:
   cache:
+    driver: local
+
+  coin-control-database-data:
     driver: local

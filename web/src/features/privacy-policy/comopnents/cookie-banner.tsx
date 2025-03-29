@@ -36,7 +36,7 @@ export const CookieBanner = () => {
                 <p>This app uses only necessary cookies, to work properly.</p>
                 <div className="flex justify-end gap-4">
                   <Button type="button" variant={'outline'} asChild size={'sm'}>
-                    <Link to="/cookie-policy">Learn more</Link>
+                    <Link to="/privacy-policy">Learn more</Link>
                   </Button>
                   <Button type="button" size={'sm'} onClick={acceptCookies}>
                     Okay

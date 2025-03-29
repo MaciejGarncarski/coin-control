@@ -1,13 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { useUser } from '@/lib/auth'
+import { getMySessionsQueryOptions } from '@/features/account/api/get-my-sessions'
+import { AccountPage } from '@/features/account/pages/account'
 
 export const Route = createFileRoute('/_authenticated/account')({
-  component: RouteComponent,
+  loader: async ({ context }) => {
+    await context.queryClient.invalidateQueries({ queryKey: ['my-sessions'] })
+
+    return context.queryClient.ensureQueryData(getMySessionsQueryOptions)
+  },
+  component: AccountPage,
   pendingComponent: () => <p>Loading</p>,
 })
-
-function RouteComponent() {
-  const user = useUser({})
-  return <div>UserID: {user.data?.id}</div>
-}

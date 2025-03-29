@@ -10,7 +10,8 @@
     "lint": "eslint --fix .",
     "format": "prettier --write --cache .",
     "lint-format": "pnpm lint && pnpm format",
-    "check-types": "pnpm tsc --skipLibCheck --noEmit"
+    "check-types": "pnpm tsc --skipLibCheck --noEmit",
+    "db-pull": "pnpm prisma db pull"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",

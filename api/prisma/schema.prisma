@@ -19,11 +19,17 @@ model otp_codes {
 }
 
 model sessions {
-  sid       String   @id
-  data      String
-  expire_at DateTime @db.Timestamp(6)
-  user_id   String?  @db.Uuid
-  users     users?   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  sid              String    @id
+  data             String
+  expire_at        DateTime  @db.Timestamp(6)
+  user_id          String    @db.Uuid
+  last_access      DateTime? @db.Timestamptz(6)
+  device_type      String?   @db.VarChar(255)
+  operating_system String?   @db.VarChar(255)
+  browser          String?   @db.VarChar(255)
+  ip_address       String?   @db.VarChar(45)
+  location         String?   @db.VarChar(255)
+  users            users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model users {

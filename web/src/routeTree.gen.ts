@@ -11,7 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as CookiePolicyImport } from './routes/cookie-policy'
+import { Route as PrivacyPolicyImport } from './routes/privacy-policy'
 import { Route as UnauthenticatedRouteImport } from './routes/_unauthenticated/route'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
@@ -24,9 +24,9 @@ import { Route as UnauthenticatedAuthForgotPasswordImport } from './routes/_unau
 
 // Create/Update Routes
 
-const CookiePolicyRoute = CookiePolicyImport.update({
-  id: '/cookie-policy',
-  path: '/cookie-policy',
+const PrivacyPolicyRoute = PrivacyPolicyImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -103,11 +103,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnauthenticatedRouteImport
       parentRoute: typeof rootRoute
     }
-    '/cookie-policy': {
-      id: '/cookie-policy'
-      path: '/cookie-policy'
-      fullPath: '/cookie-policy'
-      preLoaderRoute: typeof CookiePolicyImport
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyImport
       parentRoute: typeof rootRoute
     }
     '/_authenticated/account': {
@@ -199,7 +199,7 @@ const UnauthenticatedRouteRouteWithChildren =
 
 export interface FileRoutesByFullPath {
   '': typeof UnauthenticatedRouteRouteWithChildren
-  '/cookie-policy': typeof CookiePolicyRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/account': typeof AuthenticatedAccountRoute
   '/': typeof AuthenticatedIndexRoute
   '/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
@@ -211,7 +211,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '': typeof UnauthenticatedRouteRouteWithChildren
-  '/cookie-policy': typeof CookiePolicyRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/account': typeof AuthenticatedAccountRoute
   '/': typeof AuthenticatedIndexRoute
   '/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
@@ -225,7 +225,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_unauthenticated': typeof UnauthenticatedRouteRouteWithChildren
-  '/cookie-policy': typeof CookiePolicyRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_unauthenticated/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
@@ -239,7 +239,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | ''
-    | '/cookie-policy'
+    | '/privacy-policy'
     | '/account'
     | '/'
     | '/auth/forgot-password'
@@ -250,7 +250,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
-    | '/cookie-policy'
+    | '/privacy-policy'
     | '/account'
     | '/'
     | '/auth/forgot-password'
@@ -262,7 +262,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/_unauthenticated'
-    | '/cookie-policy'
+    | '/privacy-policy'
     | '/_authenticated/account'
     | '/_authenticated/'
     | '/_unauthenticated/auth/forgot-password'
@@ -276,13 +276,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   UnauthenticatedRouteRoute: typeof UnauthenticatedRouteRouteWithChildren
-  CookiePolicyRoute: typeof CookiePolicyRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   UnauthenticatedRouteRoute: UnauthenticatedRouteRouteWithChildren,
-  CookiePolicyRoute: CookiePolicyRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
 }
 
 export const routeTree = rootRoute
@@ -297,7 +297,7 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated",
         "/_unauthenticated",
-        "/cookie-policy"
+        "/privacy-policy"
       ]
     },
     "/_authenticated": {
@@ -317,8 +317,8 @@ export const routeTree = rootRoute
         "/_unauthenticated/auth/"
       ]
     },
-    "/cookie-policy": {
-      "filePath": "cookie-policy.tsx"
+    "/privacy-policy": {
+      "filePath": "privacy-policy.tsx"
     },
     "/_authenticated/account": {
       "filePath": "_authenticated/account.tsx",

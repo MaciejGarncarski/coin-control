@@ -84,3 +84,21 @@ export const resetPasswordMutationSchema = z
   })
 
 export type ResetPasswordMutation = z.infer<typeof resetPasswordMutationSchema>
+
+export const mySessionSchema = z.object({
+  deviceType: z.string().nullable(),
+  ip: z.string().nullable(),
+  lastAccess: z.string().pipe(z.coerce.date()).nullable(),
+  location: z.string().nullable(),
+  os: z.string().nullable(),
+  browser: z.string().nullable(),
+  sid: z.string(),
+})
+
+export type MySession = z.infer<typeof mySessionSchema>
+
+export const logOutDeviceQuerySchema = z.object({
+  sid: z.string().min(10),
+})
+
+export type LogOutDeviceQuery = z.infer<typeof logOutDeviceQuerySchema>

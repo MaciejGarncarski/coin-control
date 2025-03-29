@@ -1,8 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ApiError } from '@maciekdev/fetcher'
+import { type CheckedState } from '@radix-ui/react-checkbox'
 import { type RegisterMutation, registerMutationSchema } from '@shared/schemas'
 import { Link } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -14,6 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
   FormControl,
@@ -24,9 +27,13 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { InputPassword } from '@/components/ui/input-password'
+import { Label } from '@/components/ui/label'
 import { useRegisterMutation } from '@/features/auth/api/register'
 
 export function RegisterPage() {
+  const [isPrivacyPolicyRead, setIsPrivacyPolicyRead] =
+    useState<CheckedState>(false)
+
   const registerMutation = useRegisterMutation()
   const form = useForm<RegisterMutation>({
     resolver: zodResolver(registerMutationSchema),
@@ -37,6 +44,21 @@ export function RegisterPage() {
       confirmPassword: '',
     },
   })
+
+  const handleFormSubmit = form.handleSubmit(
+    ({ email, password, confirmPassword, fullName }) => {
+      if (!isPrivacyPolicyRead) {
+        return
+      }
+
+      registerMutation.mutate({
+        email,
+        password,
+        confirmPassword,
+        fullName,
+      })
+    },
+  )
 
   return (
     <Card className="w-full">
@@ -56,15 +78,7 @@ export function RegisterPage() {
       <CardContent>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(
-              ({ email, password, confirmPassword, fullName }) =>
-                registerMutation.mutate({
-                  email,
-                  password,
-                  confirmPassword,
-                  fullName,
-                }),
-            )}
+            onSubmit={handleFormSubmit}
             className="flex flex-col gap-4 md:gap-6">
             <FormField
               name="email"
@@ -119,11 +133,21 @@ export function RegisterPage() {
               )}
             />
             <div className="flex items-center justify-between">
-              <Link
-                to="/auth/forgot-password"
-                className="text-muted-foreground text-sm underline">
-                Forgot your password?
-              </Link>
+              <Label>
+                <Checkbox
+                  checked={isPrivacyPolicyRead}
+                  onCheckedChange={setIsPrivacyPolicyRead}
+                />
+                <span className="text-muted-foreground">
+                  I have read{' '}
+                  <Link
+                    to="/privacy-policy"
+                    className="text-foreground underline">
+                    privacy policy
+                  </Link>
+                  .
+                </span>
+              </Label>
 
               <Link
                 to="/auth/login"
@@ -131,7 +155,9 @@ export function RegisterPage() {
                 Login
               </Link>
             </div>
-            <Button type="submit">Register</Button>
+            <Button type="submit" disabled={!isPrivacyPolicyRead}>
+              Register
+            </Button>
           </form>
         </Form>
       </CardContent>

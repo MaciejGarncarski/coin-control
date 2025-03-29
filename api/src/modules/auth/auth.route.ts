@@ -1,6 +1,7 @@
 import {
   forgotPasswordEmailMutationSchema,
   loginMutationSchema,
+  logOutDeviceQuerySchema,
   OTPVerifyMutationSchema,
   registerMutationSchema,
   resetPasswordMutationSchema,
@@ -9,11 +10,16 @@ import { Router } from 'express'
 import ms from 'ms'
 
 import { createRateLimiter } from '../../lib/rate-limiter.js'
+import { authorize } from '../../middlewares/authorize.js'
 import { validateData } from '../../middlewares/validator.js'
+import { validateParams } from '../../middlewares/validator-params.js'
 import {
   forgotPasswordLinkHandler,
+  getMySessionsHandler,
   getOTPHandler,
   getUserHandler,
+  logOutDeviceHandler,
+  logOutEveryDeviceHandler,
   logoutHandler,
   postLoginHandler,
   registerHandler,
@@ -54,6 +60,16 @@ export const authRoutes = (app: Router) => {
     validateData(registerMutationSchema),
     authLimiter,
     registerHandler,
+  )
+
+  route.get('/my-sessions', authorize, getMySessionsHandler)
+  route.delete('/my-sessions', authLimiter, authorize, logOutEveryDeviceHandler)
+  route.delete(
+    '/my-sessions/:sid',
+    authLimiter,
+    authorize,
+    validateParams(logOutDeviceQuerySchema),
+    logOutDeviceHandler,
   )
 
   route.get('/me', getUserHandler)

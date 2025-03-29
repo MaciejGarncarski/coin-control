@@ -2,6 +2,7 @@
 
 ARG NODE_VERSION=22.14.0
 ARG PNPM_VERSION=10.6.1
+ARG DATABASE_URL="test"
 
 # base
 FROM node:${NODE_VERSION}-alpine AS base

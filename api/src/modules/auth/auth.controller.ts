@@ -1,29 +1,40 @@
-import { createHash } from 'node:crypto'
-
-import { hash, verify } from '@node-rs/argon2'
+import { verify } from '@node-rs/argon2'
 import type {
   ForgotPasswordEmailMutation,
+  LogOutDeviceQuery,
   OTPVerifyMutation,
   ResetPasswordMutation,
 } from '@shared/schemas'
-import { type LoginMutation, type RegisterMutation } from '@shared/schemas'
+import { type LoginMutation, type RegisterMutation, z } from '@shared/schemas'
 import type { Request, Response } from 'express'
 import { status } from 'http-status'
 import ms from 'ms'
+import { UAParser } from 'ua-parser-js'
 import { v7 } from 'uuid'
 
 import { ApiError } from '../../lib/api-error.js'
 import { db } from '../../lib/db.js'
 import { emailVerificationQueue } from '../../lib/queues/email-verification.js'
-import { resetPasswordLinkQueue } from '../../lib/queues/reset-password-link.js'
-import { resetPasswordNotificationQueue } from '../../lib/queues/reset-password-notification.js'
 import { generateOTP } from '../../utils/generate-otp.js'
-import { registerUser } from './auth.service.js'
+import { getUserLocation } from '../../utils/get-user-location.js'
+import {
+  getOTP,
+  getUser,
+  registerUser,
+  resetPassword,
+  sendResetPasswordCode,
+  verifyOTP,
+} from './auth.service.js'
+import { sessionsDTO } from './sessions.dto.js'
 import { userDTO } from './user.dto.js'
-
 interface LoginRequest extends Request {
   body: LoginMutation
 }
+
+const IPResponseSchema = z.object({
+  countryName: z.string().min(2).optional(),
+  cityName: z.string().min(2).optional(),
+})
 
 export const postLoginHandler = async (req: LoginRequest, res: Response) => {
   const email = req.body.email
@@ -82,17 +93,8 @@ export const getUserHandler = async (req: Request, res: Response) => {
       statusCode: status.UNAUTHORIZED,
     })
   }
-  const user = await db.users.findFirst({
-    where: {
-      id: req.session.userId,
-    },
-    select: {
-      id: true,
-      email: true,
-      email_verified: true,
-      name: true,
-    },
-  })
+
+  const user = await getUser({ userId: req.session.userId })
 
   if (!user) {
     throw new ApiError({
@@ -102,7 +104,37 @@ export const getUserHandler = async (req: Request, res: Response) => {
   }
 
   const userData = userDTO(user)
+
   res.status(status.OK).json(userData)
+
+  req.session.save(async (e) => {
+    const userIP = req.ip
+    const parsedUserAgent = UAParser(req.headers)
+    const userIPResponse = await fetch(
+      `https://freeipapi.com/api/json/${userIP}`,
+    )
+    const userIPData = await userIPResponse.json()
+    const IPData = IPResponseSchema.safeParse(userIPData)
+
+    const userLocation = IPData.success
+      ? getUserLocation(IPData.data.cityName, IPData.data.countryName)
+      : null
+
+    await db.sessions.update({
+      where: {
+        sid: req.session.id,
+      },
+      data: {
+        operating_system: parsedUserAgent.os.name,
+        browser: parsedUserAgent.browser.name,
+        device_type:
+          parsedUserAgent.device.type === 'mobile' ? 'mobile' : 'desktop',
+        last_access: new Date(),
+        ip_address: userIP,
+        location: userLocation,
+      },
+    })
+  })
 }
 
 export const logoutHandler = async (req: Request, res: Response) => {
@@ -235,41 +267,7 @@ export async function getOTPHandler(req: Request, res: Response) {
       statusCode: status.TOO_MANY_REQUESTS,
     })
   }
-
-  const expires_at = Date.now() + ms('5 minutes')
-  const otp_uuid = v7()
-  const OTPCode = generateOTP()
-
-  await db.otp_codes.create({
-    data: {
-      expires_at: new Date(expires_at),
-      otp: OTPCode,
-      user_id: req.session.userId,
-      id: otp_uuid,
-    },
-  })
-
-  await emailVerificationQueue.add(
-    `verification-email-${otp_uuid}`,
-    {
-      code: OTPCode,
-      userEmail: user.email,
-    },
-    {
-      attempts: 3,
-      backoff: {
-        type: 'exponential',
-        delay: 1000,
-      },
-      removeOnComplete: {
-        age: 3600,
-        count: 1000,
-      },
-      removeOnFail: {
-        age: 24 * 3600,
-      },
-    },
-  )
+  await getOTP({ email: user.email, userId: req.session.id })
 
   res.status(status.ACCEPTED).json({ message: 'success' })
   return
@@ -287,49 +285,7 @@ export async function verifyOTPHandler(req: VerifyOTPRequest, res: Response) {
     })
   }
 
-  const otp = await db.otp_codes.findFirst({
-    where: {
-      user_id: req.session.userId,
-      otp: req.body.code,
-    },
-    select: {
-      id: true,
-      expires_at: true,
-    },
-  })
-
-  if (!otp) {
-    throw new ApiError({
-      message: 'Invalid OTP code.',
-      statusCode: status.UNAUTHORIZED,
-    })
-  }
-
-  if (otp.expires_at < new Date()) {
-    throw new ApiError({
-      message: 'OTP code expired.',
-      toastMessage: 'Code expired.',
-      statusCode: status.UNAUTHORIZED,
-    })
-  }
-
-  await db.$transaction(async (tx) => {
-    await tx.users.update({
-      data: {
-        email_verified: true,
-      },
-      where: {
-        id: req.session.userId,
-      },
-    })
-
-    await tx.otp_codes.delete({
-      where: {
-        user_id: req.session.userId,
-        id: otp.id,
-      },
-    })
-  })
+  await verifyOTP({ code: req.body.code, userId: req.session.userId })
 
   res.status(status.OK).json({ message: 'success' })
 }
@@ -358,40 +314,7 @@ export async function forgotPasswordLinkHandler(
     return
   }
 
-  const passwordCodeId = v7()
-  const expiresAt = new Date().getTime() + ms('5 minutes')
-  const resetCode = createHash('sha512').update(v7()).digest('hex').slice(0, 48)
-
-  await db.reset_password_codes.create({
-    data: {
-      id: passwordCodeId,
-      expires_at: new Date(expiresAt),
-      user_id: foundUser.id,
-      reset_code: resetCode,
-    },
-  })
-
-  await resetPasswordLinkQueue.add(
-    `reset-password-link-${passwordCodeId}`,
-    {
-      passwordResetCode: resetCode,
-      userEmail: email,
-    },
-    {
-      attempts: 3,
-      backoff: {
-        type: 'exponential',
-        delay: 1000,
-      },
-      removeOnComplete: {
-        age: 3600,
-        count: 1000,
-      },
-      removeOnFail: {
-        age: 24 * 3600,
-      },
-    },
-  )
+  await sendResetPasswordCode({ email: email, userId: foundUser.id })
 
   res.status(status.ACCEPTED).json({ message: 'success' })
 }
@@ -430,67 +353,105 @@ export async function resetPasswordHandler(
     })
   }
 
-  const user = await db.$transaction(async (tx) => {
-    const userId = await tx.reset_password_codes.update({
-      where: {
-        id: codeFromDb.id,
-        reset_code: resetPasswordToken,
-      },
-      data: {
-        used: true,
-      },
-      select: {
-        user_id: true,
-      },
-    })
-
-    if (!userId.user_id) {
-      throw new Error('User not found.')
-    }
-
-    const hashedPassword = await hash(password)
-
-    const updatedUser = await tx.users.update({
-      where: {
-        id: userId.user_id,
-      },
-      data: {
-        password_hash: hashedPassword,
-      },
-    })
-
-    await tx.sessions.deleteMany({
-      where: {
-        user_id: userId.user_id,
-      },
-    })
-
-    return updatedUser
+  await resetPassword({
+    newPassword: password,
+    resetToken: resetPasswordToken,
+    resetTokenId: codeFromDb.id,
   })
 
-  const timestamp = Date.now()
-
-  await resetPasswordNotificationQueue.add(
-    `reset-password-notification-${codeFromDb.id}`,
-    {
-      createdAt: timestamp,
-      userEmail: user.email,
-    },
-    {
-      attempts: 3,
-      backoff: {
-        type: 'exponential',
-        delay: 1000,
-      },
-      removeOnComplete: {
-        age: 3600,
-        count: 1000,
-      },
-      removeOnFail: {
-        age: 24 * 3600,
-      },
-    },
-  )
-
   res.status(status.ACCEPTED).json({ message: 'success' })
+}
+
+export async function getMySessionsHandler(req: Request, res: Response) {
+  const sessions = await db.sessions.findMany({
+    where: {
+      user_id: req.session.userId,
+    },
+    orderBy: {
+      last_access: 'desc',
+    },
+    take: 10,
+    select: {
+      browser: true,
+      device_type: true,
+      ip_address: true,
+      last_access: true,
+      location: true,
+      operating_system: true,
+      sid: true,
+    },
+  })
+
+  const sessionsData = sessions.map((s) => sessionsDTO(s))
+
+  res.status(status.OK).json(sessionsData)
+}
+
+export async function logOutEveryDeviceHandler(req: Request, res: Response) {
+  const sid = req.session.id
+  const sessUserId = req.session.userId
+
+  req.session.destroy(async (err) => {
+    if (err) {
+      throw err
+    }
+
+    await db.sessions.deleteMany({
+      where: {
+        NOT: {
+          sid: sid,
+        },
+        user_id: sessUserId,
+      },
+    })
+
+    res.status(status.OK).json({ status: 'ok' })
+  })
+}
+
+interface LogOutDevice extends Request {
+  params: LogOutDeviceQuery
+}
+
+export async function logOutDeviceHandler(req: LogOutDevice, res: Response) {
+  const sid = req.params.sid
+
+  const foundSession = await db.sessions.findFirst({
+    where: {
+      sid: sid,
+    },
+  })
+
+  if (foundSession?.user_id !== req.session.userId) {
+    throw new ApiError({
+      message: 'Bad request.',
+      statusCode: status.BAD_REQUEST,
+    })
+  }
+
+  if (req.session.id === sid) {
+    req.session.destroy(async (err) => {
+      if (err) {
+        throw err
+      }
+
+      await db.sessions.deleteMany({
+        where: {
+          sid,
+        },
+      })
+
+      res.status(status.OK).json({ status: 'ok' })
+    })
+
+    return
+  }
+
+  await db.sessions.deleteMany({
+    where: {
+      sid,
+    },
+  })
+
+  res.status(status.OK).json({ status: 'ok' })
 }
