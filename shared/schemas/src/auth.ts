@@ -93,6 +93,7 @@ export const mySessionSchema = z.object({
   os: z.string().nullable(),
   browser: z.string().nullable(),
   sid: z.string(),
+  current: z.boolean(),
 })
 
 export type MySession = z.infer<typeof mySessionSchema>

@@ -13,6 +13,7 @@ export function sessionsDTO(
       sid: true
     }
   }>,
+  sessionId: string,
 ): MySession {
   return {
     deviceType: sessions.device_type,
@@ -22,5 +23,6 @@ export function sessionsDTO(
     os: sessions.operating_system,
     browser: sessions.browser,
     sid: sessions.sid,
+    current: sessionId === sessions.sid,
   }
 }

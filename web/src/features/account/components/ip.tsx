@@ -17,7 +17,7 @@ export const SessionIP = ({ ip }: Props) => {
       <span
         className={cn(
           isShown ? 'text-red-500' : 'text-muted-foreground opacity-80',
-          'bg-background flex h-6 w-30 items-center justify-center rounded shadow transition-opacity',
+          'bg-background flex h-7 w-30 items-center justify-center rounded-md border shadow transition-opacity',
         )}>
         {isShown ? ip : 'hidden'}
       </span>

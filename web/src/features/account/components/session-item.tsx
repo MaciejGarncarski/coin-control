@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Collapsible,
@@ -46,17 +47,20 @@ export const SessionItem = ({ session }: Props) => {
           <span className="bg-background text-muted-foreground rounded-full border p-2 shadow">
             {session.deviceType === 'mobile' ? <Smartphone /> : <Laptop />}
           </span>
-          <span className="flex flex-col">
-            <span>
-              {session.browser} on {session.os}
+          <div className="flex flex-col md:flex-row md:gap-4">
+            <span className="flex flex-col">
+              <span>
+                {session.browser} on {session.os}
+              </span>
+              <span className="text-muted-foreground text-xs">
+                {session.location}
+              </span>
             </span>
-            <span className="text-muted-foreground text-xs">
-              {session.location}
-            </span>
-          </span>
+            {session.current ? <Badge>current</Badge> : null}
+          </div>
 
           <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="sm" className="ml-auto">
+            <Button variant="outline" size="sm" className="ml-auto">
               <ChevronsUpDown className="h-4 w-4" />
               <span className="sr-only">Toggle</span>
             </Button>
@@ -86,7 +90,7 @@ export const SessionItem = ({ session }: Props) => {
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   You will have to sign in manually in {session.browser} on{' '}
-                  {session.os}!
+                  {session.os}.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

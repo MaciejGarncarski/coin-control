@@ -382,7 +382,7 @@ export async function getMySessionsHandler(req: Request, res: Response) {
     },
   })
 
-  const sessionsData = sessions.map((s) => sessionsDTO(s))
+  const sessionsData = sessions.map((s) => sessionsDTO(s, req.session.id))
 
   res.status(status.OK).json(sessionsData)
 }
