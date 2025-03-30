@@ -55,8 +55,7 @@ export const SessionItem = ({ session }: Props) => {
                 {session.browser} on {session.os}
               </span>
               <span className="text-muted-foreground text-xs">
-                {/* {session.location} */}
-                Test, test
+                {session.location}
               </span>
             </span>
 
