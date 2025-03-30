@@ -41,22 +41,30 @@ export const SessionItem = ({ session }: Props) => {
   }
 
   return (
-    <li className="bg-muted rounded-lg border p-4 shadow">
+    <li className="bg-muted relative rounded-lg border p-4 shadow">
       <Collapsible className="flex flex-col gap-4">
         <div className="flex items-center gap-4">
-          <span className="bg-background text-muted-foreground rounded-full border p-2 shadow">
-            {session.deviceType === 'mobile' ? <Smartphone /> : <Laptop />}
-          </span>
+          <div className="flex flex-col items-start">
+            <span className="bg-background text-muted-foreground rounded-full border p-2 shadow">
+              {session.deviceType === 'mobile' ? <Smartphone /> : <Laptop />}
+            </span>
+          </div>
           <div className="flex flex-col md:flex-row md:items-center md:gap-4">
             <span className="flex flex-col">
               <span className="text-sm md:text-base">
                 {session.browser} on {session.os}
               </span>
               <span className="text-muted-foreground text-xs">
-                {session.location}
+                {/* {session.location} */}
+                Test, test
               </span>
             </span>
-            {session.current ? <Badge>current</Badge> : null}
+
+            {session.current ? (
+              <Badge className="absolute -top-3 -right-1 md:static">
+                current
+              </Badge>
+            ) : null}
           </div>
 
           <CollapsibleTrigger asChild>
@@ -71,7 +79,7 @@ export const SessionItem = ({ session }: Props) => {
           <div className="text-muted-foreground flex flex-col gap-2 text-sm">
             <p className="flex flex-col items-center justify-center md:block">
               <span className="text-foreground">Last access: </span>
-              <span>
+              <span className="text-xs md:text-sm">
                 {session.lastAccess
                   ? dateFormatter.format(session.lastAccess)
                   : null}
