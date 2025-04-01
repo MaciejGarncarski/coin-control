@@ -54,10 +54,12 @@ export const createResetPasswordNotificationWorker = () => {
   )
 
   worker.on('completed', (job) => {
+    // eslint-disable-next-line no-console
     console.log(`Email job with ID: ${job.id} has completed successfully`)
   })
 
   worker.on('failed', (job, err) => {
+    // eslint-disable-next-line no-console
     console.error(
       `Email job with ID: ${job?.id} has failed with ${err.message}`,
     )

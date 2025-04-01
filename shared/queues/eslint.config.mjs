@@ -1,3 +1,3 @@
 import baseConfig from '@shared/eslint-prettier/base'
 
-export default [...baseConfig]
+export default baseConfig

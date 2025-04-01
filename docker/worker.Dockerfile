@@ -8,7 +8,6 @@ FROM node:${NODE_VERSION}-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
-RUN apk --no-cache add curl
 
 # dev
 FROM base AS dev
