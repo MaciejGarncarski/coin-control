@@ -33,11 +33,19 @@ function App() {
   const user = useQuery(userQueryOptions)
   const routeContext = useRouteContext({ from: '/_authenticated' })
 
+  if (!routeContext.auth) {
+    return null
+  }
+
+  if (!user.data) {
+    return null
+  }
+
   if (!user.data?.id) {
     return null
   }
 
-  if (!routeContext.auth?.isEmailVerified) {
+  if (routeContext.auth.isEmailVerified === false) {
     return <VerifyEmailPage />
   }
 
