@@ -1,11 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  type ResetPasswordForm,
-  resetPasswordFormSchema,
-} from '@shared/schemas'
+import { resetPasswordFormSchema } from '@shared/schemas'
 import { useCanGoBack, useNavigate, useRouter } from '@tanstack/react-router'
 import { KeySquare } from 'lucide-react'
-import { type SubmitHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -35,7 +32,7 @@ export const PasswordResetPage = () => {
   const router = useRouter()
   const navigate = useNavigate()
 
-  const resetPasswordForm = useForm<ResetPasswordForm>({
+  const resetPasswordForm = useForm({
     resolver: zodResolver(resetPasswordFormSchema),
     defaultValues: {
       confirmPassword: '',
@@ -43,23 +40,22 @@ export const PasswordResetPage = () => {
     },
   })
 
-  const onSubmit: SubmitHandler<ResetPasswordForm> = ({
-    confirmPassword,
-    password,
-  }) => {
-    const token = search.reset_token
+  const resetPassword = resetPasswordForm.handleSubmit(
+    ({ confirmPassword, password }) => {
+      const token = search.reset_token
 
-    if (!token) {
-      toast.error('Invalid token!')
-      return
-    }
+      if (!token) {
+        toast.error('Invalid token!')
+        return
+      }
 
-    resetPasswordMutation.mutate({
-      password,
-      confirmPassword,
-      resetToken: token,
-    })
-  }
+      resetPasswordMutation.mutate({
+        password,
+        confirmPassword,
+        resetToken: token,
+      })
+    },
+  )
 
   const goBack = () => {
     if (!canGoBack) {
@@ -88,9 +84,7 @@ export const PasswordResetPage = () => {
       </CardHeader>
       <CardContent>
         <Form {...resetPasswordForm}>
-          <form
-            className="flex flex-col gap-6"
-            onSubmit={resetPasswordForm.handleSubmit(onSubmit)}>
+          <form className="flex flex-col gap-6" onSubmit={resetPassword}>
             <FormField
               name="password"
               control={resetPasswordForm.control}

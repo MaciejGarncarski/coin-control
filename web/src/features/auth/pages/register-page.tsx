@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ApiError } from '@maciekdev/fetcher'
 import { type CheckedState } from '@radix-ui/react-checkbox'
-import { type RegisterMutation, registerMutationSchema } from '@shared/schemas'
+import { registerMutationSchema } from '@shared/schemas'
 import { Link } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import { useState } from 'react'
@@ -35,7 +35,7 @@ export function RegisterPage() {
     useState<CheckedState>(false)
 
   const registerMutation = useRegisterMutation()
-  const form = useForm<RegisterMutation>({
+  const form = useForm({
     resolver: zodResolver(registerMutationSchema),
     defaultValues: {
       email: '',

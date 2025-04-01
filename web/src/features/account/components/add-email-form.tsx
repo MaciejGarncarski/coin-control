@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { CheckedState } from '@radix-ui/react-checkbox'
-import { type AddEmailMutation, addEmailMutationSchema } from '@shared/schemas'
+import { addEmailMutationSchema } from '@shared/schemas'
 import { Plus } from 'lucide-react'
 import { useCallback, useState } from 'react'
-import { type SubmitHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -39,7 +39,7 @@ export const AddEmailForm = () => {
   const user = useUser({})
   const emails = useUserEmails()
 
-  const form = useForm<AddEmailMutation>({
+  const form = useForm({
     resolver: zodResolver(addEmailMutationSchema),
     defaultValues: {
       email: '',
@@ -54,7 +54,7 @@ export const AddEmailForm = () => {
     })
   }, [form])
 
-  const addEmail: SubmitHandler<AddEmailMutation> = ({ email }) => {
+  const addEmail = form.handleSubmit(({ email }) => {
     if (
       user.data?.email === email ||
       emails.data?.some((data) => data.email === email)
@@ -72,7 +72,7 @@ export const AddEmailForm = () => {
         },
       },
     )
-  }
+  })
 
   return (
     <Dialog
@@ -96,9 +96,7 @@ export const AddEmailForm = () => {
         </DialogHeader>
 
         <Form {...form}>
-          <form
-            className="mt-2 flex flex-col gap-6"
-            onSubmit={form.handleSubmit(addEmail)}>
+          <form className="mt-2 flex flex-col gap-6" onSubmit={addEmail}>
             <FormField
               name="email"
               control={form.control}

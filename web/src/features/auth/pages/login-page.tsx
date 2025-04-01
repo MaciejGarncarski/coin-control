@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type LoginMutation, loginMutationSchema } from '@shared/schemas'
+import { loginMutationSchema } from '@shared/schemas'
 import { Link } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -30,12 +30,16 @@ import { cn } from '@/lib/utils'
 export const LoginPage = () => {
   const loginMutation = useLoginMutation()
 
-  const form = useForm<LoginMutation>({
+  const form = useForm({
     resolver: zodResolver(loginMutationSchema),
     defaultValues: {
       email: '',
       password: '',
     },
+  })
+
+  const handleLogin = form.handleSubmit(({ email, password }) => {
+    loginMutation.mutate({ email, password })
   })
 
   return (
@@ -52,11 +56,7 @@ export const LoginPage = () => {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(({ email, password }) =>
-              loginMutation.mutate({ email, password }),
-            )}
-            className="flex flex-col gap-6">
+          <form onSubmit={handleLogin} className="flex flex-col gap-6">
             <FormField
               name="email"
               control={form.control}

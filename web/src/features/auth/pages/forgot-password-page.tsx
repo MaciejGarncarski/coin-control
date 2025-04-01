@@ -1,11 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  type ForgotPasswordEmailMutation,
-  forgotPasswordEmailMutationSchema,
-} from '@shared/schemas'
+import { forgotPasswordEmailMutationSchema } from '@shared/schemas'
 import { useCanGoBack, useNavigate, useRouter } from '@tanstack/react-router'
 import { LockKeyhole, Mail, MailCheck } from 'lucide-react'
-import { type SubmitHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -55,14 +52,14 @@ export const ForgotPasswordPage = () => {
     })
   }
 
-  const emailForm = useForm<ForgotPasswordEmailMutation>({
+  const emailForm = useForm({
     resolver: zodResolver(forgotPasswordEmailMutationSchema),
     defaultValues: {
       email: '',
     },
   })
 
-  const onSubmit: SubmitHandler<ForgotPasswordEmailMutation> = ({ email }) => {
+  const sendEmailLink = emailForm.handleSubmit(({ email }) => {
     sendResetPasswordLink.mutate(
       {
         email: email,
@@ -75,7 +72,7 @@ export const ForgotPasswordPage = () => {
         },
       },
     )
-  }
+  })
 
   if (sendResetPasswordLink.isSuccess) {
     return (
@@ -137,9 +134,7 @@ export const ForgotPasswordPage = () => {
       </CardHeader>
       <CardContent>
         <Form {...emailForm}>
-          <form
-            onSubmit={emailForm.handleSubmit(onSubmit)}
-            className="flex flex-col gap-6">
+          <form onSubmit={sendEmailLink} className="flex flex-col gap-6">
             <FormField
               control={emailForm.control}
               name="email"

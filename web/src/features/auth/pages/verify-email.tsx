@@ -3,7 +3,7 @@ import { z } from '@shared/schemas'
 import { useQuery } from '@tanstack/react-query'
 import { REGEXP_ONLY_DIGITS } from 'input-otp'
 import { MailWarning } from 'lucide-react'
-import { type SubmitHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import { LogoutButton } from '@/components/logout-button'
 import { Button } from '@/components/ui/button'
@@ -43,16 +43,14 @@ export const VerifyEmailPage = () => {
   const user = useQuery(userQueryOptions)
   const verifyOTPMutation = useVerifyOTP()
 
-  const form = useForm<z.infer<typeof OTPFormSchema>>({
+  const form = useForm({
     resolver: zodResolver(OTPFormSchema),
     defaultValues: {
       otpCode: '',
     },
   })
 
-  const onSubmit: SubmitHandler<z.infer<typeof OTPFormSchema>> = async (
-    data,
-  ) => {
+  const verifyEmail = form.handleSubmit(async (data) => {
     verifyOTPMutation.mutate(
       {
         code: data.otpCode,
@@ -63,7 +61,7 @@ export const VerifyEmailPage = () => {
         },
       },
     )
-  }
+  })
 
   return (
     <main className="mx-auto -mt-8 flex h-screen w-[20rem] flex-col items-center justify-center gap-2 md:w-[23rem]">
@@ -94,9 +92,7 @@ export const VerifyEmailPage = () => {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col gap-4">
+            <form onSubmit={verifyEmail} className="flex flex-col gap-4">
               <Separator />
               <FormField
                 control={form.control}

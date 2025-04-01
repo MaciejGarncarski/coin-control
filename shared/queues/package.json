@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
-    "@types/node": "^22.13.14",
+    "@types/node": "^22.13.17",
     "typescript": "^5.8.2"
   },
   "packageManager": "pnpm@10.6.1"
