@@ -140,32 +140,37 @@ export const getUserHandler = async (req: Request, res: Response) => {
   res.status(status.OK).json(userData)
 
   req.session.save(async (e) => {
-    const userIP = req.ip
-    const parsedUserAgent = UAParser(req.headers)
-    const userIPResponse = await fetch(
-      `https://freeipapi.com/api/json/${userIP}`,
-    )
-    const userIPData = await userIPResponse.json()
-    const IPData = IPResponseSchema.safeParse(userIPData)
+    try {
+      const userIP = req.ip
+      const parsedUserAgent = UAParser(req.headers)
 
-    const userLocation = IPData.success
-      ? getUserLocation(IPData.data.cityName, IPData.data.countryName)
-      : null
+      const userIPResponse = await fetch(
+        `https://freeipapi.com/api/json/${userIP}`,
+      )
+      const userIPData = await userIPResponse.json()
+      const IPData = IPResponseSchema.safeParse(userIPData)
 
-    await db.sessions.update({
-      where: {
-        sid: req.session.id,
-      },
-      data: {
-        operating_system: parsedUserAgent.os.name,
-        browser: parsedUserAgent.browser.name,
-        device_type:
-          parsedUserAgent.device.type === 'mobile' ? 'mobile' : 'desktop',
-        last_access: new Date(),
-        ip_address: userIP,
-        location: userLocation,
-      },
-    })
+      const userLocation = IPData.success
+        ? getUserLocation(IPData.data.cityName, IPData.data.countryName)
+        : null
+
+      await db.sessions.update({
+        where: {
+          sid: req.session.id,
+        },
+        data: {
+          operating_system: parsedUserAgent.os.name,
+          browser: parsedUserAgent.browser.name,
+          device_type:
+            parsedUserAgent.device.type === 'mobile' ? 'mobile' : 'desktop',
+          last_access: new Date(),
+          ip_address: userIP,
+          location: userLocation,
+        },
+      })
+    } catch (error) {
+      req.log.error(`IP API ERROR, ${error}`)
+    }
   })
 }
 
@@ -243,7 +248,7 @@ export async function registerHandler(req: RegisterRequest, res: Response) {
   )
 
   req.session.userId = createdUser.user.id
-  res.status(status.ACCEPTED).json(createdUser.user)
+  res.status(status.ACCEPTED).json(createdUser)
   return
 }
 
