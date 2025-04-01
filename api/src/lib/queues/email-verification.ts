@@ -1,8 +1,12 @@
-import { Queue, redisClient } from '@shared/queues'
-import { type EmailVerificationJob } from '@shared/schemas'
+import {
+  type EmailVerificationJob,
+  Queue,
+  QUEUES,
+  redisClient,
+} from '@shared/queues'
 
 export const emailVerificationQueue = new Queue<EmailVerificationJob>(
-  'emailVerificationQueue',
+  QUEUES.EMAIL_VERIFICATION,
   {
     connection: redisClient,
   },

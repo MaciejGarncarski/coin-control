@@ -37,7 +37,7 @@ export const SessionItem = ({ session }: Props) => {
   const deleteSession = useDeleteOneSession()
 
   const handleSessionDelete = () => {
-    deleteSession.mutate(session.sid)
+    deleteSession.mutate(session.id)
   }
 
   return (

@@ -1,4 +1,4 @@
-import { Queue, redisClient } from '@shared/queues'
+import { Queue, QUEUES, redisClient } from '@shared/queues'
 
 export const expiredSessionQueue = new Queue('expired-session-remover', {
   connection: redisClient,
@@ -6,7 +6,7 @@ export const expiredSessionQueue = new Queue('expired-session-remover', {
 
 export const createExpiredSessionCron = async () => {
   await expiredSessionQueue.upsertJobScheduler(
-    'expired-session-id',
+    QUEUES.EXPIRED_SESSION_REMOVER,
     {
       pattern: '*/40 * * * *',
     },

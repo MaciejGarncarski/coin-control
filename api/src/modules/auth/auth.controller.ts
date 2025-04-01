@@ -1,8 +1,9 @@
 import { verify } from '@node-rs/argon2'
+import { QUEUES } from '@shared/queues'
 import type {
+  EmailVerificationVerifyMutation,
   ForgotPasswordEmailMutation,
   LogOutDeviceQuery,
-  OTPVerifyMutation,
   ResetPasswordMutation,
 } from '@shared/schemas'
 import { type LoginMutation, type RegisterMutation, z } from '@shared/schemas'
@@ -23,7 +24,7 @@ import {
   registerUser,
   resetPassword,
   sendResetPasswordCode,
-  verifyOTP,
+  verifyEmail,
 } from './auth.service.js'
 import { sessionsDTO } from './sessions.dto.js'
 import { userDTO } from './user.dto.js'
@@ -39,16 +40,31 @@ const IPResponseSchema = z.object({
 export const postLoginHandler = async (req: LoginRequest, res: Response) => {
   const email = req.body.email
 
-  const user = await db.users.findFirst({
+  const foundUser = await db.user_emails.findFirst({
     where: {
-      email,
+      email: email,
+      is_verified: true,
     },
     select: {
-      id: true,
-      name: true,
-      password_hash: true,
-      email: true,
-      email_verified: true,
+      user_id: true,
+    },
+  })
+
+  const user = await db.users.findFirst({
+    where: {
+      id: foundUser?.user_id,
+    },
+    include: {
+      user_emails: {
+        where: {
+          is_primary: true,
+        },
+        select: {
+          email: true,
+          is_primary: true,
+          is_verified: true,
+        },
+      },
     },
   })
 
@@ -69,7 +85,11 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
     })
   }
 
-  if (user.email_verified === false) {
+  const isMinimumOneEmailVerified = user.user_emails.some(
+    ({ is_verified }) => is_verified,
+  )
+
+  if (!isMinimumOneEmailVerified) {
     req.session.cookie.maxAge = ms('15 minutes')
   }
 
@@ -77,7 +97,7 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
 
   const userData = userDTO({
     email: user.email,
-    email_verified: user.email_verified,
+    email_verified: isMinimumOneEmailVerified,
     id: user.id,
     name: user.name,
   })
@@ -103,7 +123,19 @@ export const getUserHandler = async (req: Request, res: Response) => {
     })
   }
 
-  const userData = userDTO(user)
+  const userEmail = await db.user_emails.findFirst({
+    where: {
+      user_id: user.id,
+      is_verified: true,
+    },
+  })
+
+  const userData = userDTO({
+    email: user.email,
+    email_verified: userEmail ? userEmail.is_verified : false,
+    id: user.id,
+    name: user.name,
+  })
 
   res.status(status.OK).json(userData)
 
@@ -178,17 +210,18 @@ export async function registerHandler(req: RegisterRequest, res: Response) {
   const OTPUuid = v7()
   const OTPCode = generateOTP()
 
-  await db.otp_codes.create({
+  await db.email_verification.create({
     data: {
       id: OTPUuid,
-      user_id: createdUser.id,
+      email_id: createdUser.userEmailData.email_id,
+      user_id: createdUser.user.id,
       otp: OTPCode,
       expires_at: new Date(expires_at),
     },
   })
 
   await emailVerificationQueue.add(
-    `verification-email-${OTPUuid}`,
+    `${QUEUES.EMAIL_VERIFICATION}-${OTPUuid}`,
     {
       code: OTPCode,
       userEmail: req.body.email,
@@ -209,12 +242,12 @@ export async function registerHandler(req: RegisterRequest, res: Response) {
     },
   )
 
-  req.session.userId = createdUser.id
-  res.status(status.ACCEPTED).json(createdUser)
+  req.session.userId = createdUser.user.id
+  res.status(status.ACCEPTED).json(createdUser.user)
   return
 }
 
-export async function getOTPHandler(req: Request, res: Response) {
+export async function sendEmailOTPCodeHandler(req: Request, res: Response) {
   if (!req.session.userId) {
     throw new ApiError({
       message: 'Unauthorized.',
@@ -227,7 +260,6 @@ export async function getOTPHandler(req: Request, res: Response) {
       id: req.session.userId,
     },
     select: {
-      email_verified: true,
       email: true,
     },
   })
@@ -239,11 +271,12 @@ export async function getOTPHandler(req: Request, res: Response) {
     })
   }
 
-  const newestOTP = await db.otp_codes.findFirst({
+  const newestOTP = await db.email_verification.findFirst({
     select: {
       expires_at: true,
     },
     where: {
+      verified: false,
       user_id: req.session.userId,
     },
     orderBy: {
@@ -251,33 +284,32 @@ export async function getOTPHandler(req: Request, res: Response) {
     },
   })
 
-  if (!newestOTP?.expires_at) {
-    throw new ApiError({
-      message: 'Code not found',
-      statusCode: status.TOO_MANY_REQUESTS,
-    })
+  if (newestOTP?.expires_at) {
+    const codeDate = newestOTP.expires_at.getTime() - ms('3 minutes')
+
+    if (codeDate > Date.now()) {
+      throw new ApiError({
+        message: 'Wait two minutes before sending new code.',
+        toastMessage: 'Wait two minutes before sending new code.',
+        statusCode: status.TOO_MANY_REQUESTS,
+      })
+    }
   }
 
-  const codeDate = newestOTP.expires_at.getTime() - ms('3 minutes')
-
-  if (codeDate > Date.now()) {
-    throw new ApiError({
-      message: 'Wait two minutes before sending new code.',
-      toastMessage: 'Wait two minutes before sending new code.',
-      statusCode: status.TOO_MANY_REQUESTS,
-    })
-  }
-  await getOTP({ email: user.email, userId: req.session.id })
+  await getOTP({ email: user.email, userId: req.session.userId })
 
   res.status(status.ACCEPTED).json({ message: 'success' })
   return
 }
 
-interface VerifyOTPRequest extends Request {
-  body: OTPVerifyMutation
+interface VerifyEmailRequest extends Request {
+  body: EmailVerificationVerifyMutation
 }
 
-export async function verifyOTPHandler(req: VerifyOTPRequest, res: Response) {
+export async function verifyEmailHandler(
+  req: VerifyEmailRequest,
+  res: Response,
+) {
   if (!req.session.userId) {
     throw new ApiError({
       message: 'Unauthorized.',
@@ -285,7 +317,7 @@ export async function verifyOTPHandler(req: VerifyOTPRequest, res: Response) {
     })
   }
 
-  await verifyOTP({ code: req.body.code, userId: req.session.userId })
+  await verifyEmail({ code: req.body.code, userId: req.session.userId })
 
   res.status(status.OK).json({ message: 'success' })
 }
@@ -379,6 +411,7 @@ export async function getMySessionsHandler(req: Request, res: Response) {
       location: true,
       operating_system: true,
       sid: true,
+      id: true,
     },
   })
 
@@ -414,11 +447,11 @@ interface LogOutDevice extends Request {
 }
 
 export async function logOutDeviceHandler(req: LogOutDevice, res: Response) {
-  const sid = req.params.sid
+  const id = req.params.id
 
   const foundSession = await db.sessions.findFirst({
     where: {
-      sid: sid,
+      id: id,
     },
   })
 
@@ -429,7 +462,7 @@ export async function logOutDeviceHandler(req: LogOutDevice, res: Response) {
     })
   }
 
-  if (req.session.id === sid) {
+  if (req.session.id === id) {
     req.session.destroy(async (err) => {
       if (err) {
         throw err
@@ -437,7 +470,7 @@ export async function logOutDeviceHandler(req: LogOutDevice, res: Response) {
 
       await db.sessions.deleteMany({
         where: {
-          sid,
+          id: id,
         },
       })
 
@@ -449,7 +482,7 @@ export async function logOutDeviceHandler(req: LogOutDevice, res: Response) {
 
   await db.sessions.deleteMany({
     where: {
-      sid,
+      id: id,
     },
   })
 

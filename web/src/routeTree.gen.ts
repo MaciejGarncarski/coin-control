@@ -15,6 +15,7 @@ import { Route as PrivacyPolicyImport } from './routes/privacy-policy'
 import { Route as UnauthenticatedRouteImport } from './routes/_unauthenticated/route'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
+import { Route as AuthVerifyEmailImport } from './routes/auth/verify-email'
 import { Route as AuthenticatedAccountImport } from './routes/_authenticated/account'
 import { Route as UnauthenticatedAuthIndexImport } from './routes/_unauthenticated/auth/index'
 import { Route as UnauthenticatedAuthRegisterImport } from './routes/_unauthenticated/auth/register'
@@ -44,6 +45,12 @@ const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+
+const AuthVerifyEmailRoute = AuthVerifyEmailImport.update({
+  id: '/auth/verify-email',
+  path: '/auth/verify-email',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const AuthenticatedAccountRoute = AuthenticatedAccountImport.update({
@@ -116,6 +123,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/account'
       preLoaderRoute: typeof AuthenticatedAccountImport
       parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/auth/verify-email': {
+      id: '/auth/verify-email'
+      path: '/auth/verify-email'
+      fullPath: '/auth/verify-email'
+      preLoaderRoute: typeof AuthVerifyEmailImport
+      parentRoute: typeof rootRoute
     }
     '/_authenticated/': {
       id: '/_authenticated/'
@@ -201,6 +215,7 @@ export interface FileRoutesByFullPath {
   '': typeof UnauthenticatedRouteRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/': typeof AuthenticatedIndexRoute
   '/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
   '/auth/login': typeof UnauthenticatedAuthLoginRoute
@@ -213,6 +228,7 @@ export interface FileRoutesByTo {
   '': typeof UnauthenticatedRouteRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/': typeof AuthenticatedIndexRoute
   '/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
   '/auth/login': typeof UnauthenticatedAuthLoginRoute
@@ -227,6 +243,7 @@ export interface FileRoutesById {
   '/_unauthenticated': typeof UnauthenticatedRouteRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_unauthenticated/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
   '/_unauthenticated/auth/login': typeof UnauthenticatedAuthLoginRoute
@@ -241,6 +258,7 @@ export interface FileRouteTypes {
     | ''
     | '/privacy-policy'
     | '/account'
+    | '/auth/verify-email'
     | '/'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -252,6 +270,7 @@ export interface FileRouteTypes {
     | ''
     | '/privacy-policy'
     | '/account'
+    | '/auth/verify-email'
     | '/'
     | '/auth/forgot-password'
     | '/auth/login'
@@ -264,6 +283,7 @@ export interface FileRouteTypes {
     | '/_unauthenticated'
     | '/privacy-policy'
     | '/_authenticated/account'
+    | '/auth/verify-email'
     | '/_authenticated/'
     | '/_unauthenticated/auth/forgot-password'
     | '/_unauthenticated/auth/login'
@@ -277,12 +297,14 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   UnauthenticatedRouteRoute: typeof UnauthenticatedRouteRouteWithChildren
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   UnauthenticatedRouteRoute: UnauthenticatedRouteRouteWithChildren,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
+  AuthVerifyEmailRoute: AuthVerifyEmailRoute,
 }
 
 export const routeTree = rootRoute
@@ -297,7 +319,8 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated",
         "/_unauthenticated",
-        "/privacy-policy"
+        "/privacy-policy",
+        "/auth/verify-email"
       ]
     },
     "/_authenticated": {
@@ -323,6 +346,9 @@ export const routeTree = rootRoute
     "/_authenticated/account": {
       "filePath": "_authenticated/account.tsx",
       "parent": "/_authenticated"
+    },
+    "/auth/verify-email": {
+      "filePath": "auth/verify-email.tsx"
     },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",

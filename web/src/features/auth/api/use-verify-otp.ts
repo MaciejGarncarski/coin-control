@@ -1,5 +1,8 @@
 import { ApiError } from '@maciekdev/fetcher'
-import { OTPResponeSchema, type OTPVerifyMutation } from '@shared/schemas'
+import {
+  EmailVerificationResponeSchema,
+  type EmailVerificationVerifyMutation,
+} from '@shared/schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRef } from 'react'
 import { toast } from 'sonner'
@@ -13,12 +16,12 @@ export const useVerifyOTP = () => {
 
   return useMutation({
     mutationKey: ['verify-otp'],
-    mutationFn: async (mutationData: OTPVerifyMutation) => {
+    mutationFn: async (mutationData: EmailVerificationVerifyMutation) => {
       const resposne = await fetcher({
         url: '/auth/verify-otp',
         method: 'POST',
         throwOnError: true,
-        schema: OTPResponeSchema,
+        schema: EmailVerificationResponeSchema,
         body: {
           code: mutationData.code,
         },

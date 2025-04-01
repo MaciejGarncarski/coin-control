@@ -1,5 +1,6 @@
 import session, { type SessionData } from 'express-session'
 import ms from 'ms'
+import { v7 } from 'uuid'
 
 import { db } from './db.js'
 
@@ -41,6 +42,7 @@ class PostgresSessionStore extends session.Store {
     try {
       const data = JSON.stringify(sessionData)
       const expiresAt = Date.now() + this.maxAge
+      const uuid = v7()
 
       await db.sessions.upsert({
         create: {
@@ -48,11 +50,13 @@ class PostgresSessionStore extends session.Store {
           expire_at: new Date(expiresAt),
           sid,
           user_id: sessionData.userId,
+          id: uuid,
         },
         update: {
           data,
           expire_at: new Date(expiresAt),
           sid,
+          id: uuid,
         },
         where: {
           sid,

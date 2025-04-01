@@ -1,14 +1,18 @@
 import { render } from '@react-email/render'
 import { ResetPasswordEmail } from '@shared/email'
-import { redisClient, Worker } from '@shared/queues'
-import type { ResetPasswordLinkJob } from '@shared/schemas'
+import {
+  QUEUES,
+  redisClient,
+  type ResetPasswordLinkJob,
+  Worker,
+} from '@shared/queues'
 
 import { env } from '../env.js'
 import { mailer } from '../mailer.js'
 
 export const createResetPasswordLinkWorker = () => {
   const worker = new Worker<ResetPasswordLinkJob>(
-    'resetPasswordLinkQueue',
+    QUEUES.RESET_PASSWORD,
     async (job) => {
       const [emailHTML, emailText] = await Promise.all([
         render(

@@ -1,8 +1,8 @@
 import {
+  EmailVerificationVerifyMutationSchema,
   forgotPasswordEmailMutationSchema,
   loginMutationSchema,
   logOutDeviceQuerySchema,
-  OTPVerifyMutationSchema,
   registerMutationSchema,
   resetPasswordMutationSchema,
 } from '@shared/schemas'
@@ -16,7 +16,6 @@ import { validateParams } from '../../middlewares/validator-params.js'
 import {
   forgotPasswordLinkHandler,
   getMySessionsHandler,
-  getOTPHandler,
   getUserHandler,
   logOutDeviceHandler,
   logOutEveryDeviceHandler,
@@ -24,7 +23,8 @@ import {
   postLoginHandler,
   registerHandler,
   resetPasswordHandler,
-  verifyOTPHandler,
+  sendEmailOTPCodeHandler,
+  verifyEmailHandler,
 } from './auth.controller.js'
 
 const authLimiter = createRateLimiter({
@@ -65,7 +65,7 @@ export const authRoutes = (app: Router) => {
   route.get('/my-sessions', authorize, getMySessionsHandler)
   route.delete('/my-sessions', authLimiter, authorize, logOutEveryDeviceHandler)
   route.delete(
-    '/my-sessions/:sid',
+    '/my-sessions/:id',
     authLimiter,
     authorize,
     validateParams(logOutDeviceQuerySchema),
@@ -75,25 +75,25 @@ export const authRoutes = (app: Router) => {
   route.get('/me', getUserHandler)
   route.delete('/me', logoutHandler)
 
-  route.post('/otp', getOTPHandler)
+  route.post('/email-verification', sendEmailOTPCodeHandler)
   route.post(
     '/verify-otp',
-    validateData(OTPVerifyMutationSchema),
     otpLimiter,
-    verifyOTPHandler,
+    validateData(EmailVerificationVerifyMutationSchema),
+    verifyEmailHandler,
   )
 
   route.post(
     '/forgot-password-link',
-    validateData(forgotPasswordEmailMutationSchema),
     emailLimiter,
+    validateData(forgotPasswordEmailMutationSchema),
     forgotPasswordLinkHandler,
   )
 
   route.post(
     '/reset-password',
-    validateData(resetPasswordMutationSchema),
     otpLimiter,
+    validateData(resetPasswordMutationSchema),
     resetPasswordHandler,
   )
 }

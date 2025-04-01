@@ -15,7 +15,7 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <div className={cn(!isMobile && 'flex', 'bg-background')}>
       <div className={cn('flex w-full flex-col')}>
-        <header className="bg-background/60 sticky top-0 flex h-16 w-full items-center justify-start gap-4 border-b px-4 backdrop-blur-md md:gap-1 lg:gap-12 lg:px-10">
+        <header className="bg-background/60 sticky top-0 z-50 flex h-16 w-full items-center justify-start gap-4 border-b px-4 backdrop-blur-md md:gap-1 lg:gap-12 lg:px-10">
           <MobileNavbar />
           {isMobile ? (
             <h1 className="mx-auto flex gap-2">

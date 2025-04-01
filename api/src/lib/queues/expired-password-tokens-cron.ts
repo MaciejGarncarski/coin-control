@@ -1,4 +1,4 @@
-import { Queue, redisClient } from '@shared/queues'
+import { Queue, QUEUES, redisClient } from '@shared/queues'
 
 export const expiredPasswordTokensQueue = new Queue('expired-password-tokens', {
   connection: redisClient,
@@ -6,7 +6,7 @@ export const expiredPasswordTokensQueue = new Queue('expired-password-tokens', {
 
 export const createExpiredPasswordTokensCron = async () => {
   await expiredPasswordTokensQueue.upsertJobScheduler(
-    'expired-password-tokens',
+    QUEUES.EXPIRED_PASSWORD_TOKENS,
     {
       pattern: '0 0 * * *',
     },

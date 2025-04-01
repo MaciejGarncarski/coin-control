@@ -32,17 +32,21 @@ export const registerMutationSchema = z
 
 export type RegisterMutation = z.infer<typeof registerMutationSchema>
 
-export const OTPResponeSchema = z.object({
+export const EmailVerificationResponeSchema = z.object({
   message: z.string(),
 })
 
-export type OTPResponse = z.infer<typeof OTPResponeSchema>
+export type EmailVerificationResponse = z.infer<
+  typeof EmailVerificationResponeSchema
+>
 
-export const OTPVerifyMutationSchema = z.object({
-  code: z.string().length(6, { message: 'Invalid OTP code.' }),
+export const EmailVerificationVerifyMutationSchema = z.object({
+  code: z.string().length(6, { message: 'Invalid EmailVerification code.' }),
 })
 
-export type OTPVerifyMutation = z.infer<typeof OTPVerifyMutationSchema>
+export type EmailVerificationVerifyMutation = z.infer<
+  typeof EmailVerificationVerifyMutationSchema
+>
 
 export const forgotPasswordEmailMutationSchema = z.object({
   email: emailSchema,
@@ -67,7 +71,7 @@ export const resetPasswordFormSchema = z
 
 export type ResetPasswordForm = z.infer<typeof resetPasswordFormSchema>
 
-export const resetPasswordCodeSchema = z.string().length(48)
+export const tokenSchema = z.string().length(48)
 
 export const resetPasswordMutationSchema = z
   .object({
@@ -76,7 +80,7 @@ export const resetPasswordMutationSchema = z
       .min(4, { message: 'Password is too short.' })
       .max(128, { message: 'Password is too long.' }),
     confirmPassword: z.string(),
-    resetToken: resetPasswordCodeSchema,
+    resetToken: tokenSchema,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match.',
@@ -92,14 +96,14 @@ export const mySessionSchema = z.object({
   location: z.string().nullable(),
   os: z.string().nullable(),
   browser: z.string().nullable(),
-  sid: z.string(),
+  id: z.string(),
   current: z.boolean(),
 })
 
 export type MySession = z.infer<typeof mySessionSchema>
 
 export const logOutDeviceQuerySchema = z.object({
-  sid: z.string().min(10),
+  id: z.string().min(10),
 })
 
 export type LogOutDeviceQuery = z.infer<typeof logOutDeviceQuerySchema>

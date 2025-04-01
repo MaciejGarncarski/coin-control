@@ -12,9 +12,4 @@ export type ApiError = z.infer<typeof apiErrorSchema>
 
 export * from './auth.js'
 export * from './user.js'
-export type {
-  EmailVerificationJob,
-  ResetPasswordLinkJob,
-  ResetPasswordNotificationJob,
-} from './workers.js'
 export { z } from 'zod'

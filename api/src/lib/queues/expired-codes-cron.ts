@@ -1,4 +1,4 @@
-import { Queue, redisClient } from '@shared/queues'
+import { Queue, QUEUES, redisClient } from '@shared/queues'
 
 export const expiredCodesQueue = new Queue('expired-codes-remover', {
   connection: redisClient,
@@ -6,7 +6,7 @@ export const expiredCodesQueue = new Queue('expired-codes-remover', {
 
 export const createExpiredCodesCron = async () => {
   await expiredCodesQueue.upsertJobScheduler(
-    'expired-codes',
+    QUEUES.EXPIRED_CODES_REMOVER,
     {
       pattern: '0 0 * * *',
     },

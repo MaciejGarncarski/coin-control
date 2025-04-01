@@ -1,21 +1,20 @@
-import { OTPResponeSchema } from '@shared/schemas'
+import { type RsendEmailVerificationMutation } from '@shared/schemas'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 import { userQueryOptions } from '@/lib/auth'
 import { fetcher } from '@/lib/fetcher'
 
-export const useSendOTP = () => {
+export const useResendSecondaryEmailVerification = () => {
   const user = useQuery(userQueryOptions)
 
   return useMutation({
-    mutationKey: ['send-otp'],
-    mutationFn: async () => {
+    mutationFn: async (data: RsendEmailVerificationMutation) => {
       const resposne = await fetcher({
-        url: '/auth/otp',
+        url: '/user/resend-email-verification',
         method: 'POST',
         throwOnError: true,
-        schema: OTPResponeSchema,
+        body: data,
       })
 
       return resposne

@@ -12,3 +12,8 @@ export type EmailVerificationJob = {
   userEmail: string
   code: string
 }
+
+export type NewEmailVerificationJob = {
+  email: string
+  token: string
+}

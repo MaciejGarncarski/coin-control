@@ -1,10 +1,10 @@
-import { resetPasswordCodeSchema, z } from '@shared/schemas'
+import { tokenSchema, z } from '@shared/schemas'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 import { PasswordResetPage } from '@/features/auth/pages/password-reset-page'
 
 const resetPasswordSearchSchema = z.object({
-  reset_token: resetPasswordCodeSchema.nullable(),
+  reset_token: tokenSchema.nullable(),
 })
 
 export const Route = createFileRoute('/_unauthenticated/auth/password-reset')({

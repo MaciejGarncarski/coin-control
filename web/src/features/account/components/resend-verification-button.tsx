@@ -1,18 +1,24 @@
 import { ApiError } from '@maciekdev/fetcher'
-import { Check, Mail } from 'lucide-react'
+import { Check } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 import { Spinner } from '@/components/spinner'
 import { Button } from '@/components/ui/button'
-import { useSendEmailVerification } from '@/features/auth/api/use-send-email-verification'
+import { useResendSecondaryEmailVerification } from '@/features/account/api/use-resend-secondary-email-verification'
 
 const WAIT_TIMEOUT = 1000 * 60 * 2
 
-export const GetOtpButton = () => {
+type Props = {
+  email: string
+  closeMenu: () => void
+}
+
+export function ResendEmailVerificationButton({ email, closeMenu }: Props) {
   const [isDisabled, setIsDisabled] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  const { isPending, mutate, error, reset } = useSendEmailVerification()
+  const { isPending, mutate, error, reset } =
+    useResendSecondaryEmailVerification()
 
   const hasActiveOTPAlready = error instanceof ApiError
 
@@ -43,6 +49,7 @@ export const GetOtpButton = () => {
     return (
       <Button
         size="sm"
+        className="w-full md:w-auto"
         variant={'outline'}
         type="button"
         disabled={isDisabled || isPending}>
@@ -57,22 +64,29 @@ export const GetOtpButton = () => {
       return
     }
 
-    mutate(undefined, {
-      onSettled: () => {
-        setIsDisabled(true)
+    mutate(
+      {
+        email: email,
       },
-    })
+      {
+        onSettled: () => {
+          setIsDisabled(true)
+          closeMenu()
+        },
+      },
+    )
   }
 
   return (
     <Button
       type="button"
       size="sm"
-      variant={'secondary'}
+      variant={'outline'}
       onClick={sendCode}
+      className="w-full text-xs md:w-auto"
       disabled={hasActiveOTPAlready || isPending}>
-      {isPending ? <Spinner /> : <Mail />}
-      {isPending ? 'Sending email...' : 'Resend code'}
+      {isPending ? <Spinner /> : null}
+      {isPending ? 'Sending email...' : 'Resend verification email'}
     </Button>
   )
 }

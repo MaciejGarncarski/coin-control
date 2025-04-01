@@ -19,15 +19,11 @@ export const Sessions = () => {
   const mySessions = useMySessions()
   const deleteAllSessions = useDeleteAllSessions()
 
-  if (mySessions.isLoading) {
-    return 'NULL'
-  }
-
   return (
     <section>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <h2 className="text-3xl font-semibold">Sessions</h2>
+          <h2 className="text-2xl font-semibold">Sessions</h2>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button type="button" variant="destructive" size={'sm'}>
@@ -52,8 +48,22 @@ export const Sessions = () => {
         </CardHeader>
         <CardContent>
           <ul className="flex flex-col gap-4">
+            {mySessions.data ? null : (
+              <>
+                {Array.from({ length: 2 })
+                  .map((_, i) => i + 1)
+                  .map((i) => {
+                    return (
+                      <li
+                        key={i}
+                        className="bg-muted h-18 w-full animate-pulse rounded-lg border shadow"></li>
+                    )
+                  })}
+              </>
+            )}
+
             {mySessions.data?.map((session) => {
-              return <SessionItem session={session} key={session.sid} />
+              return <SessionItem session={session} key={session.id} />
             })}
           </ul>
         </CardContent>

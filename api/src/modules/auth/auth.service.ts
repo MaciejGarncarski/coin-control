@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 
 import { hash } from '@node-rs/argon2'
+import { QUEUES } from '@shared/queues'
 import type { RegisterMutation } from '@shared/schemas'
 import status from 'http-status'
 import ms from 'ms'
@@ -36,38 +37,61 @@ export async function registerUser(userData: RegisterMutation) {
   const hashedPassword = await hash(userData.password)
   const userId = v7()
 
-  const newUser = await db.users.create({
-    data: {
-      id: userId,
-      email: userData.email,
-      password_hash: hashedPassword,
-      name: userData.fullName,
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      email_verified: true,
-    },
+  const newUser = await db.$transaction(async (tx) => {
+    const user = await tx.users.create({
+      data: {
+        id: userId,
+        email: userData.email,
+        password_hash: hashedPassword,
+        name: userData.fullName,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    })
+
+    const userEmailData = await tx.user_emails.create({
+      data: {
+        email_id: v7(),
+        email: userData.email,
+        is_primary: true,
+        is_verified: false,
+        user_id: userId,
+      },
+    })
+
+    return { user, userEmailData }
   })
 
-  return newUser ? userDTO(newUser) : null
+  return newUser
+    ? {
+        user: userDTO({
+          email: newUser.user.email,
+          email_verified: false,
+          id: newUser.user.id,
+          name: newUser.user.name,
+        }),
+        userEmailData: newUser.userEmailData,
+      }
+    : null
 }
 
-type VerifyOTPProps = {
+type VerifyEmailProps = {
   userId: string
   code: string
 }
 
-export async function verifyOTP({ code, userId }: VerifyOTPProps) {
-  const otp = await db.otp_codes.findFirst({
+export async function verifyEmail({ code, userId }: VerifyEmailProps) {
+  const otp = await db.email_verification.findFirst({
     where: {
       user_id: userId,
       otp: code,
+      verified: false,
     },
-    select: {
-      id: true,
-      expires_at: true,
+    include: {
+      users: true,
     },
   })
 
@@ -87,16 +111,27 @@ export async function verifyOTP({ code, userId }: VerifyOTPProps) {
   }
 
   await db.$transaction(async (tx) => {
-    await tx.users.update({
-      data: {
-        email_verified: true,
-      },
+    await tx.user_emails.upsert({
       where: {
-        id: userId,
+        user_id: userId,
+        email: otp.users.email,
+      },
+      create: {
+        email: otp.users.email,
+        email_id: v7(),
+        is_primary: true,
+        user_id: userId,
+        is_verified: true,
+      },
+      update: {
+        email: otp.users.email,
+        is_primary: true,
+        user_id: userId,
+        is_verified: true,
       },
     })
 
-    await tx.otp_codes.delete({
+    await tx.email_verification.delete({
       where: {
         user_id: userId,
         id: otp.id,
@@ -112,39 +147,56 @@ type GetOTPPRops = {
 
 export async function getOTP({ email, userId }: GetOTPPRops) {
   const expires_at = Date.now() + ms('5 minutes')
-  const otp_uuid = v7()
+  const OTPid = v7()
   const OTPCode = generateOTP()
 
-  await db.otp_codes.create({
-    data: {
-      expires_at: new Date(expires_at),
-      otp: OTPCode,
+  const userEmailData = await db.user_emails.findFirst({
+    where: {
+      email,
       user_id: userId,
-      id: otp_uuid,
     },
   })
 
-  await emailVerificationQueue.add(
-    `verification-email-${otp_uuid}`,
-    {
-      code: OTPCode,
-      userEmail: email,
-    },
-    {
-      attempts: 3,
-      backoff: {
-        type: 'exponential',
-        delay: 1000,
+  if (!userEmailData) {
+    throw new ApiError({
+      statusCode: status.BAD_REQUEST,
+      message: 'Bad request',
+    })
+  }
+
+  await db.$transaction(async (tx) => {
+    await tx.email_verification.create({
+      data: {
+        expires_at: new Date(expires_at),
+        otp: OTPCode,
+        email_id: userEmailData?.email_id,
+        user_id: userId,
+        id: OTPid,
       },
-      removeOnComplete: {
-        age: 3600,
-        count: 1000,
+    })
+
+    await emailVerificationQueue.add(
+      `${QUEUES.EMAIL_VERIFICATION}-${OTPid}`,
+      {
+        code: OTPCode,
+        userEmail: email,
       },
-      removeOnFail: {
-        age: 24 * 3600,
+      {
+        attempts: 3,
+        backoff: {
+          type: 'exponential',
+          delay: 1000,
+        },
+        removeOnComplete: {
+          age: 3600,
+          count: 1000,
+        },
+        removeOnFail: {
+          age: 24 * 3600,
+        },
       },
-    },
-  )
+    )
+  })
 }
 
 export async function getUser({ userId }: { userId: string }) {
@@ -155,7 +207,6 @@ export async function getUser({ userId }: { userId: string }) {
     select: {
       id: true,
       email: true,
-      email_verified: true,
       name: true,
     },
   })
@@ -182,7 +233,7 @@ export async function sendResetPasswordCode({
   })
 
   await resetPasswordLinkQueue.add(
-    `reset-password-link-${passwordCodeId}`,
+    `${QUEUES.RESET_PASSWORD}-${passwordCodeId}`,
     {
       passwordResetCode: resetCode,
       userEmail: email,
@@ -256,7 +307,7 @@ export async function resetPassword({
   const timestamp = Date.now()
 
   await resetPasswordNotificationQueue.add(
-    `reset-password-notification-${resetTokenId}`,
+    `${QUEUES.RESET_PASSWORD_NOTIFICATION}-${resetTokenId}`,
     {
       createdAt: timestamp,
       userEmail: user.email,

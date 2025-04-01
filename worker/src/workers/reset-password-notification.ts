@@ -1,7 +1,11 @@
 import { render } from '@react-email/render'
 import { ResetPasswordNotificationEmail } from '@shared/email'
-import { redisClient, Worker } from '@shared/queues'
-import type { ResetPasswordNotificationJob } from '@shared/schemas'
+import {
+  QUEUES,
+  redisClient,
+  type ResetPasswordNotificationJob,
+  Worker,
+} from '@shared/queues'
 
 import { env } from '../env.js'
 import { mailer } from '../mailer.js'
@@ -13,7 +17,7 @@ const formatter = Intl.DateTimeFormat('en', {
 
 export const createResetPasswordNotificationWorker = () => {
   const worker = new Worker<ResetPasswordNotificationJob>(
-    'resetPasswordNotification',
+    QUEUES.RESET_PASSWORD_NOTIFICATION,
     async (job) => {
       const formattedDate = formatter.format(job.data.createdAt)
 

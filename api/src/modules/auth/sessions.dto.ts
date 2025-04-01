@@ -11,6 +11,7 @@ export function sessionsDTO(
       location: true
       operating_system: true
       sid: true
+      id: true
     }
   }>,
   sessionId: string,
@@ -22,7 +23,7 @@ export function sessionsDTO(
     location: sessions.location,
     os: sessions.operating_system,
     browser: sessions.browser,
-    sid: sessions.sid,
+    id: sessions.id,
     current: sessionId === sessions.sid,
   }
 }

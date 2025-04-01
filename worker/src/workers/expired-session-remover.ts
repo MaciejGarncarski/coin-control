@@ -1,10 +1,10 @@
-import { redisClient, Worker } from '@shared/queues'
+import { QUEUES, redisClient, Worker } from '@shared/queues'
 
 import { db } from '../db.js'
 
 export const createExpiredSessionRemoverWorker = () => {
   const worker = new Worker(
-    'expired-session-remover',
+    QUEUES.EXPIRED_SESSION_REMOVER,
     async (job) => {
       console.log(`Deleting expired sessions, job ID: ${job.id}`)
       const deletedCount = await db.sessions.deleteMany({

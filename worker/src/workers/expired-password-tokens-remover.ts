@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
-import { redisClient, Worker } from '@shared/queues'
+import { QUEUES, redisClient, Worker } from '@shared/queues'
 
 import { db } from '../db.js'
 
 export const createExpiredPasswordTokensRemoverWorker = () => {
   const worker = new Worker(
-    'expired-password-tokens',
+    QUEUES.EXPIRED_PASSWORD_TOKENS,
     async (job) => {
       console.log(`Deleting expired password tokens, job ID: ${job.id}`)
       const codes = await db.reset_password_codes.deleteMany({

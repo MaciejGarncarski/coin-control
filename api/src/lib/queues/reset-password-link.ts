@@ -1,8 +1,8 @@
-import { Queue, redisClient } from '@shared/queues'
-import { type ResetPasswordLinkJob } from '@shared/schemas'
+import { Queue, QUEUES, redisClient } from '@shared/queues'
+import { type ResetPasswordLinkJob } from '@shared/queues'
 
 export const resetPasswordLinkQueue = new Queue<ResetPasswordLinkJob>(
-  'resetPasswordLinkQueue',
+  QUEUES.RESET_PASSWORD,
   {
     connection: redisClient,
   },

@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
-import { redisClient, Worker } from '@shared/queues'
+import { QUEUES, redisClient, Worker } from '@shared/queues'
 
 import { db } from '../db.js'
 
 export const createExpiredCodesRemoverWorker = () => {
   const worker = new Worker(
-    'expired-codes-remover',
+    QUEUES.EXPIRED_CODES_REMOVER,
     async (job) => {
       console.log(`Deleting expired codes, job ID: ${job.id}`)
-      const otpCodes = await db.otp_codes.deleteMany({
+      const otpCodes = await db.email_verification.deleteMany({
         where: {
           expires_at: {
             lt: new Date(),
