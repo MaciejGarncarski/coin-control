@@ -15,13 +15,13 @@ import { Route as PrivacyPolicyImport } from './routes/privacy-policy'
 import { Route as UnauthenticatedRouteImport } from './routes/_unauthenticated/route'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
-import { Route as AuthVerifyEmailImport } from './routes/auth/verify-email'
 import { Route as AuthenticatedAccountImport } from './routes/_authenticated/account'
 import { Route as UnauthenticatedAuthIndexImport } from './routes/_unauthenticated/auth/index'
 import { Route as UnauthenticatedAuthRegisterImport } from './routes/_unauthenticated/auth/register'
 import { Route as UnauthenticatedAuthPasswordResetImport } from './routes/_unauthenticated/auth/password-reset'
 import { Route as UnauthenticatedAuthLoginImport } from './routes/_unauthenticated/auth/login'
 import { Route as UnauthenticatedAuthForgotPasswordImport } from './routes/_unauthenticated/auth/forgot-password'
+import { Route as AuthenticatedAuthVerifyEmailImport } from './routes/_authenticated/auth/verify-email'
 
 // Create/Update Routes
 
@@ -45,12 +45,6 @@ const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-
-const AuthVerifyEmailRoute = AuthVerifyEmailImport.update({
-  id: '/auth/verify-email',
-  path: '/auth/verify-email',
-  getParentRoute: () => rootRoute,
 } as any)
 
 const AuthenticatedAccountRoute = AuthenticatedAccountImport.update({
@@ -92,6 +86,13 @@ const UnauthenticatedAuthForgotPasswordRoute =
     getParentRoute: () => UnauthenticatedRouteRoute,
   } as any)
 
+const AuthenticatedAuthVerifyEmailRoute =
+  AuthenticatedAuthVerifyEmailImport.update({
+    id: '/auth/verify-email',
+    path: '/auth/verify-email',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -124,18 +125,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountImport
       parentRoute: typeof AuthenticatedRouteImport
     }
-    '/auth/verify-email': {
-      id: '/auth/verify-email'
-      path: '/auth/verify-email'
-      fullPath: '/auth/verify-email'
-      preLoaderRoute: typeof AuthVerifyEmailImport
-      parentRoute: typeof rootRoute
-    }
     '/_authenticated/': {
       id: '/_authenticated/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/auth/verify-email': {
+      id: '/_authenticated/auth/verify-email'
+      path: '/auth/verify-email'
+      fullPath: '/auth/verify-email'
+      preLoaderRoute: typeof AuthenticatedAuthVerifyEmailImport
       parentRoute: typeof AuthenticatedRouteImport
     }
     '/_unauthenticated/auth/forgot-password': {
@@ -181,11 +182,13 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedAuthVerifyEmailRoute: typeof AuthenticatedAuthVerifyEmailRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedAuthVerifyEmailRoute: AuthenticatedAuthVerifyEmailRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -215,8 +218,8 @@ export interface FileRoutesByFullPath {
   '': typeof UnauthenticatedRouteRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/account': typeof AuthenticatedAccountRoute
-  '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/': typeof AuthenticatedIndexRoute
+  '/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
   '/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
   '/auth/login': typeof UnauthenticatedAuthLoginRoute
   '/auth/password-reset': typeof UnauthenticatedAuthPasswordResetRoute
@@ -228,8 +231,8 @@ export interface FileRoutesByTo {
   '': typeof UnauthenticatedRouteRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/account': typeof AuthenticatedAccountRoute
-  '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/': typeof AuthenticatedIndexRoute
+  '/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
   '/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
   '/auth/login': typeof UnauthenticatedAuthLoginRoute
   '/auth/password-reset': typeof UnauthenticatedAuthPasswordResetRoute
@@ -243,8 +246,8 @@ export interface FileRoutesById {
   '/_unauthenticated': typeof UnauthenticatedRouteRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
-  '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
   '/_unauthenticated/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
   '/_unauthenticated/auth/login': typeof UnauthenticatedAuthLoginRoute
   '/_unauthenticated/auth/password-reset': typeof UnauthenticatedAuthPasswordResetRoute
@@ -258,8 +261,8 @@ export interface FileRouteTypes {
     | ''
     | '/privacy-policy'
     | '/account'
-    | '/auth/verify-email'
     | '/'
+    | '/auth/verify-email'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/password-reset'
@@ -270,8 +273,8 @@ export interface FileRouteTypes {
     | ''
     | '/privacy-policy'
     | '/account'
-    | '/auth/verify-email'
     | '/'
+    | '/auth/verify-email'
     | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/password-reset'
@@ -283,8 +286,8 @@ export interface FileRouteTypes {
     | '/_unauthenticated'
     | '/privacy-policy'
     | '/_authenticated/account'
-    | '/auth/verify-email'
     | '/_authenticated/'
+    | '/_authenticated/auth/verify-email'
     | '/_unauthenticated/auth/forgot-password'
     | '/_unauthenticated/auth/login'
     | '/_unauthenticated/auth/password-reset'
@@ -297,14 +300,12 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   UnauthenticatedRouteRoute: typeof UnauthenticatedRouteRouteWithChildren
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
-  AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   UnauthenticatedRouteRoute: UnauthenticatedRouteRouteWithChildren,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
-  AuthVerifyEmailRoute: AuthVerifyEmailRoute,
 }
 
 export const routeTree = rootRoute
@@ -319,15 +320,15 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated",
         "/_unauthenticated",
-        "/privacy-policy",
-        "/auth/verify-email"
+        "/privacy-policy"
       ]
     },
     "/_authenticated": {
       "filePath": "_authenticated/route.tsx",
       "children": [
         "/_authenticated/account",
-        "/_authenticated/"
+        "/_authenticated/",
+        "/_authenticated/auth/verify-email"
       ]
     },
     "/_unauthenticated": {
@@ -347,11 +348,12 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/account.tsx",
       "parent": "/_authenticated"
     },
-    "/auth/verify-email": {
-      "filePath": "auth/verify-email.tsx"
-    },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/auth/verify-email": {
+      "filePath": "_authenticated/auth/verify-email.tsx",
       "parent": "/_authenticated"
     },
     "/_unauthenticated/auth/forgot-password": {

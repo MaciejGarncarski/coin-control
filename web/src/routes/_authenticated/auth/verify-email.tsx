@@ -8,7 +8,7 @@ const verifySecondaryEmailSchema = z.object({
   email: z.string().nullable(),
 })
 
-export const Route = createFileRoute('/auth/verify-email')({
+export const Route = createFileRoute('/_authenticated/auth/verify-email')({
   validateSearch: (search): z.infer<typeof verifySecondaryEmailSchema> => {
     const parsed = verifySecondaryEmailSchema.safeParse(search)
 
