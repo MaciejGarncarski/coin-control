@@ -26,12 +26,12 @@ import { passwordRouter } from './password/password.route.js'
 
 const authLimiter = createRateLimiter({
   windowMs: ms('3 minutes'),
-  limit: 10,
+  limit: 50,
 })
 
 const otpLimiter = createRateLimiter({
   windowMs: ms('3 minutes'),
-  limit: 5,
+  limit: 25,
   standardHeaders: true,
   legacyHeaders: false,
 })

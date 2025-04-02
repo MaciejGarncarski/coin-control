@@ -24,7 +24,7 @@ export const userRouter = Router()
 
 const addNewEmailLimiter = createRateLimiter({
   windowMs: ms('3 minutes'),
-  limit: 15,
+  limit: 30,
 })
 
 userRouter.get('/emails', authorize, getUserEmailsHandler)

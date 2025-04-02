@@ -9,6 +9,7 @@ export const createRateLimiter = (options: Partial<Options>) => {
   return rateLimit({
     message: {
       message: 'Too many requests, please try again later.',
+      statusCode: status.TOO_MANY_REQUESTS,
     },
     standardHeaders: true,
     legacyHeaders: false,
