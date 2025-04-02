@@ -368,3 +368,18 @@ export async function saveSessionData({
     },
   })
 }
+
+export async function getEmailVerificationCode({ userId }: { userId: string }) {
+  return db.email_verification.findFirst({
+    select: {
+      expires_at: true,
+    },
+    where: {
+      verified: false,
+      user_id: userId,
+    },
+    orderBy: {
+      expires_at: 'desc',
+    },
+  })
+}

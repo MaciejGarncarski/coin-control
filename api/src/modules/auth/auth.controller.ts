@@ -16,6 +16,7 @@ import type {
 } from '../../utils/typed-request.js'
 import {
   checkUserExists,
+  getEmailVerificationCode,
   getOTP,
   getUser,
   registerUser,
@@ -122,20 +123,8 @@ export async function sendEmailVerificationHandler(
   res: Response,
 ) {
   const userId = req.session.userId
-  const userData = await getUser({ userId: userId })
-
-  const newestOTP = await db.email_verification.findFirst({
-    select: {
-      expires_at: true,
-    },
-    where: {
-      verified: false,
-      user_id: userId,
-    },
-    orderBy: {
-      expires_at: 'desc',
-    },
-  })
+  const userData = await getUser({ userId })
+  const newestOTP = await getEmailVerificationCode({ userId })
 
   if (newestOTP?.expires_at) {
     const codeDate = newestOTP.expires_at.getTime() - ms('3 minutes')
