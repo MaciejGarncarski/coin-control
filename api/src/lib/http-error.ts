@@ -7,7 +7,7 @@ type Test = {
   additionalMessage?: string
 }
 
-export class ApiError extends Error {
+export class HttpError extends Error {
   statusCode?: number
   toastMessage?: string
   additionalMessage?: string

@@ -10,7 +10,7 @@ const hashes = styleText(
 )
 const message = styleText(
   'greenBright',
-  ` Server running on ${styleText(['bgWhite', 'black'], `http://${env.HOST}:${env.PORT}`)}`,
+  ` Server running on ${styleText(['gray'], `http://${env.HOST}:${env.PORT}`)}`,
 )
 
 export const showStartMessage = () => {

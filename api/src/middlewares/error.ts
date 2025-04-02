@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from 'express'
 import status from 'http-status'
 
 import { isProd } from '../config/consatnts.js'
-import { ApiError } from '../lib/api-error.js'
+import { HttpError } from '../lib/http-error.js'
 
 export function errorMiddleware(
   error: Error,
@@ -29,7 +29,7 @@ export function errorMiddleware(
 
   const errorMessage = error.message || 'Internal server error'
 
-  if (error instanceof ApiError) {
+  if (error instanceof HttpError) {
     const responseMessage: TApiError = {
       message: errorMessage,
       statusCode: error.statusCode,

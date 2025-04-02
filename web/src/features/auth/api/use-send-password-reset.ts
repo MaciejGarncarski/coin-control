@@ -8,7 +8,7 @@ export const useSendPasswordResetLink = () => {
   return useMutation({
     mutationFn: async (mutationData: ForgotPasswordEmailMutation) => {
       const resposne = await fetcher({
-        url: '/auth/forgot-password-link',
+        url: '/auth/password/forgot',
         method: 'POST',
         throwOnError: true,
         body: {

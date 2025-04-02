@@ -12,7 +12,7 @@ export function useResetPassword() {
     mutationFn: (mutationData: ResetPasswordMutation) => {
       return fetcher({
         method: 'POST',
-        url: '/auth/reset-password',
+        url: '/auth/password/reset',
         throwOnError: true,
         body: {
           password: mutationData.password,

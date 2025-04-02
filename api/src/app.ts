@@ -11,7 +11,8 @@ import { httpLogger } from './logger/logger.js'
 import { corsMiddleware } from './middlewares/cors.js'
 import { errorMiddleware } from './middlewares/error.js'
 import { notFoundMiddleware } from './middlewares/not-found.js'
-import { router } from './modules/router.js'
+import { mainRouter } from './middlewares/router.js'
+import { authRouter } from './modules/auth/auth.route.js'
 import { showStartMessage } from './utils/start-message.js'
 
 const app = express()
@@ -28,12 +29,11 @@ app.use(corsMiddleware())
 app.use(bodyParser.json())
 app.use(expressSession(sessionConfig))
 app.use(httpLogger)
-app.use(router())
+app.use(mainRouter)
 app.use(limiter)
+app.use(authRouter)
 app.use(errorMiddleware)
 app.use(notFoundMiddleware)
-
-setupCron()
 
 app.listen(Number(env.PORT), env.HOST, (error) => {
   if (error) {
@@ -50,5 +50,6 @@ app.listen(Number(env.PORT), env.HOST, (error) => {
     process.exit(1)
   }
 
+  setupCron()
   showStartMessage()
 })

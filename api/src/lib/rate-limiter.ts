@@ -3,7 +3,7 @@ import rateLimit, { type Options } from 'express-rate-limit'
 import status from 'http-status'
 import { RedisStore } from 'rate-limit-redis'
 
-import { ApiError } from './api-error.js'
+import { HttpError } from './http-error.js'
 
 export const createRateLimiter = (options: Partial<Options>) => {
   return rateLimit({
@@ -17,7 +17,7 @@ export const createRateLimiter = (options: Partial<Options>) => {
       sendCommand: (...args: string[]) => redisClient.call(...args),
     }),
     handler: () => {
-      throw new ApiError({
+      throw new HttpError({
         message: 'Too many requests, please try again later.',
         statusCode: status.TOO_MANY_REQUESTS,
       })

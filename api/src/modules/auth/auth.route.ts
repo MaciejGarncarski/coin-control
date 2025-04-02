@@ -1,10 +1,8 @@
 import {
   EmailVerificationVerifyMutationSchema,
-  forgotPasswordEmailMutationSchema,
   loginMutationSchema,
   logOutDeviceQuerySchema,
   registerMutationSchema,
-  resetPasswordMutationSchema,
 } from '@shared/schemas'
 import { Router } from 'express'
 import ms from 'ms'
@@ -14,7 +12,6 @@ import { authorize } from '../../middlewares/authorize.js'
 import { validateData } from '../../middlewares/validator.js'
 import { validateParams } from '../../middlewares/validator-params.js'
 import {
-  forgotPasswordLinkHandler,
   getMySessionsHandler,
   getUserHandler,
   logOutDeviceHandler,
@@ -22,10 +19,10 @@ import {
   logoutHandler,
   postLoginHandler,
   registerHandler,
-  resetPasswordHandler,
   sendEmailVerificationHandler,
   verifyAccountHandler,
 } from './auth.controller.js'
+import { passwordRouter } from './password/password.route.js'
 
 const authLimiter = createRateLimiter({
   windowMs: ms('3 minutes'),
@@ -39,63 +36,54 @@ const otpLimiter = createRateLimiter({
   legacyHeaders: false,
 })
 
-const emailLimiter = createRateLimiter({
-  windowMs: ms('5 minutes'),
-  limit: 3,
-})
+export const authRouter = Router()
 
-const route = Router()
+authRouter.use('/password', passwordRouter)
+authRouter.post(
+  '/login',
+  validateData(loginMutationSchema),
+  authLimiter,
+  postLoginHandler,
+)
 
-export const authRoutes = (app: Router) => {
-  app.use('/auth', route)
+authRouter.post(
+  '/register',
+  validateData(registerMutationSchema),
+  authLimiter,
+  registerHandler,
+)
 
-  route.post(
-    '/login',
-    validateData(loginMutationSchema),
-    authLimiter,
-    postLoginHandler,
-  )
-  route.post(
-    '/register',
-    validateData(registerMutationSchema),
-    authLimiter,
-    registerHandler,
-  )
+authRouter.get('/my-sessions', authorize, getMySessionsHandler)
 
-  route.get('/my-sessions', authorize, getMySessionsHandler)
-  route.delete('/my-sessions', authLimiter, authorize, logOutEveryDeviceHandler)
-  route.delete(
-    '/my-sessions/:id',
-    authLimiter,
-    authorize,
-    validateParams(logOutDeviceQuerySchema),
-    logOutDeviceHandler,
-  )
+authRouter.delete(
+  '/my-sessions',
+  authLimiter,
+  authorize,
+  logOutEveryDeviceHandler,
+)
 
-  route.get('/me', authorize, getUserHandler)
-  route.delete('/me', logoutHandler)
+authRouter.delete(
+  '/my-sessions/:id',
+  authLimiter,
+  authorize,
+  validateParams(logOutDeviceQuerySchema),
+  logOutDeviceHandler,
+)
 
-  route.post('/account-verification', authorize, sendEmailVerificationHandler)
+authRouter.get('/me', authorize, getUserHandler)
 
-  route.post(
-    '/verify-otp',
-    otpLimiter,
-    authorize,
-    validateData(EmailVerificationVerifyMutationSchema),
-    verifyAccountHandler,
-  )
+authRouter.delete('/me', logoutHandler)
 
-  route.post(
-    '/forgot-password-link',
-    emailLimiter,
-    validateData(forgotPasswordEmailMutationSchema),
-    forgotPasswordLinkHandler,
-  )
+authRouter.post(
+  '/account-verification',
+  authorize,
+  sendEmailVerificationHandler,
+)
 
-  route.post(
-    '/reset-password',
-    otpLimiter,
-    validateData(resetPasswordMutationSchema),
-    resetPasswordHandler,
-  )
-}
+authRouter.post(
+  '/verify-otp',
+  otpLimiter,
+  authorize,
+  validateData(EmailVerificationVerifyMutationSchema),
+  verifyAccountHandler,
+)

@@ -14,10 +14,11 @@ import status from 'http-status'
 import ms from 'ms'
 import { v7 } from 'uuid'
 
-import { ApiError } from '../../lib/api-error.js'
 import { db } from '../../lib/db.js'
+import { HttpError } from '../../lib/http-error.js'
 import { secondaryEmailVerificationQueue } from '../../lib/queues/secondary-email-verification.js'
 import type { TypedRequestBody } from '../../utils/typed-request.js'
+import { getUser } from '../auth/auth.service.js'
 
 export const getUserEmailsHandler = async (req: Request, res: Response) => {
   const userID = req.session.userId
@@ -60,7 +61,7 @@ export async function addEmailHandler(
   })
 
   if (userEmailsCount >= USER_EMAILS_LIMIT) {
-    throw new ApiError({
+    throw new HttpError({
       message: `Emails limit is ${USER_EMAILS_LIMIT}.`,
       toastMessage: `Email limit is ${USER_EMAILS_LIMIT}.`,
       statusCode: 'FORBIDDEN',
@@ -74,7 +75,7 @@ export async function addEmailHandler(
   })
 
   if (someUserHasEmail?.id) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Already exists',
       toastMessage: 'Email already taken',
       statusCode: 'CONFLICT',
@@ -88,7 +89,7 @@ export async function addEmailHandler(
   })
 
   if (emailExists?.user_id) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Already exists',
       toastMessage: 'Email already taken',
       statusCode: 'CONFLICT',
@@ -102,7 +103,7 @@ export async function addEmailHandler(
   })
 
   if (myEmails.some((myEmails) => myEmails.email === email)) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Already exists',
       toastMessage: 'Email already taken',
       statusCode: 'CONFLICT',
@@ -161,14 +162,14 @@ export async function resendEmailVerificationHandler(
   })
 
   if (!foundEmail) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Not found.',
       statusCode: 'BAD_REQUEST',
     })
   }
 
   if (foundEmail.user_id !== userId) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Unauthorized.',
       statusCode: 'UNAUTHORIZED',
     })
@@ -198,7 +199,7 @@ export async function resendEmailVerificationHandler(
   const tokenDate = latestToken.expires_at.getTime() - ms('3 minutes')
 
   if (tokenDate > Date.now()) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Wait two minutes before sending new code.',
       toastMessage: 'Wait two minutes before sending new code.',
       statusCode: 'TOO_MANY_REQUESTS',
@@ -251,7 +252,7 @@ export async function verifySecondaryEmailHandler(
   })
 
   if (!foundToken?.id) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Bad request',
       statusCode: 'BAD_REQUEST',
     })
@@ -260,7 +261,7 @@ export async function verifySecondaryEmailHandler(
   const isExpired = foundToken.expires_at.getTime() < new Date().getTime()
 
   if (isExpired) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Token expired',
       statusCode: 'BAD_REQUEST',
     })
@@ -308,21 +309,21 @@ export async function setPrimaryEmailHandler(
   })
 
   if (!emailData) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Bad request.',
       statusCode: 'BAD_REQUEST',
     })
   }
 
   if (emailData.is_primary) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Is primary already.',
       statusCode: 'BAD_REQUEST',
     })
   }
 
   if (!emailData.is_verified) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Email not verified.',
       statusCode: 'BAD_REQUEST',
     })
@@ -339,7 +340,7 @@ export async function setPrimaryEmailHandler(
     })
 
     if (!prevPrimaryEmail) {
-      throw new ApiError({
+      throw new HttpError({
         message: 'Bad request.',
         statusCode: 'BAD_REQUEST',
       })
@@ -386,23 +387,12 @@ export async function deleteEmailHandler(
   const userId = req.session.userId
   const email = req.body.email
 
-  const userData = await db.users.findFirst({
-    where: {
-      id: userId,
-    },
-  })
-
-  if (!userData) {
-    throw new ApiError({
-      message: 'Unauthorized.',
-      statusCode: 'UNAUTHORIZED',
-    })
-  }
+  const userData = await getUser({ userId })
 
   const isPrimaryEmail = email === userData.email
 
   if (isPrimaryEmail) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Cannot delete primary email.',
       statusCode: 'FORBIDDEN',
       toastMessage: 'Cannot delete primary email.',
@@ -418,7 +408,7 @@ export async function deleteEmailHandler(
   })
 
   if (!emailExistsForUser) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Email does not exist.',
       statusCode: 'BAD_REQUEST',
     })

@@ -1,5 +1,3 @@
-import { createHash } from 'node:crypto'
-
 import { hash, verify } from '@node-rs/argon2'
 import { QUEUES } from '@shared/queues'
 import { type RegisterMutation, z } from '@shared/schemas'
@@ -7,11 +5,9 @@ import ms from 'ms'
 import type { IResult } from 'ua-parser-js'
 import { v7 } from 'uuid'
 
-import { ApiError } from '../../lib/api-error.js'
 import { db } from '../../lib/db.js'
+import { HttpError } from '../../lib/http-error.js'
 import { emailVerificationQueue } from '../../lib/queues/email-verification.js'
-import { resetPasswordLinkQueue } from '../../lib/queues/reset-password-link.js'
-import { resetPasswordNotificationQueue } from '../../lib/queues/reset-password-notification.js'
 import { generateOTP } from '../../utils/generate-otp.js'
 import { getUserLocation } from '../../utils/get-user-location.js'
 import { userDTO } from './user.dto.js'
@@ -50,7 +46,7 @@ export async function checkUserExists({ email }: CheckUserExistsProps) {
   })
 
   if (!user) {
-    throw new ApiError({
+    throw new HttpError({
       statusCode: 'UNAUTHORIZED',
       message: 'Invalid email or password.',
     })
@@ -68,7 +64,7 @@ export async function verifyPassword({ hash, password }: VerifyPasswordProps) {
   const passwordMatches = await verify(hash, password)
 
   if (!passwordMatches) {
-    throw new ApiError({
+    throw new HttpError({
       statusCode: 'UNAUTHORIZED',
       message: 'Invalid email or password.',
     })
@@ -87,7 +83,7 @@ export async function registerUser(userData: RegisterMutation) {
   })
 
   if (user) {
-    throw new ApiError({
+    throw new HttpError({
       toastMessage: 'User already exists.',
       message: 'User already exists.',
       statusCode: 'CONFLICT',
@@ -126,7 +122,7 @@ export async function registerUser(userData: RegisterMutation) {
   })
 
   if (!newUser) {
-    throw new ApiError({
+    throw new HttpError({
       toastMessage: 'User not found.',
       message: 'User not found.',
       statusCode: 'NOT_FOUND',
@@ -198,14 +194,14 @@ export async function verifyAccount({ code, userId }: VerifyAccountProps) {
   })
 
   if (!otp) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Invalid OTP code.',
       statusCode: 'UNAUTHORIZED',
     })
   }
 
   if (otp.expires_at < new Date()) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'OTP code expired.',
       toastMessage: 'Code expired.',
       statusCode: 'UNAUTHORIZED',
@@ -260,7 +256,7 @@ export async function getOTP({ email, userId }: GetOTPPRops) {
   })
 
   if (!userEmailData) {
-    throw new ApiError({
+    throw new HttpError({
       statusCode: 'BAD_REQUEST',
       message: 'Bad request',
     })
@@ -302,7 +298,7 @@ export async function getOTP({ email, userId }: GetOTPPRops) {
 }
 
 export async function getUser({ userId }: { userId: string }) {
-  return await db.users.findFirst({
+  const user = await db.users.findUnique({
     where: {
       id: userId,
     },
@@ -311,6 +307,27 @@ export async function getUser({ userId }: { userId: string }) {
       email: true,
       name: true,
     },
+  })
+
+  if (!user) {
+    throw new HttpError({
+      message: 'User not found',
+      statusCode: 'BAD_REQUEST',
+    })
+  }
+
+  const userEmail = await db.user_emails.findFirst({
+    where: {
+      user_id: user.id,
+      is_verified: true,
+    },
+  })
+
+  return userDTO({
+    email: user.email,
+    email_verified: userEmail ? userEmail.is_verified : false,
+    id: user.id,
+    name: user.name,
   })
 }
 
@@ -350,121 +367,4 @@ export async function saveSessionData({
       location: userLocation,
     },
   })
-}
-
-export async function sendResetPasswordCode({
-  userId,
-  email,
-}: {
-  userId: string
-  email: string
-}) {
-  const passwordCodeId = v7()
-  const expiresAt = new Date().getTime() + ms('5 minutes')
-  const resetCode = createHash('sha512').update(v7()).digest('hex').slice(0, 48)
-
-  await db.reset_password_codes.create({
-    data: {
-      id: passwordCodeId,
-      expires_at: new Date(expiresAt),
-      user_id: userId,
-      reset_code: resetCode,
-    },
-  })
-
-  await resetPasswordLinkQueue.add(
-    `${QUEUES.RESET_PASSWORD}-${passwordCodeId}`,
-    {
-      passwordResetCode: resetCode,
-      userEmail: email,
-    },
-    {
-      attempts: 3,
-      backoff: {
-        type: 'exponential',
-        delay: 1000,
-      },
-      removeOnComplete: {
-        age: 3600,
-        count: 1000,
-      },
-      removeOnFail: {
-        age: 24 * 3600,
-      },
-    },
-  )
-}
-
-type ResetPasswordProps = {
-  newPassword: string
-  resetToken: string
-  resetTokenId: string
-}
-
-export async function resetPassword({
-  newPassword,
-  resetToken,
-  resetTokenId,
-}: ResetPasswordProps) {
-  const user = await db.$transaction(async (tx) => {
-    const userCode = await tx.reset_password_codes.update({
-      where: {
-        id: resetTokenId,
-        reset_code: resetToken,
-      },
-      data: {
-        used: true,
-      },
-      select: {
-        user_id: true,
-      },
-    })
-
-    if (!userCode.user_id) {
-      throw new Error('User not found.')
-    }
-
-    const hashedPassword = await hash(newPassword)
-
-    const updatedUser = await tx.users.update({
-      where: {
-        id: userCode.user_id,
-      },
-      data: {
-        password_hash: hashedPassword,
-      },
-    })
-
-    await tx.sessions.deleteMany({
-      where: {
-        user_id: userCode.user_id,
-      },
-    })
-
-    return updatedUser
-  })
-
-  const timestamp = Date.now()
-
-  await resetPasswordNotificationQueue.add(
-    `${QUEUES.RESET_PASSWORD_NOTIFICATION}-${resetTokenId}`,
-    {
-      createdAt: timestamp,
-      userEmail: user.email,
-    },
-    {
-      attempts: 3,
-      backoff: {
-        type: 'exponential',
-        delay: 1000,
-      },
-      removeOnComplete: {
-        age: 3600,
-        count: 1000,
-      },
-      removeOnFail: {
-        age: 24 * 3600,
-      },
-    },
-  )
 }

@@ -20,51 +20,47 @@ import {
   verifySecondaryEmailHandler,
 } from './user.controller.js'
 
-const route = Router()
+export const userRouter = Router()
 
 const addNewEmailLimiter = createRateLimiter({
   windowMs: ms('3 minutes'),
   limit: 15,
 })
 
-export const userRoutes = (app: Router) => {
-  app.use('/user', route)
+userRouter.get('/emails', authorize, getUserEmailsHandler)
 
-  route.get('/emails', authorize, getUserEmailsHandler)
+userRouter.post(
+  '/emails',
+  addNewEmailLimiter,
+  authorize,
+  validateData(addEmailMutationSchema),
+  addEmailHandler,
+)
 
-  route.post(
-    '/emails',
-    addNewEmailLimiter,
-    authorize,
-    validateData(addEmailMutationSchema),
-    addEmailHandler,
-  )
+userRouter.post(
+  '/resend-email-verification',
+  authorize,
+  validateData(resendEmailVerificationMutationSchema),
+  resendEmailVerificationHandler,
+)
 
-  route.post(
-    '/resend-email-verification',
-    authorize,
-    validateData(resendEmailVerificationMutationSchema),
-    resendEmailVerificationHandler,
-  )
+userRouter.post(
+  '/verify-secondary-email',
+  authorize,
+  validateData(verifySecondaryEmailMutaitonSchema),
+  verifySecondaryEmailHandler,
+)
 
-  route.post(
-    '/verify-secondary-email',
-    authorize,
-    validateData(verifySecondaryEmailMutaitonSchema),
-    verifySecondaryEmailHandler,
-  )
+userRouter.post(
+  '/set-primary-email',
+  authorize,
+  validateData(setPrimaryEmailMutationSchema),
+  setPrimaryEmailHandler,
+)
 
-  route.post(
-    '/set-primary-email',
-    authorize,
-    validateData(setPrimaryEmailMutationSchema),
-    setPrimaryEmailHandler,
-  )
-
-  route.post(
-    '/delete-email',
-    authorize,
-    validateData(deleteEmailMutationSchema),
-    deleteEmailHandler,
-  )
-}
+userRouter.post(
+  '/delete-email',
+  authorize,
+  validateData(deleteEmailMutationSchema),
+  deleteEmailHandler,
+)

@@ -1,8 +1,6 @@
 import type {
   EmailVerificationVerifyMutation,
-  ForgotPasswordEmailMutation,
   LogOutDeviceQuery,
-  ResetPasswordMutation,
 } from '@shared/schemas'
 import { type LoginMutation, type RegisterMutation } from '@shared/schemas'
 import type { Request, Response } from 'express'
@@ -10,8 +8,8 @@ import { status } from 'http-status'
 import ms from 'ms'
 import { UAParser } from 'ua-parser-js'
 
-import { ApiError } from '../../lib/api-error.js'
 import { db } from '../../lib/db.js'
+import { HttpError } from '../../lib/http-error.js'
 import type {
   TypedRequestBody,
   TypedRequestParams,
@@ -21,9 +19,7 @@ import {
   getOTP,
   getUser,
   registerUser,
-  resetPassword,
   saveSessionData,
-  sendResetPasswordCode,
   verifyAccount,
   verifyPassword,
 } from './auth.service.js'
@@ -63,29 +59,7 @@ export const postLoginHandler = async (
 
 export const getUserHandler = async (req: Request, res: Response) => {
   const user = await getUser({ userId: req.session.userId })
-
-  if (!user) {
-    throw new ApiError({
-      message: 'User not found.',
-      statusCode: 'NOT_FOUND',
-    })
-  }
-
-  const userEmail = await db.user_emails.findFirst({
-    where: {
-      user_id: user.id,
-      is_verified: true,
-    },
-  })
-
-  const userData = userDTO({
-    email: user.email,
-    email_verified: userEmail ? userEmail.is_verified : false,
-    id: user.id,
-    name: user.name,
-  })
-
-  res.status(status.OK).json(userData)
+  res.status(status.OK).json(user)
 
   req.session.save(async (e) => {
     if (e) {
@@ -113,7 +87,7 @@ export const getUserHandler = async (req: Request, res: Response) => {
 
 export const logoutHandler = async (req: Request, res: Response) => {
   if (!req.session.userId) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Unauthorized.',
       statusCode: 'UNAUTHORIZED',
     })
@@ -121,7 +95,7 @@ export const logoutHandler = async (req: Request, res: Response) => {
 
   req.session.destroy((err) => {
     if (err) {
-      throw new ApiError({
+      throw new HttpError({
         message: 'Internal server error.',
         statusCode: 'INTERNAL_SERVER_ERROR',
       })
@@ -158,7 +132,7 @@ export async function sendEmailVerificationHandler(
   })
 
   if (!user) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'User not found.',
       statusCode: 'NOT_FOUND',
     })
@@ -181,7 +155,7 @@ export async function sendEmailVerificationHandler(
     const codeDate = newestOTP.expires_at.getTime() - ms('3 minutes')
 
     if (codeDate > Date.now()) {
-      throw new ApiError({
+      throw new HttpError({
         message: 'Wait two minutes before sending new code.',
         toastMessage: 'Wait two minutes before sending new code.',
         statusCode: 'TOO_MANY_REQUESTS',
@@ -202,71 +176,6 @@ export async function verifyAccountHandler(
   await verifyAccount({ code: req.body.code, userId: req.session.userId })
 
   res.status(status.OK).json({ message: 'success' })
-}
-
-export async function forgotPasswordLinkHandler(
-  req: TypedRequestBody<ForgotPasswordEmailMutation>,
-  res: Response,
-) {
-  const email = req.body.email
-
-  const foundUser = await db.users.findFirst({
-    where: {
-      email: email,
-    },
-    select: {
-      id: true,
-    },
-  })
-
-  if (!foundUser?.id) {
-    // send fake resopnse so attacker does not know if email exists.
-    res.status(status.ACCEPTED).json({ message: 'success' })
-    return
-  }
-
-  await sendResetPasswordCode({ email: email, userId: foundUser.id })
-
-  res.status(status.ACCEPTED).json({ message: 'success' })
-}
-
-export async function resetPasswordHandler(
-  req: TypedRequestBody<ResetPasswordMutation>,
-  res: Response,
-) {
-  const resetPasswordToken = req.body.resetToken
-  const password = req.body.password
-
-  const codeFromDb = await db.reset_password_codes.findFirst({
-    where: {
-      reset_code: resetPasswordToken,
-      used: false,
-    },
-  })
-
-  if (!codeFromDb?.expires_at) {
-    throw new ApiError({
-      message: 'Invalid reset token',
-      toastMessage: 'Invalid reset token.',
-      statusCode: 'BAD_REQUEST',
-    })
-  }
-
-  if (codeFromDb?.expires_at < new Date()) {
-    throw new ApiError({
-      message: 'Invalid reset token',
-      toastMessage: 'Code expired!',
-      statusCode: 'BAD_REQUEST',
-    })
-  }
-
-  await resetPassword({
-    newPassword: password,
-    resetToken: resetPasswordToken,
-    resetTokenId: codeFromDb.id,
-  })
-
-  res.status(status.ACCEPTED).json({ message: 'success' })
 }
 
 export async function getMySessionsHandler(req: Request, res: Response) {
@@ -321,22 +230,22 @@ export async function logOutDeviceHandler(
   req: TypedRequestParams<LogOutDeviceQuery>,
   res: Response,
 ) {
-  const id = req.params.id
+  const sessionUuid = req.params.id
 
   const foundSession = await db.sessions.findFirst({
     where: {
-      id: id,
+      id: sessionUuid,
     },
   })
 
   if (foundSession?.user_id !== req.session.userId) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Bad request.',
       statusCode: 'BAD_REQUEST',
     })
   }
 
-  if (req.session.id === id) {
+  if (req.sessionID === foundSession.sid) {
     req.session.destroy(async (err) => {
       if (err) {
         throw err
@@ -344,7 +253,7 @@ export async function logOutDeviceHandler(
 
       await db.sessions.deleteMany({
         where: {
-          id: id,
+          id: sessionUuid,
         },
       })
 
@@ -356,7 +265,7 @@ export async function logOutDeviceHandler(
 
   await db.sessions.deleteMany({
     where: {
-      id: id,
+      id: sessionUuid,
     },
   })
 

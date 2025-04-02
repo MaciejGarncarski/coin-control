@@ -1,17 +1,17 @@
 import type { NextFunction, Request, Response } from 'express'
 
-import { ApiError } from '../lib/api-error.js'
+import { HttpError } from '../lib/http-error.js'
 
 export function authorize(req: Request, _: Response, next: NextFunction) {
   if (!req.session.id) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Unauthorized.',
       statusCode: 'UNAUTHORIZED',
     })
   }
 
   if (!req.session.userId) {
-    throw new ApiError({
+    throw new HttpError({
       message: 'Unauthorized.',
       statusCode: 'UNAUTHORIZED',
     })
