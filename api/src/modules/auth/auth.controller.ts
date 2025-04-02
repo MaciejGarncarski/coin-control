@@ -45,20 +45,6 @@ export async function postLoginHandler(
   }
 
   req.session.userId = user.id
-  await new Promise<void>((resolve, reject) => {
-    req.session.regenerate((err) => {
-      if (err) {
-        reject(
-          new HttpError({
-            message: 'Internal server error',
-            statusCode: 'INTERNAL_SERVER_ERROR',
-          }),
-        )
-      }
-      req.session.userId = user.id
-      resolve()
-    })
-  })
 
   const userData = userDTO({
     email: user.email,
@@ -126,20 +112,6 @@ export async function registerHandler(
   const createdUser = await registerUser(req.body)
 
   req.session.userId = createdUser.user.id
-  await new Promise<void>((resolve, reject) => {
-    req.session.regenerate((err) => {
-      if (err) {
-        reject(
-          new HttpError({
-            message: 'Internal server error',
-            statusCode: 'INTERNAL_SERVER_ERROR',
-          }),
-        )
-      }
-      req.session.userId = createdUser.user.id
-      resolve()
-    })
-  })
 
   res.status(status.ACCEPTED).json(createdUser.user)
   return
