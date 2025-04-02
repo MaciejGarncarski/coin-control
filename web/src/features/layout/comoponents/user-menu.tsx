@@ -7,7 +7,7 @@ import { useUser } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 
 export const UserMenu = () => {
-  const user = useUser({})
+  const user = useUser()
 
   if (!user.data) {
     return null

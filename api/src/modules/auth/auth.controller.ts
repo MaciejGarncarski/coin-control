@@ -26,10 +26,10 @@ import {
 import { sessionsDTO } from './sessions.dto.js'
 import { userDTO } from './user.dto.js'
 
-export const postLoginHandler = async (
+export async function postLoginHandler(
   req: TypedRequestBody<LoginMutation>,
   res: Response,
-) => {
+) {
   const email = req.body.email
   const password = req.body.password
 
@@ -45,6 +45,20 @@ export const postLoginHandler = async (
   }
 
   req.session.userId = user.id
+  await new Promise<void>((resolve, reject) => {
+    req.session.regenerate((err) => {
+      if (err) {
+        reject(
+          new HttpError({
+            message: 'Internal server error',
+            statusCode: 'INTERNAL_SERVER_ERROR',
+          }),
+        )
+      }
+      req.session.userId = user.id
+      resolve()
+    })
+  })
 
   const userData = userDTO({
     email: user.email,
@@ -57,9 +71,9 @@ export const postLoginHandler = async (
   return
 }
 
-export const getUserHandler = async (req: Request, res: Response) => {
-  const user = await getUser({ userId: req.session.userId })
-  res.status(status.OK).json(user)
+export async function getUserHandler(req: Request, res: Response) {
+  const userData = await getUser({ userId: req.session.userId })
+  res.status(status.OK).json(userData)
 
   req.session.save(async (e) => {
     if (e) {
@@ -103,8 +117,6 @@ export const logoutHandler = async (req: Request, res: Response) => {
 
     res.status(status.OK).json({ message: 'success' })
   })
-
-  return
 }
 
 export async function registerHandler(
@@ -114,6 +126,21 @@ export async function registerHandler(
   const createdUser = await registerUser(req.body)
 
   req.session.userId = createdUser.user.id
+  await new Promise<void>((resolve, reject) => {
+    req.session.regenerate((err) => {
+      if (err) {
+        reject(
+          new HttpError({
+            message: 'Internal server error',
+            statusCode: 'INTERNAL_SERVER_ERROR',
+          }),
+        )
+      }
+      req.session.userId = createdUser.user.id
+      resolve()
+    })
+  })
+
   res.status(status.ACCEPTED).json(createdUser.user)
   return
 }
@@ -122,21 +149,8 @@ export async function sendEmailVerificationHandler(
   req: Request,
   res: Response,
 ) {
-  const user = await db.users.findFirst({
-    where: {
-      id: req.session.userId,
-    },
-    select: {
-      email: true,
-    },
-  })
-
-  if (!user) {
-    throw new HttpError({
-      message: 'User not found.',
-      statusCode: 'NOT_FOUND',
-    })
-  }
+  const userId = req.session.userId
+  const userData = await getUser({ userId: userId })
 
   const newestOTP = await db.email_verification.findFirst({
     select: {
@@ -144,7 +158,7 @@ export async function sendEmailVerificationHandler(
     },
     where: {
       verified: false,
-      user_id: req.session.userId,
+      user_id: userId,
     },
     orderBy: {
       expires_at: 'desc',
@@ -156,14 +170,14 @@ export async function sendEmailVerificationHandler(
 
     if (codeDate > Date.now()) {
       throw new HttpError({
-        message: 'Wait two minutes before sending new code.',
-        toastMessage: 'Wait two minutes before sending new code.',
+        message: 'Wait before sending new code.',
+        toastMessage: 'Wait before sending new code.',
         statusCode: 'TOO_MANY_REQUESTS',
       })
     }
   }
 
-  await getOTP({ email: user.email, userId: req.session.userId })
+  await getOTP({ email: userData.email, userId: userId })
 
   res.status(status.ACCEPTED).json({ message: 'success' })
   return
@@ -210,7 +224,12 @@ export async function logOutEveryDeviceHandler(req: Request, res: Response) {
 
   req.session.destroy(async (err) => {
     if (err) {
-      throw err
+      if (err instanceof Error) {
+        throw new HttpError({
+          message: err.message,
+          statusCode: 'INTERNAL_SERVER_ERROR',
+        })
+      }
     }
 
     await db.sessions.deleteMany({

@@ -13,13 +13,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: ./docker/api.Dockerfile
+          - dockerfile: ./api/api.Dockerfile
             appname: maciejgarncarski/coin-control-api
             image: ghcr.io/maciejgarncarski/coin-control-api
-          - dockerfile: ./docker/worker.Dockerfile
+          - dockerfile: ./worker/worker.Dockerfile
             appname: maciejgarncarski/coin-control-worker
             image: ghcr.io/maciejgarncarski/coin-control-worker
-          - dockerfile: ./docker/web.Dockerfile
+          - dockerfile: ./web/web.Dockerfile
             appname: maciejgarncarski/coin-control-web
             image: ghcr.io/maciejgarncarski/coin-control-web
             build_args: |

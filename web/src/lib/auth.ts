@@ -31,10 +31,10 @@ type UseUserOptions = {
   queryConfig?: QueryConfig<typeof getUser>
 }
 
-export const useUser = ({ queryConfig }: UseUserOptions) => {
+export const useUser = (props?: UseUserOptions) => {
   return useQuery({
     ...userQueryOptions,
-    ...queryConfig,
+    ...props?.queryConfig,
   })
 }
 

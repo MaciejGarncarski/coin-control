@@ -27,7 +27,7 @@ export const Emails = () => {
         <ul className="flex flex-col gap-2">
           {emails.isPending ? (
             <>
-              {Array.from({ length: 2 })
+              {Array.from({ length: 3 })
                 .map((_, i) => i + 1)
                 .map((i) => {
                   return (

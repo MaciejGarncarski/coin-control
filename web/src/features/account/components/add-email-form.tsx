@@ -36,7 +36,7 @@ export const AddEmailForm = () => {
   const [isChecked, setIsChecked] = useState<CheckedState>(false)
   const addEmailMutation = useAddNewEmail()
 
-  const user = useUser({})
+  const user = useUser()
   const emails = useUserEmails()
 
   const form = useForm({

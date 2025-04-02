@@ -19,7 +19,7 @@ type Props = {
 }
 
 export const DeleteEmailButton = ({ email, closeMenu }: Props) => {
-  const userData = useUser({})
+  const userData = useUser()
   const deleteEmailMutation = useDeleteEmail()
 
   const isDisabled = userData.data?.email === email
