@@ -7,14 +7,14 @@ export function authorize(req: Request, _: Response, next: NextFunction) {
   if (!req.session.id) {
     throw new ApiError({
       message: 'Unauthorized.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
   if (!req.session.userId) {
     throw new ApiError({
       message: 'Unauthorized.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 

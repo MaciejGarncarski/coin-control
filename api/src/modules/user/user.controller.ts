@@ -56,7 +56,7 @@ export async function addEmailHandler(req: AddEmailRequest, res: Response) {
   if (!userId) {
     throw new ApiError({
       message: 'Unauthorized.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
@@ -70,7 +70,7 @@ export async function addEmailHandler(req: AddEmailRequest, res: Response) {
     throw new ApiError({
       message: `Emails limit is ${USER_EMAILS_LIMIT}.`,
       toastMessage: `Email limit is ${USER_EMAILS_LIMIT}.`,
-      statusCode: status.FORBIDDEN,
+      statusCode: 'FORBIDDEN',
     })
   }
 
@@ -84,7 +84,7 @@ export async function addEmailHandler(req: AddEmailRequest, res: Response) {
     throw new ApiError({
       message: 'Already exists',
       toastMessage: 'Email already taken',
-      statusCode: status.CONFLICT,
+      statusCode: 'CONFLICT',
     })
   }
 
@@ -98,7 +98,7 @@ export async function addEmailHandler(req: AddEmailRequest, res: Response) {
     throw new ApiError({
       message: 'Already exists',
       toastMessage: 'Email already taken',
-      statusCode: status.CONFLICT,
+      statusCode: 'CONFLICT',
     })
   }
 
@@ -112,7 +112,7 @@ export async function addEmailHandler(req: AddEmailRequest, res: Response) {
     throw new ApiError({
       message: 'Already exists',
       toastMessage: 'Email already taken',
-      statusCode: status.CONFLICT,
+      statusCode: 'CONFLICT',
     })
   }
 
@@ -167,7 +167,7 @@ export async function resendEmailVerificationHandler(
   if (!userId) {
     throw new ApiError({
       message: 'Unauthorized.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
@@ -182,14 +182,14 @@ export async function resendEmailVerificationHandler(
   if (!foundEmail) {
     throw new ApiError({
       message: 'Not found.',
-      statusCode: status.BAD_REQUEST,
+      statusCode: 'BAD_REQUEST',
     })
   }
 
   if (foundEmail.user_id !== userId) {
     throw new ApiError({
       message: 'Unauthorized.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
@@ -220,7 +220,7 @@ export async function resendEmailVerificationHandler(
     throw new ApiError({
       message: 'Wait two minutes before sending new code.',
       toastMessage: 'Wait two minutes before sending new code.',
-      statusCode: status.TOO_MANY_REQUESTS,
+      statusCode: 'TOO_MANY_REQUESTS',
     })
   }
 
@@ -276,7 +276,7 @@ export async function verifySecondaryEmailHandler(
   if (!foundToken?.id) {
     throw new ApiError({
       message: 'Bad request',
-      statusCode: status.BAD_REQUEST,
+      statusCode: 'BAD_REQUEST',
     })
   }
 
@@ -285,7 +285,7 @@ export async function verifySecondaryEmailHandler(
   if (isExpired) {
     throw new ApiError({
       message: 'Token expired',
-      statusCode: status.BAD_REQUEST,
+      statusCode: 'BAD_REQUEST',
     })
   }
 
@@ -329,7 +329,7 @@ export async function setPrimaryEmailHandler(
   if (!userId) {
     throw new ApiError({
       message: 'Unauthorized.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
@@ -344,21 +344,21 @@ export async function setPrimaryEmailHandler(
   if (!emailData) {
     throw new ApiError({
       message: 'Bad request.',
-      statusCode: status.BAD_REQUEST,
+      statusCode: 'BAD_REQUEST',
     })
   }
 
   if (emailData.is_primary) {
     throw new ApiError({
       message: 'Is primary already.',
-      statusCode: status.BAD_REQUEST,
+      statusCode: 'BAD_REQUEST',
     })
   }
 
   if (!emailData.is_verified) {
     throw new ApiError({
       message: 'Email not verified.',
-      statusCode: status.BAD_REQUEST,
+      statusCode: 'BAD_REQUEST',
     })
   }
 
@@ -375,7 +375,7 @@ export async function setPrimaryEmailHandler(
     if (!prevPrimaryEmail) {
       throw new ApiError({
         message: 'Bad request.',
-        statusCode: status.BAD_REQUEST,
+        statusCode: 'BAD_REQUEST',
       })
     }
 
@@ -426,7 +426,7 @@ export async function deleteEmailHandler(
   if (!userId) {
     throw new ApiError({
       message: 'Unauthorized.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
@@ -441,7 +441,7 @@ export async function deleteEmailHandler(
   if (!userData) {
     throw new ApiError({
       message: 'Unauthorized.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
@@ -450,7 +450,7 @@ export async function deleteEmailHandler(
   if (isPrimaryEmail) {
     throw new ApiError({
       message: 'Cannot delete primary email.',
-      statusCode: status.FORBIDDEN,
+      statusCode: 'FORBIDDEN',
       toastMessage: 'Cannot delete primary email.',
     })
   }
@@ -466,7 +466,7 @@ export async function deleteEmailHandler(
   if (!emailExistsForUser) {
     throw new ApiError({
       message: 'Email does not exist.',
-      statusCode: status.BAD_REQUEST,
+      statusCode: 'BAD_REQUEST',
     })
   }
 

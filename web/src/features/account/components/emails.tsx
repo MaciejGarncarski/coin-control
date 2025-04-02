@@ -27,13 +27,13 @@ export const Emails = () => {
         <ul className="flex flex-col gap-2">
           {emails.data ? null : (
             <>
-              {Array.from({ length: 3 })
+              {Array.from({ length: 2 })
                 .map((_, i) => i + 1)
                 .map((i) => {
                   return (
                     <li
                       key={i}
-                      className="bg-muted h-16 w-full animate-pulse rounded-lg border shadow"></li>
+                      className="bg-muted h-22 w-full animate-pulse rounded-lg border shadow md:h-16"></li>
                   )
                 })}
             </>

@@ -70,7 +70,7 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
 
   if (!user) {
     throw new ApiError({
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
       message: 'Invalid email or password.',
     })
   }
@@ -80,7 +80,7 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
 
   if (!passwordMatches) {
     throw new ApiError({
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
       message: 'Invalid email or password.',
     })
   }
@@ -110,7 +110,7 @@ export const getUserHandler = async (req: Request, res: Response) => {
   if (!req.session.userId) {
     throw new ApiError({
       message: 'User not found.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
@@ -119,7 +119,7 @@ export const getUserHandler = async (req: Request, res: Response) => {
   if (!user) {
     throw new ApiError({
       message: 'User not found.',
-      statusCode: status.NOT_FOUND,
+      statusCode: 'NOT_FOUND',
     })
   }
 
@@ -178,7 +178,7 @@ export const logoutHandler = async (req: Request, res: Response) => {
   if (!req.session.userId) {
     throw new ApiError({
       message: 'Unauthorized.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
@@ -186,7 +186,7 @@ export const logoutHandler = async (req: Request, res: Response) => {
     if (err) {
       throw new ApiError({
         message: 'Internal server error.',
-        statusCode: status.INTERNAL_SERVER_ERROR,
+        statusCode: 'INTERNAL_SERVER_ERROR',
       })
     }
 
@@ -207,7 +207,7 @@ export async function registerHandler(req: RegisterRequest, res: Response) {
     throw new ApiError({
       toastMessage: 'User not found.',
       message: 'User not found.',
-      statusCode: status.NOT_FOUND,
+      statusCode: 'NOT_FOUND',
     })
   }
 
@@ -256,7 +256,7 @@ export async function sendEmailOTPCodeHandler(req: Request, res: Response) {
   if (!req.session.userId) {
     throw new ApiError({
       message: 'Unauthorized.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
@@ -272,7 +272,7 @@ export async function sendEmailOTPCodeHandler(req: Request, res: Response) {
   if (!user) {
     throw new ApiError({
       message: 'User not found.',
-      statusCode: status.NOT_FOUND,
+      statusCode: 'NOT_FOUND',
     })
   }
 
@@ -296,7 +296,7 @@ export async function sendEmailOTPCodeHandler(req: Request, res: Response) {
       throw new ApiError({
         message: 'Wait two minutes before sending new code.',
         toastMessage: 'Wait two minutes before sending new code.',
-        statusCode: status.TOO_MANY_REQUESTS,
+        statusCode: 'TOO_MANY_REQUESTS',
       })
     }
   }
@@ -318,7 +318,7 @@ export async function verifyEmailHandler(
   if (!req.session.userId) {
     throw new ApiError({
       message: 'Unauthorized.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
@@ -378,7 +378,7 @@ export async function resetPasswordHandler(
     throw new ApiError({
       message: 'Invalid reset token',
       toastMessage: 'Invalid reset token.',
-      statusCode: status.BAD_REQUEST,
+      statusCode: 'BAD_REQUEST',
     })
   }
 
@@ -386,7 +386,7 @@ export async function resetPasswordHandler(
     throw new ApiError({
       message: 'Invalid reset token',
       toastMessage: 'Code expired!',
-      statusCode: status.BAD_REQUEST,
+      statusCode: 'BAD_REQUEST',
     })
   }
 
@@ -463,7 +463,7 @@ export async function logOutDeviceHandler(req: LogOutDevice, res: Response) {
   if (foundSession?.user_id !== req.session.userId) {
     throw new ApiError({
       message: 'Bad request.',
-      statusCode: status.BAD_REQUEST,
+      statusCode: 'BAD_REQUEST',
     })
   }
 

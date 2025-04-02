@@ -38,21 +38,17 @@ export function errorMiddleware(
       stack: isProd ? undefined : error.stack,
     }
 
-    res
-      .status(error.statusCode || status.INTERNAL_SERVER_ERROR)
-      .json(responseMessage)
+    res.status(error.statusCode || 500).json(responseMessage)
     return
   }
 
   const responseMessage: TApiError = {
     message: 'Internal server error.',
-    statusCode: req.statusCode || status.INTERNAL_SERVER_ERROR,
+    statusCode: req.statusCode || 500,
     additionalMessage: errorMessage,
     stack: isProd ? undefined : error.stack,
   }
 
-  res
-    .status(req.statusCode || status.INTERNAL_SERVER_ERROR)
-    .json(responseMessage)
+  res.status(req.statusCode || 500).json(responseMessage)
   return
 }

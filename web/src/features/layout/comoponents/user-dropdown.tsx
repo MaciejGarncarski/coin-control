@@ -3,6 +3,7 @@ import { User } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 import { LogoutButton } from '@/components/logout-button'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,10 +25,16 @@ export function UserDropdown({ triggerComponent, side = 'right' }: Props) {
       <DropdownMenuContent className="w-32" side={side} sideOffset={10}>
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link to="/account">
-              <User />
-              Account
-            </Link>
+            <Button
+              variant={'ghost'}
+              asChild
+              size={'sm'}
+              className="w-full justify-start text-left font-normal">
+              <Link to="/account">
+                <User />
+                Account
+              </Link>
+            </Button>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

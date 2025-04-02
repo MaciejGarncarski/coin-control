@@ -17,8 +17,13 @@ model email_verification {
   created_at         DateTime?   @default(now()) @db.Timestamp(6)
   verification_token String?     @db.VarChar(255)
   email_id           String      @db.Uuid
-  user_emails        user_emails @relation(fields: [email_id], references: [email_id], onDelete: NoAction, onUpdate: NoAction)
+  user_emails        user_emails @relation(fields: [email_id], references: [email_id], onDelete: Cascade, onUpdate: NoAction)
   users              users       @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([email_id], map: "idx_email_verification_email_id")
+  @@index([expires_at], map: "idx_email_verification_expires_at")
+  @@index([verification_token], map: "idx_email_verification_token")
+  @@index([user_id], map: "idx_email_verification_user_id")
 }
 
 model reset_password_codes {
@@ -51,6 +56,9 @@ model sessions {
   users            users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([id], map: "idx_id")
+  @@index([expire_at], map: "idx_sessions_expire_at")
+  @@index([last_access], map: "idx_sessions_last_access")
+  @@index([user_id], map: "idx_sessions_user_id")
 }
 
 model user_emails {
@@ -61,6 +69,9 @@ model user_emails {
   is_verified        Boolean?             @default(false)
   email_verification email_verification[]
   users              users                @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([is_primary], map: "idx_user_emails_is_primary")
+  @@index([user_id], map: "idx_user_emails_user_id")
 }
 
 model users {

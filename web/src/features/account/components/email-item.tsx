@@ -39,7 +39,7 @@ export const EmailItem = ({ email, emailID, isPrimary, isVerified }: Props) => {
 
   return (
     <li
-      className="bg-muted relative flex flex-col gap-4 rounded-lg border p-4 text-sm shadow md:flex-row md:items-center"
+      className="bg-muted relative flex h-22 flex-col gap-4 rounded-lg border p-4 text-sm shadow md:h-16 md:flex-row md:items-center"
       key={emailID}>
       <span>{email}</span>
       <div className="flex w-full flex-row items-center gap-4">

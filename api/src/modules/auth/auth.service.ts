@@ -30,7 +30,7 @@ export async function registerUser(userData: RegisterMutation) {
     throw new ApiError({
       toastMessage: 'User already exists.',
       message: 'User already exists.',
-      statusCode: status.CONFLICT,
+      statusCode: 'CONFLICT',
     })
   }
 
@@ -98,7 +98,7 @@ export async function verifyEmail({ code, userId }: VerifyEmailProps) {
   if (!otp) {
     throw new ApiError({
       message: 'Invalid OTP code.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
@@ -106,7 +106,7 @@ export async function verifyEmail({ code, userId }: VerifyEmailProps) {
     throw new ApiError({
       message: 'OTP code expired.',
       toastMessage: 'Code expired.',
-      statusCode: status.UNAUTHORIZED,
+      statusCode: 'UNAUTHORIZED',
     })
   }
 
@@ -159,7 +159,7 @@ export async function getOTP({ email, userId }: GetOTPPRops) {
 
   if (!userEmailData) {
     throw new ApiError({
-      statusCode: status.BAD_REQUEST,
+      statusCode: 'BAD_REQUEST',
       message: 'Bad request',
     })
   }
