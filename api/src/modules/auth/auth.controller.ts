@@ -114,7 +114,7 @@ export async function registerHandler(
   const createdUser = await registerUser(req.body)
 
   req.session.userId = createdUser.user.id
-  res.status(status.ACCEPTED).json(createdUser)
+  res.status(status.ACCEPTED).json(createdUser.user)
   return
 }
 
