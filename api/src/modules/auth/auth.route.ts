@@ -23,8 +23,8 @@ import {
   postLoginHandler,
   registerHandler,
   resetPasswordHandler,
-  sendEmailOTPCodeHandler,
-  verifyEmailHandler,
+  sendEmailVerificationHandler,
+  verifyAccountHandler,
 } from './auth.controller.js'
 
 const authLimiter = createRateLimiter({
@@ -72,15 +72,17 @@ export const authRoutes = (app: Router) => {
     logOutDeviceHandler,
   )
 
-  route.get('/me', getUserHandler)
+  route.get('/me', authorize, getUserHandler)
   route.delete('/me', logoutHandler)
 
-  route.post('/email-verification', sendEmailOTPCodeHandler)
+  route.post('/account-verification', authorize, sendEmailVerificationHandler)
+
   route.post(
     '/verify-otp',
     otpLimiter,
+    authorize,
     validateData(EmailVerificationVerifyMutationSchema),
-    verifyEmailHandler,
+    verifyAccountHandler,
   )
 
   route.post(

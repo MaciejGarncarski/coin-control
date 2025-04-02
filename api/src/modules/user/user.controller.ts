@@ -5,7 +5,7 @@ import type {
   AddEmailMutation,
   DeleteEmailMutation,
   EmailsResponse,
-  RsendEmailVerificationMutation,
+  ResendEmailVerificationMutation,
   SetPrimaryEmailMutation,
   VerifySecondaryEmailMutation,
 } from '@shared/schemas'
@@ -17,6 +17,7 @@ import { v7 } from 'uuid'
 import { ApiError } from '../../lib/api-error.js'
 import { db } from '../../lib/db.js'
 import { secondaryEmailVerificationQueue } from '../../lib/queues/secondary-email-verification.js'
+import type { TypedRequestBody } from '../../utils/typed-request.js'
 
 export const getUserEmailsHandler = async (req: Request, res: Response) => {
   const userID = req.session.userId
@@ -42,23 +43,15 @@ export const getUserEmailsHandler = async (req: Request, res: Response) => {
   return
 }
 
-interface AddEmailRequest extends Request {
-  body: AddEmailMutation
-}
-
 const USER_EMAILS_LIMIT = 5
 
-export async function addEmailHandler(req: AddEmailRequest, res: Response) {
+export async function addEmailHandler(
+  req: TypedRequestBody<AddEmailMutation>,
+  res: Response,
+) {
   const email = req.body.email
   const token = createHash('sha512').update(v7()).digest('hex').slice(0, 48)
   const userId = req.session.userId
-
-  if (!userId) {
-    throw new ApiError({
-      message: 'Unauthorized.',
-      statusCode: 'UNAUTHORIZED',
-    })
-  }
 
   const userEmailsCount = await db.user_emails.count({
     where: {
@@ -154,23 +147,11 @@ export async function addEmailHandler(req: AddEmailRequest, res: Response) {
   return
 }
 
-interface ResendEmailVerificationRequest extends Request {
-  body: RsendEmailVerificationMutation
-}
-
 export async function resendEmailVerificationHandler(
-  req: ResendEmailVerificationRequest,
+  req: TypedRequestBody<ResendEmailVerificationMutation>,
   res: Response,
 ) {
   const userId = req.session.userId
-
-  if (!userId) {
-    throw new ApiError({
-      message: 'Unauthorized.',
-      statusCode: 'UNAUTHORIZED',
-    })
-  }
-
   const email = req.body.email
 
   const foundEmail = await db.user_emails.findFirst({
@@ -247,12 +228,8 @@ export async function resendEmailVerificationHandler(
   return
 }
 
-interface VerifySecondaryEmailRequest extends Request {
-  body: VerifySecondaryEmailMutation
-}
-
 export async function verifySecondaryEmailHandler(
-  req: VerifySecondaryEmailRequest,
+  req: TypedRequestBody<VerifySecondaryEmailMutation>,
   res: Response,
 ) {
   const body = req.body
@@ -316,22 +293,11 @@ export async function verifySecondaryEmailHandler(
   return
 }
 
-interface SetPrimaryEmailRequest extends Request {
-  body: SetPrimaryEmailMutation
-}
-
 export async function setPrimaryEmailHandler(
-  req: SetPrimaryEmailRequest,
+  req: TypedRequestBody<SetPrimaryEmailMutation>,
   res: Response,
 ) {
   const userId = req.session.userId
-
-  if (!userId) {
-    throw new ApiError({
-      message: 'Unauthorized.',
-      statusCode: 'UNAUTHORIZED',
-    })
-  }
 
   const email = req.body.email
 
@@ -413,23 +379,11 @@ export async function setPrimaryEmailHandler(
   return
 }
 
-interface DeleteEmailRequest extends Request {
-  body: DeleteEmailMutation
-}
-
 export async function deleteEmailHandler(
-  req: DeleteEmailRequest,
+  req: TypedRequestBody<DeleteEmailMutation>,
   res: Response,
 ) {
   const userId = req.session.userId
-
-  if (!userId) {
-    throw new ApiError({
-      message: 'Unauthorized.',
-      statusCode: 'UNAUTHORIZED',
-    })
-  }
-
   const email = req.body.email
 
   const userData = await db.users.findFirst({

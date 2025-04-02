@@ -17,7 +17,7 @@ import { showStartMessage } from './utils/start-message.js'
 const app = express()
 
 declare module 'express-session' {
-  interface SessionData {
+  interface Session {
     userId: string
   }
 }

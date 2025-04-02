@@ -1,89 +1,44 @@
-import { verify } from '@node-rs/argon2'
-import { QUEUES } from '@shared/queues'
 import type {
   EmailVerificationVerifyMutation,
   ForgotPasswordEmailMutation,
   LogOutDeviceQuery,
   ResetPasswordMutation,
 } from '@shared/schemas'
-import { type LoginMutation, type RegisterMutation, z } from '@shared/schemas'
+import { type LoginMutation, type RegisterMutation } from '@shared/schemas'
 import type { Request, Response } from 'express'
 import { status } from 'http-status'
 import ms from 'ms'
 import { UAParser } from 'ua-parser-js'
-import { v7 } from 'uuid'
 
 import { ApiError } from '../../lib/api-error.js'
 import { db } from '../../lib/db.js'
-import { emailVerificationQueue } from '../../lib/queues/email-verification.js'
-import { generateOTP } from '../../utils/generate-otp.js'
-import { getUserLocation } from '../../utils/get-user-location.js'
+import type {
+  TypedRequestBody,
+  TypedRequestParams,
+} from '../../utils/typed-request.js'
 import {
+  checkUserExists,
   getOTP,
   getUser,
   registerUser,
   resetPassword,
+  saveSessionData,
   sendResetPasswordCode,
-  verifyEmail,
+  verifyAccount,
+  verifyPassword,
 } from './auth.service.js'
 import { sessionsDTO } from './sessions.dto.js'
 import { userDTO } from './user.dto.js'
-interface LoginRequest extends Request {
-  body: LoginMutation
-}
 
-const IPResponseSchema = z.object({
-  countryName: z.string().min(2).optional(),
-  cityName: z.string().min(2).optional(),
-})
-
-export const postLoginHandler = async (req: LoginRequest, res: Response) => {
+export const postLoginHandler = async (
+  req: TypedRequestBody<LoginMutation>,
+  res: Response,
+) => {
   const email = req.body.email
-
-  const foundUser = await db.user_emails.findFirst({
-    where: {
-      email: email,
-      is_verified: true,
-    },
-    select: {
-      user_id: true,
-    },
-  })
-
-  const user = await db.users.findFirst({
-    where: {
-      id: foundUser?.user_id,
-    },
-    include: {
-      user_emails: {
-        where: {
-          is_primary: true,
-        },
-        select: {
-          email: true,
-          is_primary: true,
-          is_verified: true,
-        },
-      },
-    },
-  })
-
-  if (!user) {
-    throw new ApiError({
-      statusCode: 'UNAUTHORIZED',
-      message: 'Invalid email or password.',
-    })
-  }
-
   const password = req.body.password
-  const passwordMatches = await verify(user.password_hash, password)
 
-  if (!passwordMatches) {
-    throw new ApiError({
-      statusCode: 'UNAUTHORIZED',
-      message: 'Invalid email or password.',
-    })
-  }
+  const user = await checkUserExists({ email })
+  await verifyPassword({ password, hash: user.password_hash })
 
   const isMinimumOneEmailVerified = user.user_emails.some(
     ({ is_verified }) => is_verified,
@@ -107,13 +62,6 @@ export const postLoginHandler = async (req: LoginRequest, res: Response) => {
 }
 
 export const getUserHandler = async (req: Request, res: Response) => {
-  if (!req.session.userId) {
-    throw new ApiError({
-      message: 'User not found.',
-      statusCode: 'UNAUTHORIZED',
-    })
-  }
-
   const user = await getUser({ userId: req.session.userId })
 
   if (!user) {
@@ -140,33 +88,22 @@ export const getUserHandler = async (req: Request, res: Response) => {
   res.status(status.OK).json(userData)
 
   req.session.save(async (e) => {
+    if (e) {
+      req.log.error(`IP API ERROR, ${e}`)
+      return
+    }
+
     try {
       const userIP = req.ip
+
+      if (!userIP) {
+        return
+      }
       const parsedUserAgent = UAParser(req.headers)
-
-      const userIPResponse = await fetch(
-        `https://freeipapi.com/api/json/${userIP}`,
-      )
-      const userIPData = await userIPResponse.json()
-      const IPData = IPResponseSchema.safeParse(userIPData)
-
-      const userLocation = IPData.success
-        ? getUserLocation(IPData.data.cityName, IPData.data.countryName)
-        : null
-
-      await db.sessions.update({
-        where: {
-          sid: req.session.id,
-        },
-        data: {
-          operating_system: parsedUserAgent.os.name,
-          browser: parsedUserAgent.browser.name,
-          device_type:
-            parsedUserAgent.device.type === 'mobile' ? 'mobile' : 'desktop',
-          last_access: new Date(),
-          ip_address: userIP,
-          location: userLocation,
-        },
+      await saveSessionData({
+        parsedUserAgent,
+        userIP,
+        sessionId: req.sessionID,
       })
     } catch (error) {
       req.log.error(`IP API ERROR, ${error}`)
@@ -196,70 +133,21 @@ export const logoutHandler = async (req: Request, res: Response) => {
   return
 }
 
-interface RegisterRequest extends Request {
-  body: RegisterMutation
-}
-
-export async function registerHandler(req: RegisterRequest, res: Response) {
+export async function registerHandler(
+  req: TypedRequestBody<RegisterMutation>,
+  res: Response,
+) {
   const createdUser = await registerUser(req.body)
-
-  if (!createdUser) {
-    throw new ApiError({
-      toastMessage: 'User not found.',
-      message: 'User not found.',
-      statusCode: 'NOT_FOUND',
-    })
-  }
-
-  const expires_at = Date.now() + ms('5 minutes')
-  const OTPUuid = v7()
-  const OTPCode = generateOTP()
-
-  await db.email_verification.create({
-    data: {
-      id: OTPUuid,
-      email_id: createdUser.userEmailData.email_id,
-      user_id: createdUser.user.id,
-      otp: OTPCode,
-      expires_at: new Date(expires_at),
-    },
-  })
-
-  await emailVerificationQueue.add(
-    `${QUEUES.EMAIL_VERIFICATION}-${OTPUuid}`,
-    {
-      code: OTPCode,
-      userEmail: req.body.email,
-    },
-    {
-      attempts: 3,
-      backoff: {
-        type: 'exponential',
-        delay: 1000,
-      },
-      removeOnComplete: {
-        age: 3600,
-        count: 1000,
-      },
-      removeOnFail: {
-        age: 24 * 3600,
-      },
-    },
-  )
 
   req.session.userId = createdUser.user.id
   res.status(status.ACCEPTED).json(createdUser)
   return
 }
 
-export async function sendEmailOTPCodeHandler(req: Request, res: Response) {
-  if (!req.session.userId) {
-    throw new ApiError({
-      message: 'Unauthorized.',
-      statusCode: 'UNAUTHORIZED',
-    })
-  }
-
+export async function sendEmailVerificationHandler(
+  req: Request,
+  res: Response,
+) {
   const user = await db.users.findFirst({
     where: {
       id: req.session.userId,
@@ -307,31 +195,17 @@ export async function sendEmailOTPCodeHandler(req: Request, res: Response) {
   return
 }
 
-interface VerifyEmailRequest extends Request {
-  body: EmailVerificationVerifyMutation
-}
-
-export async function verifyEmailHandler(
-  req: VerifyEmailRequest,
+export async function verifyAccountHandler(
+  req: TypedRequestBody<EmailVerificationVerifyMutation>,
   res: Response,
 ) {
-  if (!req.session.userId) {
-    throw new ApiError({
-      message: 'Unauthorized.',
-      statusCode: 'UNAUTHORIZED',
-    })
-  }
-
-  await verifyEmail({ code: req.body.code, userId: req.session.userId })
+  await verifyAccount({ code: req.body.code, userId: req.session.userId })
 
   res.status(status.OK).json({ message: 'success' })
 }
-interface GetPasswordLinkRequest extends Request {
-  body: ForgotPasswordEmailMutation
-}
 
 export async function forgotPasswordLinkHandler(
-  req: GetPasswordLinkRequest,
+  req: TypedRequestBody<ForgotPasswordEmailMutation>,
   res: Response,
 ) {
   const email = req.body.email
@@ -356,12 +230,8 @@ export async function forgotPasswordLinkHandler(
   res.status(status.ACCEPTED).json({ message: 'success' })
 }
 
-interface ResetPasswordRequest extends Request {
-  body: ResetPasswordMutation
-}
-
 export async function resetPasswordHandler(
-  req: ResetPasswordRequest,
+  req: TypedRequestBody<ResetPasswordMutation>,
   res: Response,
 ) {
   const resetPasswordToken = req.body.resetToken
@@ -447,11 +317,10 @@ export async function logOutEveryDeviceHandler(req: Request, res: Response) {
   })
 }
 
-interface LogOutDevice extends Request {
-  params: LogOutDeviceQuery
-}
-
-export async function logOutDeviceHandler(req: LogOutDevice, res: Response) {
+export async function logOutDeviceHandler(
+  req: TypedRequestParams<LogOutDeviceQuery>,
+  res: Response,
+) {
   const id = req.params.id
 
   const foundSession = await db.sessions.findFirst({

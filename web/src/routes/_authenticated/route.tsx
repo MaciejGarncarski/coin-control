@@ -6,7 +6,7 @@ import {
   useRouteContext,
 } from '@tanstack/react-router'
 
-import { VerifyEmailPage } from '@/features/auth/pages/verify-email'
+import { VerifyAccountPage } from '@/features/auth/pages/verify-account'
 import { Layout } from '@/features/layout/comoponents/layout'
 import { CookieBanner } from '@/features/privacy-policy/comopnents/cookie-banner'
 import { userQueryOptions } from '@/lib/auth'
@@ -46,7 +46,7 @@ function App() {
   }
 
   if (routeContext.auth.isEmailVerified === false) {
-    return <VerifyEmailPage />
+    return <VerifyAccountPage />
   }
 
   return (

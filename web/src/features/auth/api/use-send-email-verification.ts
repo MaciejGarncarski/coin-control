@@ -12,7 +12,7 @@ export const useSendEmailVerification = () => {
     mutationKey: ['send-email-verification'],
     mutationFn: async () => {
       const resposne = await fetcher({
-        url: '/auth/email-verification',
+        url: '/auth/account-verification',
         method: 'POST',
         throwOnError: true,
         schema: EmailVerificationResponeSchema,

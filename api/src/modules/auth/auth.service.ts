@@ -1,10 +1,10 @@
 import { createHash } from 'node:crypto'
 
-import { hash } from '@node-rs/argon2'
+import { hash, verify } from '@node-rs/argon2'
 import { QUEUES } from '@shared/queues'
-import type { RegisterMutation } from '@shared/schemas'
-import status from 'http-status'
+import { type RegisterMutation, z } from '@shared/schemas'
 import ms from 'ms'
+import type { IResult } from 'ua-parser-js'
 import { v7 } from 'uuid'
 
 import { ApiError } from '../../lib/api-error.js'
@@ -13,7 +13,67 @@ import { emailVerificationQueue } from '../../lib/queues/email-verification.js'
 import { resetPasswordLinkQueue } from '../../lib/queues/reset-password-link.js'
 import { resetPasswordNotificationQueue } from '../../lib/queues/reset-password-notification.js'
 import { generateOTP } from '../../utils/generate-otp.js'
+import { getUserLocation } from '../../utils/get-user-location.js'
 import { userDTO } from './user.dto.js'
+
+type CheckUserExistsProps = {
+  email: string
+}
+
+export async function checkUserExists({ email }: CheckUserExistsProps) {
+  const userByEmail = await db.user_emails.findFirst({
+    where: {
+      email: email,
+      is_verified: true,
+    },
+    select: {
+      user_id: true,
+    },
+  })
+
+  const user = await db.users.findFirst({
+    where: {
+      id: userByEmail?.user_id,
+    },
+    include: {
+      user_emails: {
+        where: {
+          is_primary: true,
+        },
+        select: {
+          email: true,
+          is_primary: true,
+          is_verified: true,
+        },
+      },
+    },
+  })
+
+  if (!user) {
+    throw new ApiError({
+      statusCode: 'UNAUTHORIZED',
+      message: 'Invalid email or password.',
+    })
+  }
+
+  return user
+}
+
+type VerifyPasswordProps = {
+  hash: string
+  password: string
+}
+
+export async function verifyPassword({ hash, password }: VerifyPasswordProps) {
+  const passwordMatches = await verify(hash, password)
+
+  if (!passwordMatches) {
+    throw new ApiError({
+      statusCode: 'UNAUTHORIZED',
+      message: 'Invalid email or password.',
+    })
+  }
+}
 
 export async function registerUser(userData: RegisterMutation) {
   const user = await db.users.findFirst({
@@ -65,25 +125,67 @@ export async function registerUser(userData: RegisterMutation) {
     return { user, userEmailData }
   })
 
-  return newUser
-    ? {
-        user: userDTO({
-          email: newUser.user.email,
-          email_verified: false,
-          id: newUser.user.id,
-          name: newUser.user.name,
-        }),
-        userEmailData: newUser.userEmailData,
-      }
-    : null
+  if (!newUser) {
+    throw new ApiError({
+      toastMessage: 'User not found.',
+      message: 'User not found.',
+      statusCode: 'NOT_FOUND',
+    })
+  }
+
+  const expires_at = Date.now() + ms('5 minutes')
+  const OTPUuid = v7()
+  const OTPCode = generateOTP()
+
+  await db.email_verification.create({
+    data: {
+      id: OTPUuid,
+      email_id: newUser.userEmailData.email_id,
+      user_id: newUser.user.id,
+      otp: OTPCode,
+      expires_at: new Date(expires_at),
+    },
+  })
+
+  await emailVerificationQueue.add(
+    `${QUEUES.EMAIL_VERIFICATION}-${OTPUuid}`,
+    {
+      code: OTPCode,
+      userEmail: userData.email,
+    },
+    {
+      attempts: 3,
+      backoff: {
+        type: 'exponential',
+        delay: 1000,
+      },
+      removeOnComplete: {
+        age: 3600,
+        count: 1000,
+      },
+      removeOnFail: {
+        age: 24 * 3600,
+      },
+    },
+  )
+
+  return {
+    user: userDTO({
+      email: newUser.user.email,
+      email_verified: false,
+      id: newUser.user.id,
+      name: newUser.user.name,
+    }),
+    userEmailData: newUser.userEmailData,
+  }
 }
 
-type VerifyEmailProps = {
+type VerifyAccountProps = {
   userId: string
   code: string
 }
 
-export async function verifyEmail({ code, userId }: VerifyEmailProps) {
+export async function verifyAccount({ code, userId }: VerifyAccountProps) {
   const otp = await db.email_verification.findFirst({
     where: {
       user_id: userId,
@@ -212,6 +314,44 @@ export async function getUser({ userId }: { userId: string }) {
   })
 }
 
+const IPResponseSchema = z.object({
+  countryName: z.string().min(2).optional(),
+  cityName: z.string().min(2).optional(),
+})
+
+export async function saveSessionData({
+  parsedUserAgent,
+  userIP,
+  sessionId,
+}: {
+  parsedUserAgent: IResult
+  userIP: string
+  sessionId: string
+}) {
+  const userIPResponse = await fetch(`https://freeipapi.com/api/json/${userIP}`)
+  const userIPData = await userIPResponse.json()
+  const IPData = IPResponseSchema.safeParse(userIPData)
+
+  const userLocation = IPData.success
+    ? getUserLocation(IPData.data.cityName, IPData.data.countryName)
+    : null
+
+  await db.sessions.update({
+    where: {
+      sid: sessionId,
+    },
+    data: {
+      operating_system: parsedUserAgent.os.name,
+      browser: parsedUserAgent.browser.name,
+      device_type:
+        parsedUserAgent.device.type === 'mobile' ? 'mobile' : 'desktop',
+      last_access: new Date(),
+      ip_address: userIP,
+      location: userLocation,
+    },
+  })
+}
+
 export async function sendResetPasswordCode({
   userId,
   email,
@@ -267,7 +407,7 @@ export async function resetPassword({
   resetTokenId,
 }: ResetPasswordProps) {
   const user = await db.$transaction(async (tx) => {
-    const userId = await tx.reset_password_codes.update({
+    const userCode = await tx.reset_password_codes.update({
       where: {
         id: resetTokenId,
         reset_code: resetToken,
@@ -280,7 +420,7 @@ export async function resetPassword({
       },
     })
 
-    if (!userId.user_id) {
+    if (!userCode.user_id) {
       throw new Error('User not found.')
     }
 
@@ -288,7 +428,7 @@ export async function resetPassword({
 
     const updatedUser = await tx.users.update({
       where: {
-        id: userId.user_id,
+        id: userCode.user_id,
       },
       data: {
         password_hash: hashedPassword,
@@ -297,7 +437,7 @@ export async function resetPassword({
 
     await tx.sessions.deleteMany({
       where: {
-        user_id: userId.user_id,
+        user_id: userCode.user_id,
       },
     })
 

@@ -1,4 +1,4 @@
-import { createEmailVerificationWorker } from './workers/email-verification.js'
+import { createAccountVerificationWorker } from './workers/account-verification.js'
 import { createExpiredCodesRemoverWorker } from './workers/expired-codes-remover.js'
 import { createExpiredPasswordTokensRemoverWorker } from './workers/expired-password-tokens-remover.js'
 import { createExpiredSessionRemoverWorker } from './workers/expired-session-remover.js'
@@ -7,7 +7,7 @@ import { createResetPasswordLinkWorker } from './workers/reset-email-password-li
 import { createResetPasswordNotificationWorker } from './workers/reset-password-notification.js'
 
 createResetPasswordLinkWorker()
-createEmailVerificationWorker()
+createAccountVerificationWorker()
 createResetPasswordNotificationWorker()
 createExpiredSessionRemoverWorker()
 createNewEmailVerificationWorker()

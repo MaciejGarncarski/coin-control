@@ -1,4 +1,4 @@
-import session, { type SessionData } from 'express-session'
+import session, { Session, type SessionData } from 'express-session'
 import ms from 'ms'
 import { v7 } from 'uuid'
 
@@ -36,7 +36,7 @@ class PostgresSessionStore extends session.Store {
 
   async set(
     sid: string,
-    sessionData: SessionData,
+    sessionData: Session,
     callback?: (err?: unknown) => void,
   ): Promise<void> {
     try {

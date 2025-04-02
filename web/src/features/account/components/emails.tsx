@@ -25,7 +25,7 @@ export const Emails = () => {
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <ul className="flex flex-col gap-2">
-          {emails.data ? null : (
+          {emails.isPending ? (
             <>
               {Array.from({ length: 2 })
                 .map((_, i) => i + 1)
@@ -37,19 +37,21 @@ export const Emails = () => {
                   )
                 })}
             </>
+          ) : (
+            <>
+              {emails.data?.map(({ emailID, email, isPrimary, isVerified }) => {
+                return (
+                  <EmailItem
+                    key={emailID}
+                    email={email}
+                    isPrimary={isPrimary}
+                    emailID={emailID}
+                    isVerified={isVerified}
+                  />
+                )
+              })}
+            </>
           )}
-
-          {emails.data?.map(({ emailID, email, isPrimary, isVerified }) => {
-            return (
-              <EmailItem
-                key={emailID}
-                email={email}
-                isPrimary={isPrimary}
-                emailID={emailID}
-                isVerified={isVerified}
-              />
-            )
-          })}
         </ul>
 
         <div className="mr-auto">

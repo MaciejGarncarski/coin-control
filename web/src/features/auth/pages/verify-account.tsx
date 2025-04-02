@@ -39,7 +39,7 @@ const OTPFormSchema = z.object({
   }),
 })
 
-export const VerifyEmailPage = () => {
+export const VerifyAccountPage = () => {
   const user = useQuery(userQueryOptions)
   const verifyOTPMutation = useVerifyOTP()
 
@@ -50,7 +50,7 @@ export const VerifyEmailPage = () => {
     },
   })
 
-  const verifyEmail = form.handleSubmit(async (data) => {
+  const verifyAccount = form.handleSubmit(async (data) => {
     verifyOTPMutation.mutate(
       {
         code: data.otpCode,
@@ -92,7 +92,7 @@ export const VerifyEmailPage = () => {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={verifyEmail} className="flex flex-col gap-4">
+            <form onSubmit={verifyAccount} className="flex flex-col gap-4">
               <Separator />
               <FormField
                 control={form.control}

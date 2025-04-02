@@ -48,7 +48,7 @@ export const Sessions = () => {
         </CardHeader>
         <CardContent>
           <ul className="flex flex-col gap-4">
-            {mySessions.data ? null : (
+            {mySessions.isPending ? (
               <>
                 {Array.from({ length: 2 })
                   .map((_, i) => i + 1)
@@ -60,11 +60,13 @@ export const Sessions = () => {
                     )
                   })}
               </>
+            ) : (
+              <>
+                {mySessions.data?.map((session) => {
+                  return <SessionItem session={session} key={session.id} />
+                })}
+              </>
             )}
-
-            {mySessions.data?.map((session) => {
-              return <SessionItem session={session} key={session.id} />
-            })}
           </ul>
         </CardContent>
       </Card>

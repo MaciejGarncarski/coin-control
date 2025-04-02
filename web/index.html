@@ -1,46 +1,46 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-tsrouter-app" />
+    <link rel="icon" href="/logo.jpeg" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#000000" />
-  <meta name="description" content="Web site created using create-tsrouter-app" />
-  <link rel="icon" href="/logo.jpeg" />
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-    rel="stylesheet" />
-</head>
+  <body>
+    <div id="app"></div>
+    <script>
+      const handleFlashOnRender = () => {
+        const theme =
+          JSON.parse(localStorage.getItem('theme'))?.state?.theme || 'system'
 
-<body>
-  <div id="app"></div>
-  <script>
-    const handleFlashOnRender = () => {
-      const theme =
-        JSON.parse(localStorage.getItem('theme'))?.state?.theme || 'system'
+        const root = window.document.documentElement
+        root.classList.remove('light', 'dark')
 
-      const root = window.document.documentElement
-      root.classList.remove('light', 'dark')
+        if (theme === 'system' || !theme) {
+          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+            .matches
+            ? 'dark'
+            : 'light'
 
-      if (theme === 'system' || !theme) {
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
-          .matches
-          ? 'dark'
-          : 'light'
+          root.classList.add(systemTheme)
+          return
+        }
 
-        root.classList.add(systemTheme)
-        return
+        root.classList.add(theme)
       }
 
-      root.classList.add(theme)
-    }
-
-    handleFlashOnRender()
-  </script>
-  <script type="module" src="/src/main.tsx"></script>
-</body>
-
+      handleFlashOnRender()
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

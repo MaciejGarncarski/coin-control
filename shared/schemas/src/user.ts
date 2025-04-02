@@ -40,7 +40,7 @@ export const resendEmailVerificationMutationSchema = z.object({
   email: z.string().email(),
 })
 
-export type RsendEmailVerificationMutation = z.infer<
+export type ResendEmailVerificationMutation = z.infer<
   typeof resendEmailVerificationMutationSchema
 >
 

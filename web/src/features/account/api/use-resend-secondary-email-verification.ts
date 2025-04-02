@@ -1,4 +1,4 @@
-import { type RsendEmailVerificationMutation } from '@shared/schemas'
+import { type ResendEmailVerificationMutation } from '@shared/schemas'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
@@ -9,7 +9,7 @@ export const useResendSecondaryEmailVerification = () => {
   const user = useQuery(userQueryOptions)
 
   return useMutation({
-    mutationFn: async (data: RsendEmailVerificationMutation) => {
+    mutationFn: async (data: ResendEmailVerificationMutation) => {
       const resposne = await fetcher({
         url: '/user/resend-email-verification',
         method: 'POST',

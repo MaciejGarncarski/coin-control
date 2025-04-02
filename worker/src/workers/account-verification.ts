@@ -1,7 +1,7 @@
 import { render } from '@react-email/render'
 import { EmailVerification } from '@shared/email'
 import {
-  type EmailVerificationJob,
+  type AccountVerificationJob,
   QUEUES,
   redisClient,
   Worker,
@@ -10,8 +10,8 @@ import {
 import { env } from '../env.js'
 import { mailer } from '../mailer.js'
 
-export const createEmailVerificationWorker = () => {
-  const worker = new Worker<EmailVerificationJob>(
+export const createAccountVerificationWorker = () => {
+  const worker = new Worker<AccountVerificationJob>(
     QUEUES.EMAIL_VERIFICATION,
     async (job) => {
       const [emailHTML, emailText] = await Promise.all([

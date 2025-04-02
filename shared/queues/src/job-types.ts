@@ -8,7 +8,7 @@ export type ResetPasswordNotificationJob = {
   createdAt: number
 }
 
-export type EmailVerificationJob = {
+export type AccountVerificationJob = {
   userEmail: string
   code: string
 }
