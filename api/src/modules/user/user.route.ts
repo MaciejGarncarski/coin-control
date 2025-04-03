@@ -1,8 +1,10 @@
 import {
   addEmailMutationSchema,
   deleteEmailMutationSchema,
+  deleteUserAccountMutationSchema,
   resendEmailVerificationMutationSchema,
   setPrimaryEmailMutationSchema,
+  userFullNameMutationSchema,
   verifySecondaryEmailMutaitonSchema,
 } from '@shared/schemas'
 import { Router } from 'express'
@@ -14,9 +16,11 @@ import { validateData } from '../../middlewares/validator.js'
 import {
   addEmailHandler,
   deleteEmailHandler,
+  deleteUserAccountHandler,
   getUserEmailsHandler,
   resendEmailVerificationHandler,
   setPrimaryEmailHandler,
+  updateUserHandler,
   verifySecondaryEmailHandler,
 } from './user.controller.js'
 
@@ -63,4 +67,26 @@ userRouter.post(
   authorize,
   validateData(deleteEmailMutationSchema),
   deleteEmailHandler,
+)
+
+userRouter.patch(
+  '/',
+  createRateLimiter({
+    limit: 10,
+    windowMs: ms('1 minute'),
+  }),
+  authorize,
+  validateData(userFullNameMutationSchema),
+  updateUserHandler,
+)
+
+userRouter.post(
+  '/delete-account',
+  createRateLimiter({
+    limit: 10,
+    windowMs: ms('1 minute'),
+  }),
+  authorize,
+  validateData(deleteUserAccountMutationSchema),
+  deleteUserAccountHandler,
 )

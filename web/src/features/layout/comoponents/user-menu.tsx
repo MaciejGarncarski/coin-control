@@ -16,9 +16,9 @@ export const UserMenu = () => {
   return (
     <div
       className={cn(
-        'bg-muted flex h-14 items-center gap-3 overflow-hidden rounded-md border px-3 py-2 shadow',
+        'bg-muted flex max-h-20 min-h-14 items-center gap-3 overflow-hidden rounded-md border px-3 py-2 shadow',
       )}>
-      <UserAvatar userId="" />
+      <UserAvatar />
 
       <div className="text-xs">
         <p className="font-semibold">{user.data.name}</p>

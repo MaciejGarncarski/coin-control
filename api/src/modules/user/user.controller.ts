@@ -4,9 +4,11 @@ import { QUEUES } from '@shared/queues'
 import type {
   AddEmailMutation,
   DeleteEmailMutation,
+  DeleteUserAccountMutation,
   EmailsResponse,
   ResendEmailVerificationMutation,
   SetPrimaryEmailMutation,
+  UserFullNameMutation,
   VerifySecondaryEmailMutation,
 } from '@shared/schemas'
 import type { Request, Response } from 'express'
@@ -424,4 +426,59 @@ export async function deleteEmailHandler(
 
   res.status(status.OK).send({ message: 'ok' })
   return
+}
+
+export async function updateUserHandler(
+  req: TypedRequestBody<UserFullNameMutation>,
+  res: Response,
+) {
+  const userId = req.session.userId
+  const name = req.body.name
+
+  await db.users.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      name: name,
+    },
+  })
+
+  res.status(status.OK).send({ message: 'ok' })
+}
+
+export async function deleteUserAccountHandler(
+  req: TypedRequestBody<DeleteUserAccountMutation>,
+  res: Response,
+) {
+  const userId = req.session.userId
+  const name = req.body.name
+
+  const user = await db.users.findUnique({
+    where: {
+      name: name,
+      id: userId,
+    },
+    select: {
+      password_hash: true,
+    },
+  })
+
+  if (!user) {
+    throw new HttpError({
+      message: 'Bad request',
+      statusCode: 'BAD_REQUEST',
+    })
+  }
+
+  await db.users.delete({
+    where: {
+      id: userId,
+      name: name,
+    },
+  })
+
+  req.session.destroy(() => null)
+
+  res.status(status.OK).send({ message: 'ok' })
 }

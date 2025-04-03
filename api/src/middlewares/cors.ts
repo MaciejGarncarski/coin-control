@@ -6,7 +6,7 @@ export function corsMiddleware() {
   const middleware = cors({
     origin: env.APP_ORIGIN,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   })
 
   return middleware

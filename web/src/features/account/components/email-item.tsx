@@ -118,7 +118,12 @@ export const EmailItem = ({ email, emailID, isPrimary, isVerified }: Props) => {
                       closeMenu={closeMenu}
                     />
                   ) : null}
-                  <SetPrimaryEmailButton email={email} closeMenu={closeMenu} />
+                  {isPrimary ? null : (
+                    <SetPrimaryEmailButton
+                      email={email}
+                      closeMenu={closeMenu}
+                    />
+                  )}
                   <DeleteEmailButton email={email} closeMenu={closeMenu} />
                 </div>
               </SheetHeader>

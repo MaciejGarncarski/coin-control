@@ -8,25 +8,9 @@ import {
 import { lazy } from 'react'
 import { Toaster } from 'sonner'
 
+import type { Auth } from '@/config/auth'
 import { NotFoundPage } from '@/features/layout/pages/not-found'
-
-export const auth: Auth = {
-  status: 'loggedOut',
-  isEmailVerified: false,
-  login: () => {
-    auth.status = 'loggedIn'
-  },
-  logout: () => {
-    auth.status = 'loggedOut'
-  },
-}
-
-export type Auth = {
-  login: () => void
-  logout: () => void
-  status: 'loggedOut' | 'loggedIn'
-  isEmailVerified: boolean
-}
+import { useDetectTheme } from '@/hooks/use-detect-theme'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -43,6 +27,8 @@ const LazyRouterDevtools =
       )
 
 const RootComponent = () => {
+  useDetectTheme()
+
   return (
     <>
       <HeadContent />

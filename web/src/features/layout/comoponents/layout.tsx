@@ -81,7 +81,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 side="bottom"
                 triggerComponent={
                   <button type="button">
-                    <UserAvatar userId="" />
+                    <UserAvatar />
                   </button>
                 }
               />
@@ -99,7 +99,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 side="bottom"
                 triggerComponent={
                   <button type="button">
-                    <UserAvatar userId="" />
+                    <UserAvatar />
                   </button>
                 }
               />

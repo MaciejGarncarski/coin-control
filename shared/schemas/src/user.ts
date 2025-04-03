@@ -66,3 +66,43 @@ export const deleteEmailMutationSchema = z.object({
 })
 
 export type DeleteEmailMutation = z.infer<typeof deleteEmailMutationSchema>
+
+export const IMAGE_SCHEMA = z
+  .instanceof(File)
+  .refine(
+    (file) =>
+      [
+        'image/png',
+        'image/jpeg',
+        'image/jpg',
+        'image/svg+xml',
+        'image/gif',
+      ].includes(file.type),
+    { message: 'Invalid image file type' },
+  )
+
+export const userAvatarMutationSchema = z.object({
+  avatar: IMAGE_SCHEMA,
+})
+
+export type UserAvatarMutation = z.infer<typeof userAvatarMutationSchema>
+
+export const userFullNameMutationSchema = z.object({
+  name: z
+    .string()
+    .min(2)
+    .max(32, { message: 'Please use 32 characters at maximum.' }),
+})
+
+export type UserFullNameMutation = z.infer<typeof userFullNameMutationSchema>
+
+export const deleteUserAccountMutationSchema = z.object({
+  name: z
+    .string()
+    .min(2)
+    .max(32, { message: 'Please use 32 characters at maximum.' }),
+})
+
+export type DeleteUserAccountMutation = z.infer<
+  typeof deleteUserAccountMutationSchema
+>

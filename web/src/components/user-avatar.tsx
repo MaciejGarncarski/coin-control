@@ -1,16 +1,15 @@
 import { User } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useUser } from '@/lib/auth'
 
-type Props = {
-  userId: string
-}
+export function UserAvatar() {
+  const userData = useUser()
 
-export function UserAvatar({ userId }: Props) {
   return (
     <Avatar>
       <AvatarImage
-        src={`https://coincontrol.maciej-garncarski/imgs/${userId}`}
+        src={`https://coincontrol.maciej-garncarski/imgs/${userData.data?.id}`}
       />
       <AvatarFallback>
         <User className="opacity-80" />

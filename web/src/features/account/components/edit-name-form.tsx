@@ -1,3 +1,5 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { userFullNameMutationSchema } from '@shared/schemas'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
@@ -17,14 +19,17 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useUpdateUser } from '@/features/account/api/use-update-user'
 import { useUser } from '@/lib/auth'
 
 export const EditNameForm = () => {
   const user = useUser()
+  const updateUserNameMutation = useUpdateUser()
 
   const editNameForm = useForm({
+    resolver: zodResolver(userFullNameMutationSchema),
     values: {
-      name: user.data?.name,
+      name: user.data?.name || '',
     },
   })
 
@@ -33,7 +38,7 @@ export const EditNameForm = () => {
   }
 
   const updateUserFullName = editNameForm.handleSubmit(({ name }) => {
-    // todo mutation
+    updateUserNameMutation.mutate({ name })
     return name
   })
 
@@ -68,8 +73,12 @@ export const EditNameForm = () => {
             <p className="text-muted-foreground text-sm">
               Please use 32 characters at maximum.
             </p>
-            <Button type="submit" className="ml-auto" size={'sm'}>
-              Save
+            <Button
+              type="submit"
+              className="ml-auto"
+              size={'sm'}
+              disabled={updateUserNameMutation.isPending}>
+              {updateUserNameMutation.isPending ? 'Saving...' : 'Save'}
             </Button>
           </CardFooter>
         </Card>
