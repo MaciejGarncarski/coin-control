@@ -61,8 +61,6 @@ export async function postLoginHandler(
 export async function getUserHandler(req: Request, res: Response) {
   const userData = await getUser({ userId: req.session.userId })
 
-  // eslint-disable-next-line no-console
-  console.log(userData)
   res.status(status.OK).json(userData)
 
   req.session.save(async (e) => {
