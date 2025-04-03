@@ -1,4 +1,4 @@
-import { copyFile, mkdir } from 'node:fs/promises'
+import { copyFile, mkdir, unlink } from 'node:fs/promises'
 import { join, normalize } from 'node:path'
 
 import { type Request, type Response } from 'express'
@@ -9,7 +9,6 @@ import { v7 } from 'uuid'
 import { env } from '../../config/env.js'
 import { db } from '../../lib/db.js'
 import { HttpError } from '../../lib/http-error.js'
-import type { TypedRequestParams } from '../../utils/typed-request.js'
 
 const MAX_FILE_SIZE = 5_000_000 // 5 MB;
 
@@ -17,7 +16,6 @@ export async function uploadUserAvatarHandler(req: Request, res: Response) {
   const userId = req.session.userId
 
   const form = formidable({
-    // uploadDir: normalize(join('temp', `${userId}-temp-avatar`)),
     maxFileSize: MAX_FILE_SIZE,
   })
 
@@ -41,15 +39,30 @@ export async function uploadUserAvatarHandler(req: Request, res: Response) {
     })
   }
 
+  const userData = await db.users.findFirst({
+    where: {
+      id: userId,
+    },
+    select: {
+      avatar_url: true,
+    },
+  })
+
+  const avatarFileName = userData?.avatar_url?.split(
+    `${env.API_URL}/avatars/`,
+  )[1]
+
+  try {
+    await unlink(normalize(join('avatar-upload', avatarFileName || '')))
+    // eslint-disable-next-line no-empty
+  } catch {}
+
   const avatarId = v7()
-  await mkdir(normalize(join('avatar-upload', userId)), { recursive: true })
-  const avatarFileName = `${avatarId}.jpg`
-  const avatarFolder = `avatar_${userId}`
-  const safeFilePath = normalize(
-    join('avatar-upload', avatarFolder, avatarFileName),
-  )
+  await mkdir(normalize(join('avatar-upload')), { recursive: true })
+  const newAvatarName = `${avatarId}.jpg`
+  const safeFilePath = normalize(join('avatar-upload', newAvatarName))
   await copyFile(avatar.filepath, safeFilePath)
-  const avatarURL = `${env.API_URL}/avatars/${avatarFolder}/${avatarFileName}`
+  const avatarURL = `${env.API_URL}/avatars/${newAvatarName}`
 
   await db.users.update({
     where: {
@@ -59,22 +72,6 @@ export async function uploadUserAvatarHandler(req: Request, res: Response) {
       avatar_url: avatarURL,
     },
   })
-
-  res.status(status.OK).send({ message: 'ok', filepath: safeFilePath })
-  return
-}
-
-export async function authenticateAvatarHandler(
-  req: TypedRequestParams<{ userId: string }>,
-  res: Response,
-) {
-  if (req.session.userId !== req.params.userId) {
-    throw new HttpError({
-      statusCode: 'UNAUTHORIZED',
-      message: 'Unauthorized',
-      additionalMessage: 'userId does not match',
-    })
-  }
 
   res.status(status.OK).send({ message: 'ok' })
   return

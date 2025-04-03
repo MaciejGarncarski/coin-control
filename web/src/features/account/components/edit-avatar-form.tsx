@@ -143,9 +143,9 @@ export const EditAvatarForm = () => {
           </p>
           <label className="ml-auto cursor-pointer">
             <Avatar className="h-20 w-20">
-              <AvatarImage
-                src={`https://api-coincontrol.maciej-garncarski.pl/avatars/${user.data?.id}/avatar.jpg`}
-              />
+              {user.data?.avatarURL ? (
+                <AvatarImage src={user.data?.avatarURL} />
+              ) : null}
               <AvatarFallback>
                 <User className="h-10 w-10" />
               </AvatarFallback>
