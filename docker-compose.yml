@@ -2,8 +2,6 @@ services:
   avatar-service:
     image: nginx:1-alpine
     container_name: coin-control-avatars
-    networks:
-      - app-network
     ports:
       - 8089:80
     volumes:
