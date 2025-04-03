@@ -5,7 +5,7 @@ services:
     ports:
       - 8089:80
     volumes:
-      - ./api/avatar-upload/:/static/coin-control-avatars
+      - ./api/avatar-upload/:/coin-control-avatars
       - ./avatar-service/nginx.conf:/etc/nginx/conf.d/default.conf
       - avatar-cache:/var/cache/nginx/static
 
