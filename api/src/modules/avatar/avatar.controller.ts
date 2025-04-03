@@ -42,8 +42,11 @@ export async function uploadUserAvatarHandler(req: Request, res: Response) {
   //   )
 
   await mkdir(normalize(join('avatar-upload', userId)), { recursive: true })
+
   const safeFilePath = normalize(join('avatar-upload', userId, `avatar.jpg`))
+
   await copyFile(avatar.filepath, safeFilePath)
-  res.status(status.OK).send({ message: 'ok' })
+
+  res.status(status.OK).send({ message: 'ok', filepath: safeFilePath })
   return
 }

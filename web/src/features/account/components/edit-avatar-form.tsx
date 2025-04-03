@@ -25,17 +25,19 @@ import { useUploadAvatar } from '@/features/account/api/use-upload-avatar'
 import { checkImageSize } from '@/features/account/utils/check-image-size'
 import { useUser } from '@/lib/auth'
 
+const defaultCrop: Crop = {
+  height: 40,
+  width: 40,
+  unit: '%',
+  x: 30,
+  y: 30,
+}
+
 export const EditAvatarForm = () => {
   const [isModalShwon, setIsModalShown] = useState(false)
   const user = useUser()
   const [preview, setPreview] = useState<string | null>(null)
-  const [crop, setCrop] = useState<Crop>({
-    height: 40,
-    width: 40,
-    unit: '%',
-    x: 30,
-    y: 30,
-  })
+  const [crop, setCrop] = useState<Crop>(defaultCrop)
   const [croppedImage, setCroppedImage] = useState<Blob | null>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const uploadAvatarMutation = useUploadAvatar()
@@ -59,6 +61,7 @@ export const EditAvatarForm = () => {
     }
 
     const urlImage = URL.createObjectURL(file)
+
     setPreview(urlImage)
     setIsModalShown(true)
   }
@@ -118,6 +121,8 @@ export const EditAvatarForm = () => {
           toast.error('Error. Try again later.')
         },
         onSuccess: () => {
+          setCroppedImage(null)
+          setIsModalShown(false)
           toast.success('Success.')
         },
       },
