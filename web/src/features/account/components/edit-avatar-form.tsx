@@ -2,7 +2,13 @@ import 'react-image-crop/dist/ReactCrop.css'
 
 import { User } from 'lucide-react'
 import { type ChangeEvent, useRef, useState } from 'react'
-import { type Crop, type PixelCrop, ReactCrop } from 'react-image-crop'
+import {
+  centerCrop,
+  type Crop,
+  makeAspectCrop,
+  type PixelCrop,
+  ReactCrop,
+} from 'react-image-crop'
 import { toast } from 'sonner'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -25,19 +31,11 @@ import { useUploadAvatar } from '@/features/account/api/use-upload-avatar'
 import { checkImageSize } from '@/features/account/utils/check-image-size'
 import { useUser } from '@/lib/auth'
 
-const defaultCrop: Crop = {
-  height: 40,
-  width: 40,
-  unit: '%',
-  x: 30,
-  y: 30,
-}
-
 export const EditAvatarForm = () => {
   const [isModalShwon, setIsModalShown] = useState(false)
   const user = useUser()
   const [preview, setPreview] = useState<string | null>(null)
-  const [crop, setCrop] = useState<Crop>(defaultCrop)
+  const [crop, setCrop] = useState<Crop>()
   const [croppedImage, setCroppedImage] = useState<Blob | null>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const uploadAvatarMutation = useUploadAvatar()
@@ -64,6 +62,9 @@ export const EditAvatarForm = () => {
 
     setPreview(urlImage)
     setIsModalShown(true)
+    if (crop) {
+      handleCropComplete(crop as PixelCrop)
+    }
   }
 
   const handleCropComplete = (crop: PixelCrop) => {
@@ -140,7 +141,7 @@ export const EditAvatarForm = () => {
             This is your avatar. <br /> Click on the avatar to upload a custom
             one from your files.
           </p>
-          <label className="ml-auto">
+          <label className="ml-auto cursor-pointer">
             <Avatar className="h-20 w-20">
               <AvatarImage
                 src={`https://api-coincontrol.maciej-garncarski.pl/avatars/${user.data?.id}/avatar.jpg`}
@@ -179,7 +180,26 @@ export const EditAvatarForm = () => {
               <img
                 src={preview}
                 ref={imageRef}
-                className="object-fit aspect-square w-full"
+                className="mx-auto"
+                onLoad={(e) => {
+                  const { naturalWidth: width, naturalHeight: height } =
+                    e.currentTarget
+                  const crop = centerCrop(
+                    makeAspectCrop(
+                      {
+                        unit: '%',
+                        width: 80,
+                      },
+                      1,
+                      width,
+                      height,
+                    ),
+                    width,
+                    height,
+                  )
+
+                  setCrop(crop)
+                }}
               />
             </ReactCrop>
 

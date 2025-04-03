@@ -5,6 +5,7 @@ type UserFromDB = {
   id: string
   email_verified: boolean | null
   name: string | null
+  avatar_url: string | null
 }
 
 function obfuscateEmail(email: string) {
@@ -25,5 +26,6 @@ export const userDTO = (user: UserFromDB): User => {
     id: user.id,
     name: user.name || '',
     isEmailVerified: user.email_verified || false,
+    avatarURL: user.avatar_url,
   }
 }

@@ -52,6 +52,7 @@ export async function postLoginHandler(
     email_verified: isMinimumOneEmailVerified,
     id: user.id,
     name: user.name,
+    avatar_url: user.avatar_url,
   })
 
   res.status(status.OK).json(userData)

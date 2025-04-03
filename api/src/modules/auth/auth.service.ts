@@ -105,6 +105,7 @@ export async function registerUser(userData: RegisterMutation) {
         id: true,
         name: true,
         email: true,
+        avatar_url: true,
       },
     })
 
@@ -171,6 +172,7 @@ export async function registerUser(userData: RegisterMutation) {
       email_verified: false,
       id: newUser.user.id,
       name: newUser.user.name,
+      avatar_url: newUser.user.avatar_url,
     }),
     userEmailData: newUser.userEmailData,
   }
@@ -306,6 +308,7 @@ export async function getUser({ userId }: { userId: string }) {
       id: true,
       email: true,
       name: true,
+      avatar_url: true,
     },
   })
 
@@ -328,6 +331,7 @@ export async function getUser({ userId }: { userId: string }) {
     email_verified: userEmail ? userEmail.is_verified : false,
     id: user.id,
     name: user.name,
+    avatar_url: user.avatar_url,
   })
 }
 
