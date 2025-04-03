@@ -9,7 +9,7 @@ export function UserAvatar() {
   return (
     <Avatar>
       <AvatarImage
-        src={`https://coincontrol.maciej-garncarski/imgs/${userData.data?.id}`}
+        src={`https://coincontrol.maciej-garncarski.pl/avatars/${userData.data?.id}/avatar.jpg`}
       />
       <AvatarFallback>
         <User className="opacity-80" />
