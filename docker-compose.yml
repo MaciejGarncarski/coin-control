@@ -1,4 +1,13 @@
 services:
+  avatar-service:
+    image: nginx:1-alpine
+    container_name: coin-control-avatars
+    ports:
+      - 8089:80
+    volumes:
+      - ./api/avatar-upload/:/static/coin-control-avatars
+      - ./avatar-service/nginx.conf:/etc/nginx/conf.d/default.conf
+      - avatar-cache:/var/cache/nginx/static
   database:
     image: postgres:17.4-alpine
     container_name: coin-control-database
@@ -118,6 +127,7 @@ services:
       args:
         - DATABASE_URL=${DATABASE_URL}
     volumes:
+      - ./api/avatar-upload:/app/api/avatar-upload
       - ./api/src:/app/api/src
       - ./api/prisma:/app/api/prisma
       - ./api/node_modules:/app/api/node_modules
@@ -207,6 +217,9 @@ networks:
     driver: bridge
 
 volumes:
+  avatar-cache:
+    driver: local
+
   cache:
     driver: local
 

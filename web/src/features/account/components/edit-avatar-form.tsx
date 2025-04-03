@@ -3,6 +3,7 @@ import 'react-image-crop/dist/ReactCrop.css'
 import { User } from 'lucide-react'
 import { type ChangeEvent, useRef, useState } from 'react'
 import { type Crop, type PixelCrop, ReactCrop } from 'react-image-crop'
+import { toast } from 'sonner'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -20,6 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { useUploadAvatar } from '@/features/account/api/use-upload-avatar'
 import { checkImageSize } from '@/features/account/utils/check-image-size'
 import { useUser } from '@/lib/auth'
 
@@ -36,6 +38,7 @@ export const EditAvatarForm = () => {
   })
   const [croppedImage, setCroppedImage] = useState<Blob | null>(null)
   const imageRef = useRef<HTMLImageElement>(null)
+  const uploadAvatarMutation = useUploadAvatar()
 
   if (user.isPending) {
     return null
@@ -104,8 +107,21 @@ export const EditAvatarForm = () => {
   }
 
   const updateUserAvatar = () => {
-    // updateUserAvatarMutation.mutate({avatar: croppedImage}, { onSuccess: () => {}})
-    return croppedImage
+    if (!croppedImage) {
+      return
+    }
+
+    uploadAvatarMutation.mutate(
+      { avatar: croppedImage },
+      {
+        onError: () => {
+          toast.error('Error. Try again later.')
+        },
+        onSuccess: () => {
+          toast.success('Success.')
+        },
+      },
+    )
   }
 
   return (
