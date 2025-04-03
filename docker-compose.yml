@@ -168,6 +168,8 @@ services:
       - "host.docker.internal:host-gateway"
     ports:
       - "${API_PORT}:${API_PORT}"
+    volumes:
+      - ./api/avatar-upload:/app/api/avatar-upload
     environment:
       - PORT=${API_PORT}
       - APP_ORIGIN=${APP_URL}
