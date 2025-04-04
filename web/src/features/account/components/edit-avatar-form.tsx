@@ -114,18 +114,20 @@ export const EditAvatarForm = () => {
             <DialogHeader>
               <DialogTitle>Crop avatar</DialogTitle>
             </DialogHeader>
-            <ReactCrop
-              aspect={1}
-              crop={crop}
-              onChange={(c) => setCrop(c)}
-              onComplete={handleCropComplete}>
-              <img
-                src={preview}
-                ref={imageRef}
-                className="mx-auto"
-                onLoad={onImageLoad}
-              />
-            </ReactCrop>
+            <div className="mx-auto">
+              <ReactCrop
+                aspect={1}
+                crop={crop}
+                onChange={(c) => setCrop(c)}
+                onComplete={handleCropComplete}>
+                <img
+                  src={preview}
+                  ref={imageRef}
+                  className="mx-auto"
+                  onLoad={onImageLoad}
+                />
+              </ReactCrop>
+            </div>
 
             <DialogFooter>
               <div className="flex w-full justify-between">
