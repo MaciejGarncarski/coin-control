@@ -1,14 +1,8 @@
 import 'react-image-crop/dist/ReactCrop.css'
 
 import { User } from 'lucide-react'
-import { type ChangeEvent, useRef, useState } from 'react'
-import {
-  centerCrop,
-  type Crop,
-  makeAspectCrop,
-  type PixelCrop,
-  ReactCrop,
-} from 'react-image-crop'
+import { useState } from 'react'
+import { type Crop, ReactCrop } from 'react-image-crop'
 import { toast } from 'sonner'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -28,86 +22,29 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useUploadAvatar } from '@/features/account/api/use-upload-avatar'
-import { checkImageSize } from '@/features/account/utils/check-image-size'
+import { useAvatarCrop } from '@/features/account/hooks/use-avatar-crop'
 import { useUser } from '@/lib/auth'
 
 export const EditAvatarForm = () => {
-  const [isModalShwon, setIsModalShown] = useState(false)
   const user = useUser()
-  const [preview, setPreview] = useState<string | null>(null)
   const [crop, setCrop] = useState<Crop>()
-  const [croppedImage, setCroppedImage] = useState<Blob | null>(null)
-  const imageRef = useRef<HTMLImageElement>(null)
   const uploadAvatarMutation = useUploadAvatar()
+
+  const {
+    croppedImage,
+    imageRef,
+    handleCropComplete,
+    handleUploadedFile,
+    preview,
+    setCroppedImage,
+    setPreview,
+    isModalShwon,
+    setIsModalShown,
+    onImageLoad,
+  } = useAvatarCrop()
 
   if (user.isPending) {
     return null
-  }
-
-  const handleUploadedFile = async (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files
-    const file = files ? files[0] : null
-
-    if (!file) {
-      return
-    }
-
-    const isImageValid = checkImageSize(file)
-
-    if (!isImageValid) {
-      return
-    }
-
-    const urlImage = URL.createObjectURL(file)
-
-    setPreview(urlImage)
-    setIsModalShown(true)
-    if (crop) {
-      handleCropComplete(crop as PixelCrop)
-    }
-  }
-
-  const handleCropComplete = (crop: PixelCrop) => {
-    if (imageRef.current && crop.width && crop.height) {
-      const imageElement = imageRef.current
-      const canvas = document.createElement('canvas')
-      const scaleX = imageElement.naturalWidth / imageElement.width
-      const scaleY = imageElement.naturalHeight / imageElement.height
-      canvas.width = crop.width
-      canvas.height = crop.height
-      const ctx = canvas.getContext('2d')
-
-      if (!ctx) {
-        return
-      }
-
-      const pixelCrop = {
-        x: crop.x * scaleX,
-        y: crop.y * scaleY,
-        width: crop.width * scaleX,
-        height: crop.height * scaleY,
-      }
-
-      ctx.drawImage(
-        imageElement,
-        pixelCrop.x,
-        pixelCrop.y,
-        pixelCrop.width,
-        pixelCrop.height,
-        0,
-        0,
-        crop.width,
-        crop.height,
-      )
-
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          return
-        }
-
-        setCroppedImage(blob)
-      }, 'image/jpeg')
-    }
   }
 
   const updateUserAvatar = () => {
@@ -128,6 +65,11 @@ export const EditAvatarForm = () => {
         },
       },
     )
+  }
+
+  const resetForm = () => {
+    setPreview(null)
+    setIsModalShown(false)
   }
 
   return (
@@ -181,25 +123,7 @@ export const EditAvatarForm = () => {
                 src={preview}
                 ref={imageRef}
                 className="mx-auto"
-                onLoad={(e) => {
-                  const { naturalWidth: width, naturalHeight: height } =
-                    e.currentTarget
-                  const crop = centerCrop(
-                    makeAspectCrop(
-                      {
-                        unit: '%',
-                        width: 80,
-                      },
-                      1,
-                      width,
-                      height,
-                    ),
-                    width,
-                    height,
-                  )
-
-                  setCrop(crop)
-                }}
+                onLoad={onImageLoad}
               />
             </ReactCrop>
 
@@ -209,10 +133,7 @@ export const EditAvatarForm = () => {
                   type="button"
                   size={'sm'}
                   variant={'ghost'}
-                  onClick={() => {
-                    setPreview(null)
-                    setIsModalShown(false)
-                  }}>
+                  onClick={resetForm}>
                   Cancel
                 </Button>
                 <Button
