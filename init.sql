@@ -100,7 +100,8 @@ CREATE TABLE public.users (
     email text NOT NULL,
     password_hash text NOT NULL,
     created_at timestamp with time zone DEFAULT now(),
-    name character varying(255)
+    name character varying(255),
+    avatar_url character varying(255)
 );
 
 
@@ -163,6 +164,34 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: idx_email_verification_email_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_email_verification_email_id ON public.email_verification USING btree (email_id);
+
+
+--
+-- Name: idx_email_verification_expires_at; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_email_verification_expires_at ON public.email_verification USING btree (expires_at);
+
+
+--
+-- Name: idx_email_verification_token; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_email_verification_token ON public.email_verification USING btree (verification_token);
+
+
+--
+-- Name: idx_email_verification_user_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_email_verification_user_id ON public.email_verification USING btree (user_id);
+
+
+--
 -- Name: idx_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -195,6 +224,41 @@ CREATE INDEX idx_reset_password_codes_used ON public.reset_password_codes USING 
 --
 
 CREATE INDEX idx_reset_password_codes_user_id ON public.reset_password_codes USING btree (user_id);
+
+
+--
+-- Name: idx_sessions_expire_at; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_sessions_expire_at ON public.sessions USING btree (expire_at);
+
+
+--
+-- Name: idx_sessions_last_access; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_sessions_last_access ON public.sessions USING btree (last_access);
+
+
+--
+-- Name: idx_sessions_user_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_sessions_user_id ON public.sessions USING btree (user_id);
+
+
+--
+-- Name: idx_user_emails_is_primary; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_user_emails_is_primary ON public.user_emails USING btree (is_primary);
+
+
+--
+-- Name: idx_user_emails_user_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_user_emails_user_id ON public.user_emails USING btree (user_id);
 
 
 --

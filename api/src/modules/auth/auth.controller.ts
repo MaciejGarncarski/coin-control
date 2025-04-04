@@ -125,7 +125,22 @@ export async function sendEmailVerificationHandler(
   res: Response,
 ) {
   const userId = req.session.userId
-  const userData = await getUser({ userId })
+  const userData = await db.users.findFirst({
+    where: {
+      id: userId,
+    },
+    select: {
+      email: true,
+    },
+  })
+
+  if (!userData?.email) {
+    throw new HttpError({
+      message: 'User email not found.',
+      statusCode: 'BAD_REQUEST',
+    })
+  }
+
   const newestOTP = await getEmailVerificationCode({ userId })
 
   if (newestOTP?.expires_at) {

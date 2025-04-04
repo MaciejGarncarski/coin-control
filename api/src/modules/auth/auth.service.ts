@@ -17,19 +17,45 @@ type CheckUserExistsProps = {
 }
 
 export async function checkUserExists({ email }: CheckUserExistsProps) {
-  const userByEmail = await db.user_emails.findFirst({
+  const userIdData = await db.users.findFirst({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+    },
+  })
+
+  const userEmail = await db.user_emails.findFirst({
     where: {
       email: email,
-      is_verified: true,
     },
     select: {
       user_id: true,
     },
   })
 
+  if (!userIdData?.id) {
+    throw new HttpError({
+      statusCode: 'UNAUTHORIZED',
+      message: 'Invalid email or password.',
+    })
+  }
+
+  if (!userEmail) {
+    await db.user_emails.create({
+      data: {
+        user_id: userIdData.id,
+        email: email,
+        is_primary: true,
+        email_id: v7(),
+      },
+    })
+  }
+
   const user = await db.users.findFirst({
     where: {
-      id: userByEmail?.user_id,
+      id: userEmail?.user_id,
     },
     include: {
       user_emails: {

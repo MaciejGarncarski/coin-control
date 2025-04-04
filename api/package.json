@@ -12,7 +12,8 @@
     "lint-format": "pnpm lint && pnpm format",
     "check-types": "pnpm tsc --skipLibCheck --noEmit",
     "generate-prisma": "pnpm prisma generate",
-    "db-pull": "pnpm prisma db pull"
+    "db-pull": "pnpm prisma db pull",
+    "test": "vitest"
   },
   "license": "ISC",
   "packageManager": "pnpm@10.6.1",
@@ -56,6 +57,9 @@
     "@types/node": "^22.13.17",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.0.12",
-    "tsx": "^4.19.3"
+    "@vitest/coverage-v8": "^3.1.1",
+    "tsx": "^4.19.3",
+    "vite": "^6.2.4",
+    "vitest": "^3.1.1"
   }
 }
