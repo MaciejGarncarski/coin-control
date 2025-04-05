@@ -1,4 +1,4 @@
-name: Run Tests in Docker Compose
+name: tests
 
 on:
   push:
