@@ -13,7 +13,7 @@
     "check-types": "pnpm tsc --skipLibCheck --noEmit",
     "generate-prisma": "pnpm prisma generate",
     "db-pull": "pnpm prisma db pull",
-    "test": "pnpm dlx vitest run tests/smoke.test.ts && pnpm dlx vitest",
+    "test": "vitest run tests/smoke.test.ts && vitest",
     "test:watch": "pnpm test watch",
     "test:coverage": "pnpm test run --coverage"
   },
