@@ -51,25 +51,20 @@ services:
     depends_on:
       - cache
       - database
+    networks:
+      - app-network
     build:
       target: test
       dockerfile: ./api/api.Dockerfile
       args:
         - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
-    volumes:
-      - ./api/avatar-upload:/app/api/avatar-upload
-      - ./api/src:/app/api/src
-      - ./api/tests:/app/api/tests
-      - ./api/prisma:/app/api/prisma
-      - ./api/node_modules:/app/api/node_modules
-      - ./shared:/app/shared
-    networks:
-      - app-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - PORT=3001
       - APP_ORIGIN=http://localhost:3000
       - API_URL=http://localhost:3001
-      - HOST=127.0.0.1
+      - HOST=0.0.0.0
       - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
       - API_SECRET=randomsecretfortestingpurposes
       - REDIS_HOST=cache
