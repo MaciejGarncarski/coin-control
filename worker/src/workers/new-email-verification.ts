@@ -54,6 +54,7 @@ export const createNewEmailVerificationWorker = () => {
   })
 
   worker.on('failed', (job, err) => {
+    // eslint-disable-next-line no-console
     console.error(
       `New email verification job with ID: ${job?.id} has failed with ${err.message}`,
     )

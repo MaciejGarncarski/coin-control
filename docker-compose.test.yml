@@ -1,0 +1,88 @@
+services:
+  database:
+    image: postgres:17.4-alpine
+    container_name: coin-control-database
+    restart: always
+    environment:
+      PGUSER: postgres
+      PGDATABASE: coin_control
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: coin_control
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - app-network
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - test-database:/var/lib/postgresql/data
+
+  cache:
+    image: redis:6.2-alpine
+    container_name: coin-control-cache
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "redis-cli",
+          "-a",
+          "eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81",
+          "--raw",
+          "incr",
+          "ping",
+        ]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    restart: always
+    networks:
+      - app-network
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - cache-test:/data
+
+  api-test:
+    container_name: coin-control-api-test
+    tty: true
+    depends_on:
+      - cache
+      - database
+    build:
+      target: test
+      dockerfile: ./api/api.Dockerfile
+      args:
+        - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
+    volumes:
+      - ./api/avatar-upload:/app/api/avatar-upload
+      - ./api/src:/app/api/src
+      - ./api/tests:/app/api/tests
+      - ./api/prisma:/app/api/prisma
+      - ./api/node_modules:/app/api/node_modules
+      - ./shared:/app/shared
+    networks:
+      - app-network
+    environment:
+      - PORT=3001
+      - APP_ORIGIN=http://localhost:3000
+      - API_URL=http://localhost:3001
+      - HOST=127.0.0.1
+      - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
+      - API_SECRET=randomsecretfortestingpurposes
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  cache-test:
+    driver: local
+
+  test-database:
+    driver: local

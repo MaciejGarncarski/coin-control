@@ -1,5 +1,3 @@
-import { createHash } from 'node:crypto'
-
 import { QUEUES } from '@shared/queues'
 import type {
   AddEmailMutation,
@@ -19,6 +17,7 @@ import { v7 } from 'uuid'
 import { db } from '../../lib/db.js'
 import { HttpError } from '../../lib/http-error.js'
 import { secondaryEmailVerificationQueue } from '../../lib/queues/secondary-email-verification.js'
+import { getHashCode } from '../../utils/get-hash-code.js'
 import type { TypedRequestBody } from '../../utils/typed-request.js'
 import { getUser } from '../auth/auth.service.js'
 
@@ -53,7 +52,7 @@ export async function addEmailHandler(
   res: Response,
 ) {
   const email = req.body.email
-  const token = createHash('sha512').update(v7()).digest('hex').slice(0, 48)
+  const token = getHashCode()
   const userId = req.session.userId
 
   const userEmailsCount = await db.user_emails.count({
@@ -183,7 +182,7 @@ export async function resendEmailVerificationHandler(
     },
   })
 
-  const token = createHash('sha512').update(v7()).digest('hex').slice(0, 48)
+  const token = getHashCode()
 
   if (!latestToken) {
     await secondaryEmailVerificationQueue.add(

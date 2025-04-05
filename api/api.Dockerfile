@@ -10,6 +10,18 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
+# tests
+FROM base as test
+WORKDIR /app
+COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
+COPY api ./api
+COPY shared ./shared
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install 
+ENV NODE_ENV="test"
+EXPOSE ${PORT}
+RUN pnpm --filter "api" generate-prisma
+CMD [ "pnpm", "--filter", "api", "test:coverage" ]
+
 # dev
 FROM base AS dev
 WORKDIR /app
@@ -38,4 +50,4 @@ COPY --from=build /prod/api /prod/api
 WORKDIR /prod/api
 EXPOSE ${PORT}
 ENV NODE_ENV="production"
-CMD ["node", "./dist/src/app.js"]
+CMD ["node", "./dist/src/server.js"]

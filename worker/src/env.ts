@@ -4,7 +4,11 @@ const envSchema = z.object({
   DATABASE_URL: z.string().startsWith('postgresql://'),
   APP_ORIGIN: z.string().startsWith('http'),
   NODE_ENV: z
-    .union([z.literal('development'), z.literal('production')])
+    .union([
+      z.literal('development'),
+      z.literal('production'),
+      z.literal('test'),
+    ])
     .default('development'),
   MAIL_USER: z.string().email(),
   MAIL_PASS: z.string(),
@@ -16,7 +20,6 @@ const envSchema = z.object({
 const parsedEnv = envSchema.safeParse(process.env)
 
 if (!parsedEnv.success) {
-  console.error(parsedEnv.error.errors)
   process.exit(1)
 }
 

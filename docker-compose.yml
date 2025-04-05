@@ -28,7 +28,6 @@ services:
       - app-network
     volumes:
       - coin-control-database-data:/var/lib/postgresql/data
-
   cache:
     image: redis:6.2-alpine
     container_name: coin-control-cache

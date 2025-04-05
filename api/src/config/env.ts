@@ -10,7 +10,11 @@ const envSchema = z.object({
   APP_ORIGIN: z.string().startsWith('http'),
   PORT: z.string().length(4),
   NODE_ENV: z
-    .union([z.literal('development'), z.literal('production')])
+    .union([
+      z.literal('development'),
+      z.literal('production'),
+      z.literal('test'),
+    ])
     .default('development'),
   REDIS_HOST: z.string(),
   REDIS_PORT: z.string(),
@@ -20,6 +24,7 @@ const envSchema = z.object({
 const parsedEnv = envSchema.safeParse(process.env)
 
 if (!parsedEnv.success) {
+  console.log('api', parsedEnv.error.message)
   httpLogger.logger.error(parsedEnv.error.errors)
   process.exit(1)
 }

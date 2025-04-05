@@ -4,7 +4,7 @@ import { join, normalize } from 'node:path'
 import { type Request, type Response } from 'express'
 import formidable from 'formidable'
 import status from 'http-status'
-import { v7 } from 'uuid'
+import { nanoid } from 'nanoid'
 
 import { env } from '../../config/env.js'
 import { db } from '../../lib/db.js'
@@ -57,7 +57,7 @@ export async function uploadUserAvatarHandler(req: Request, res: Response) {
     // eslint-disable-next-line no-empty
   } catch {}
 
-  const avatarId = v7()
+  const avatarId = nanoid()
   await mkdir(normalize(join('avatar-upload')), { recursive: true })
   const newAvatarName = `${avatarId}.jpg`
   const safeFilePath = normalize(join('avatar-upload', newAvatarName))
