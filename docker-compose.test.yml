@@ -53,6 +53,9 @@ services:
       - database
     networks:
       - app-network
+    volumes:
+      - ./api:/app/api
+      - avatar-upload-test:/app/api/avatar-upload
     build:
       target: test
       dockerfile: ./api/api.Dockerfile
@@ -78,6 +81,7 @@ networks:
 volumes:
   cache-test:
     driver: local
-
+  avatar-upload-test:
+    driver: local
   test-database:
     driver: local

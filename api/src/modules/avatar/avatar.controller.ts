@@ -73,6 +73,6 @@ export async function uploadUserAvatarHandler(req: Request, res: Response) {
     },
   })
 
-  res.status(status.OK).send({ message: 'ok' })
+  res.status(status.OK).send({ message: 'ok', filename: newAvatarName })
   return
 }

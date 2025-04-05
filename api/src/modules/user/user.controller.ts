@@ -203,7 +203,7 @@ export async function resendEmailVerificationHandler(
     throw new HttpError({
       message: 'Wait two minutes before sending new code.',
       toastMessage: 'Wait two minutes before sending new code.',
-      statusCode: 'TOO_MANY_REQUESTS',
+      statusCode: 'BAD_REQUEST',
     })
   }
 

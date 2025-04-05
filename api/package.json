@@ -14,8 +14,9 @@
     "generate-prisma": "pnpm prisma generate",
     "db-pull": "pnpm prisma db pull",
     "test": "vitest run tests/smoke.test.ts && vitest run",
-    "test:watch": "pnpm test watch",
-    "test:coverage": "pnpm test run --coverage"
+    "test:watch": "vitest run tests/smoke.test.ts && vitest watch",
+    "test:coverage": "vitest run tests/smoke.test.ts && vitest run --coverage",
+    "test:watch-coverage": "vitest run tests/smoke.test.ts && vitest watch --coverage"
   },
   "license": "ISC",
   "packageManager": "pnpm@10.6.1",
@@ -62,6 +63,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.0.12",
     "@types/supertest": "^6.0.3",
+    "@vitest/coverage-istanbul": "^3.1.1",
     "@vitest/coverage-v8": "^3.1.1",
     "supertest": "^7.1.0",
     "tsx": "^4.19.3",
