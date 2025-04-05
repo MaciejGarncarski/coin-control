@@ -10,9 +10,9 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: coin_control
     healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready"]
-      interval: 10s
-      timeout: 3s
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 30s
       retries: 3
     networks:
       - app-network
@@ -37,7 +37,7 @@ services:
       interval: 1m30s
       timeout: 30s
       retries: 5
-      start_period: 30s
+      start_period: 10s
     restart: always
     networks:
       - app-network
@@ -49,11 +49,14 @@ services:
     container_name: coin-control-api-test
     tty: true
     depends_on:
-      - cache
-      - database
+      cache:
+        condition: service_started
+      database:
+        condition: service_healthy
     networks:
       - app-network
     volumes:
+      - ./api/node_modules:/app/api/node_modules
       - ./api:/app/api
       - avatar-upload-test:/app/api/avatar-upload
     build:
