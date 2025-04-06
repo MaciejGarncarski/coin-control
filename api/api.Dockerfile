@@ -14,7 +14,7 @@ RUN corepack enable
 FROM base AS test
 COPY . /app
 WORKDIR /app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install
 RUN pnpm "--filter=@shared/*" build && \
     pnpm --filter "api" generate-prisma
 CMD [ "pnpm", "--filter", "api", "test" ]
@@ -43,7 +43,8 @@ RUN pnpm "--filter=@shared/*" build && \
 
 # prod
 FROM base AS prod
-COPY --from=build /prod/api /prod/api
+COPY --from=build /prod/api/node_modules /prod/api/node_modules
+COPY --from=build /prod/api/dist /prod/api/dist
 WORKDIR /prod/api
 EXPOSE ${PORT}
 ENV NODE_ENV="production"

@@ -4,6 +4,9 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "dev": "pnpm just up-dev",
+    "prod": "pnpm just up-prod",
+    "test": "pnpm just test",
     "lint": "pnpm run -r lint",
     "format": "pnpm run -r format",
     "lint-format": "pnpm run -r lint-format",
@@ -16,10 +19,11 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
-    "eslint": "^9.23.0",
+    "eslint": "^9.24.0",
     "husky": "^9.1.7",
     "prettier": "^3.5.3",
-    "typescript": "^5.8.2"
+    "rust-just": "^1.40.0",
+    "typescript": "^5.8.3"
   },
   "author": "",
   "license": "ISC",

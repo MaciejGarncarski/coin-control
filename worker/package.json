@@ -21,12 +21,12 @@
     "@shared/schemas": "workspace:*",
     "nodemailer": "^6.10.0",
     "prisma": "^6.5.0",
-    "typescript": "^5.8.2",
+    "typescript": "^5.8.3",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
-    "@types/node": "^22.13.17",
+    "@types/node": "^22.14.0",
     "@types/nodemailer": "^6.4.17",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"

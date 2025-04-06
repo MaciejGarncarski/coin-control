@@ -1,8 +1,8 @@
 import 'react-image-crop/dist/ReactCrop.css'
 
 import { User } from 'lucide-react'
-import { useState } from 'react'
-import { type Crop, ReactCrop } from 'react-image-crop'
+import { useRef } from 'react'
+import { ReactCrop } from 'react-image-crop'
 import { toast } from 'sonner'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -26,10 +26,9 @@ import { useAvatarCrop } from '@/features/account/hooks/use-avatar-crop'
 import { useUser } from '@/lib/auth'
 
 export const EditAvatarForm = () => {
-  const user = useUser()
-  const [crop, setCrop] = useState<Crop>()
-  const uploadAvatarMutation = useUploadAvatar()
+  const inputRef = useRef<HTMLInputElement>(null)
 
+  const user = useUser()
   const {
     croppedImage,
     imageRef,
@@ -41,7 +40,11 @@ export const EditAvatarForm = () => {
     isModalShwon,
     setIsModalShown,
     onImageLoad,
+    crop,
+    setCrop,
   } = useAvatarCrop()
+
+  const uploadAvatarMutation = useUploadAvatar()
 
   if (user.isPending) {
     return null
@@ -61,6 +64,7 @@ export const EditAvatarForm = () => {
         onSuccess: () => {
           setCroppedImage(null)
           setIsModalShown(false)
+          resetForm()
           toast.success('Success.')
         },
       },
@@ -68,8 +72,20 @@ export const EditAvatarForm = () => {
   }
 
   const resetForm = () => {
+    if (inputRef.current) {
+      inputRef.current.files = null
+      inputRef.current.value = ''
+    }
+
     setPreview(null)
     setIsModalShown(false)
+    setCrop(undefined)
+    setCroppedImage(null)
+  }
+
+  const closeModal = (open: boolean) => {
+    setIsModalShown(open)
+    resetForm()
   }
 
   return (
@@ -97,6 +113,7 @@ export const EditAvatarForm = () => {
               type="file"
               accept="image/*"
               className="h-[0px] w-[0px] opacity-0"
+              ref={inputRef}
               onChange={handleUploadedFile}
             />
           </label>
@@ -109,7 +126,7 @@ export const EditAvatarForm = () => {
       </CardFooter>
 
       {preview ? (
-        <Dialog open={isModalShwon} onOpenChange={setIsModalShown}>
+        <Dialog open={isModalShwon} onOpenChange={closeModal}>
           <DialogContent aria-describedby={undefined}>
             <DialogHeader>
               <DialogTitle>Crop avatar</DialogTitle>

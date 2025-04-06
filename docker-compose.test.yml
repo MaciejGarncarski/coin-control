@@ -35,9 +35,9 @@ services:
           "ping",
         ]
       interval: 1m30s
-      timeout: 30s
+      timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 3s
     restart: always
     networks:
       - app-network
@@ -56,8 +56,6 @@ services:
     networks:
       - app-network
     volumes:
-      - ./api/node_modules:/app/api/node_modules
-      - ./api:/app/api
       - avatar-upload-test:/app/api/avatar-upload
     build:
       target: test

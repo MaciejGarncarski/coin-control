@@ -57,7 +57,6 @@ services:
     build:
       target: dev
       dockerfile: ./shared/email/react-email.Dockerfile
-    profiles: [dev]
     volumes:
       - ./shared:/app/shared
     ports:
@@ -75,31 +74,6 @@ services:
       - ./worker/prisma:/app/worker/prisma
       - ./worker/node_modules:/app/worker/node_modules
       - ./shared:/app/shared
-    profiles: [dev]
-    depends_on:
-      - cache
-      - database
-    networks:
-      - app-network
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - APP_ORIGIN=${APP_URL}
-      - MAIL_USER=${MAIL_USER}
-      - MAIL_PASS=${MAIL_PASS}
-      - REDIS_HOST=cache
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-
-  worker:
-    image: ghcr.io/maciejgarncarski/coin-control-worker:latest
-    container_name: coin-control-worker-prod
-    pull_policy: always
-    build:
-      target: prod
-      dockerfile: ./worker/worker.Dockerfile
-      args:
-        - DATABASE_URL=${DATABASE_URL}
-    profiles: [prod]
     depends_on:
       - cache
       - database
@@ -132,44 +106,10 @@ services:
       - ./api/prisma:/app/api/prisma
       - ./api/node_modules:/app/api/node_modules
       - ./shared:/app/shared
-    profiles: [dev]
     networks:
       - app-network
     ports:
       - "${API_PORT}:${API_PORT}"
-    environment:
-      - PORT=${API_PORT}
-      - APP_ORIGIN=${APP_URL}
-      - API_URL=${API_URL}
-      - HOST=${HOST}
-      - DATABASE_URL=${DATABASE_URL}
-      - API_SECRET=${API_SECRET}
-      - REDIS_HOST=cache
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-
-  api:
-    image: ghcr.io/maciejgarncarski/coin-control-api:latest
-    pull_policy: always
-    container_name: coin-control-api-prod
-    depends_on:
-      - cache
-      - worker
-      - database
-    networks:
-      - app-network
-    build:
-      target: prod
-      dockerfile: ./api/api.Dockerfile
-      args:
-        - DATABASE_URL=${DATABASE_URL}
-    profiles: [prod]
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    ports:
-      - "${API_PORT}:${API_PORT}"
-    volumes:
-      - ./api/avatar-upload:/prod/api/avatar-upload
     environment:
       - PORT=${API_PORT}
       - APP_ORIGIN=${APP_URL}
@@ -191,28 +131,11 @@ services:
     volumes:
       - ./web/src:/app/web/src
       - ./shared:/app/shared
-    profiles: [dev]
     ports:
       - "${WEB_PORT}:${WEB_PORT}"
     environment:
       - VITE_PORT=${WEB_PORT}
       - VITE_API_URL=${API_URL}
-  web:
-    image: ghcr.io/maciejgarncarski/coin-control-web:latest
-    pull_policy: always
-    container_name: coin-control-web-prod
-    build:
-      dockerfile: ./web/web.Dockerfile
-      args:
-        VITE_API_URL: ${API_URL}
-        NODE_ENV: production
-    depends_on:
-      - api
-    environment:
-      - NODE_ENV=production
-    profiles: [prod]
-    ports:
-      - "${WEB_PORT}:80"
 
 networks:
   app-network:

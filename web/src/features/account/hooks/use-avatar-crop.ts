@@ -24,12 +24,16 @@ export const useAvatarCrop = () => {
 
   const onImageLoad = useCallback(
     (e: SyntheticEvent<HTMLImageElement, Event>) => {
-      const { naturalWidth: width, naturalHeight: height } = e.currentTarget
+      const { width, height } = e.currentTarget
+
       const crop = centerCrop(
         makeAspectCrop(
           {
-            unit: '%',
-            width: 80,
+            unit: 'px',
+            x: Math.floor(width / 2),
+            y: Math.floor(height / 2),
+            width: Math.floor(width / 2),
+            height: Math.floor(height / 2),
           },
           1,
           width,
@@ -124,5 +128,7 @@ export const useAvatarCrop = () => {
     setPreview,
     isModalShwon,
     setIsModalShown,
+    crop,
+    setCrop,
   }
 }
