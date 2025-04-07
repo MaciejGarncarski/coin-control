@@ -56,7 +56,6 @@ class PostgresSessionStore extends session.Store {
           data,
           expire_at: new Date(expiresAt),
           sid,
-          id: uuid,
         },
         where: {
           sid,

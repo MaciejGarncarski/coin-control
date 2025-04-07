@@ -10,7 +10,7 @@ const COOKIE_MAX_AGE = ms('1 week')
 
 export const sessionConfig: SessionOptions = {
   secret: env.API_SECRET,
-  resave: true,
+  resave: false,
   rolling: false,
   saveUninitialized: false,
   store: SessionStore,
