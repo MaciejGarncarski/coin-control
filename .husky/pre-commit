@@ -1,1 +1,1 @@
-pnpm -r lint-format
+pnpm lint-staged
