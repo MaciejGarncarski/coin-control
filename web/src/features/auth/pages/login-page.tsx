@@ -4,6 +4,7 @@ import { Link } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
+import { Logo } from '@/components/logo'
 import { Spinner } from '@/components/spinner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -45,7 +46,9 @@ export const LoginPage = () => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Login</CardTitle>
+        <CardTitle>
+          <Logo />
+        </CardTitle>
         <CardDescription>Login to CoinControl</CardDescription>
         {loginMutation.isError && (
           <Alert variant={'destructive'} className={cn('bg-card mt-3')}>

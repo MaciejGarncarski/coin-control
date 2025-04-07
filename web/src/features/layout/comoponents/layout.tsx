@@ -39,7 +39,7 @@ export function Layout({ children }: { children: ReactNode }) {
                   <Link to="/">
                     <Logo />
                   </Link>
-                  <nav className="text-muted-foreground hidden w-full text-sm md:ml-6 md:block lg:ml-8">
+                  <nav className="text-muted-foreground hidden w-full text-sm md:ml-6 md:block lg:ml-10">
                     <ul className="flex items-center justify-center gap-2 lg:justify-start lg:gap-10">
                       {rotues.map(({ text, url, icon: Icon }) => {
                         return (

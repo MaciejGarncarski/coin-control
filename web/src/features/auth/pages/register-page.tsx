@@ -7,6 +7,7 @@ import { AlertCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
+import { Logo } from '@/components/logo'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
@@ -63,7 +64,9 @@ export function RegisterPage() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Register</CardTitle>
+        <CardTitle>
+          <Logo />
+        </CardTitle>
         <CardDescription>Register to CoinControl</CardDescription>
         {registerMutation.isError &&
           registerMutation.error instanceof ApiError && (

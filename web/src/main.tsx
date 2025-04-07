@@ -10,6 +10,7 @@ import { StrictMode, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import { auth } from '@/config/auth'
+import { ErrorPage } from '@/features/layout/pages/error'
 import { userQueryOptions } from '@/lib/auth'
 import { queryConfig } from '@/lib/react-query'
 
@@ -25,6 +26,7 @@ const router = createRouter({
     queryClient: queryClient,
   },
   routeTree,
+  defaultErrorComponent: ErrorPage,
   defaultPreload: 'intent',
   scrollRestoration: true,
   defaultStructuralSharing: true,
