@@ -27,7 +27,6 @@ export const GoBackButton = ({
     if (!canGoBack) {
       navigate({
         to: '/',
-        viewTransition: true,
       })
       return
     }

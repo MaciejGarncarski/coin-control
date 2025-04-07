@@ -61,7 +61,6 @@ export const PasswordResetPage = () => {
     if (!canGoBack) {
       navigate({
         to: '/',
-        viewTransition: true,
       })
       return
     }

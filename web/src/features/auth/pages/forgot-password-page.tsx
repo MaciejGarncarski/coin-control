@@ -33,7 +33,6 @@ export const ForgotPasswordPage = () => {
     if (!canGoBack) {
       navigate({
         to: '/',
-        viewTransition: true,
       })
       return
     }
@@ -48,7 +47,6 @@ export const ForgotPasswordPage = () => {
   const navigateToHomePage = () => {
     navigate({
       to: '/',
-      viewTransition: true,
     })
   }
 

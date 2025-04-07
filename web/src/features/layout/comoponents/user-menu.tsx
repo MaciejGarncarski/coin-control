@@ -21,7 +21,9 @@ export const UserMenu = () => {
       <UserAvatar />
 
       <div className="text-xs">
-        <p className="font-semibold">{user.data.name}</p>
+        <p className="max-w-[16ch] overflow-hidden font-semibold overflow-ellipsis">
+          {user.data.name}
+        </p>
         <p className="text-muted-foreground max-w-[16ch] overflow-hidden text-xs overflow-ellipsis">
           {user.data.email}
         </p>

@@ -32,7 +32,6 @@ export const Route = createFileRoute('/_unauthenticated/auth/password-reset')({
 
     throw redirect({
       to: '/auth/forgot-password',
-      viewTransition: true,
     })
   },
 })

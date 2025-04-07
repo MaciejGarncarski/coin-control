@@ -71,10 +71,6 @@ userRouter.post(
 
 userRouter.patch(
   '/',
-  createRateLimiter({
-    limit: 10,
-    windowMs: ms('1 minute'),
-  }),
   authorize,
   validateData(userFullNameMutationSchema),
   updateUserHandler,

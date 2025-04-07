@@ -4,7 +4,6 @@ export const Route = createFileRoute('/_unauthenticated/auth/')({
   beforeLoad: () => {
     throw redirect({
       to: '/auth/login',
-      viewTransition: true,
     })
   },
 

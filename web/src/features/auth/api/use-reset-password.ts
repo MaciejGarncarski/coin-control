@@ -24,7 +24,6 @@ export function useResetPassword() {
     onSuccess: async () => {
       await navigate({
         to: '/auth/login',
-        viewTransition: true,
       })
 
       toast.success('Success. You can log in with new password.')

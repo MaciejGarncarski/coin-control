@@ -143,4 +143,51 @@
     font-family:
       source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
   }
+
+  html::view-transition-old(main-transition) {
+    animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-name: reveal;
+    animation-direction: reverse;
+  }
+
+  html::view-transition-new(main-transition) {
+    animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-name: reveal;
+  }
+
+  html::view-transition-old(logos) {
+    animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-name: opacity-reveal;
+    animation-direction: reverse;
+  }
+  html::view-transition-new(logos) {
+    animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-name: opacity-reveal;
+  }
+
+  @keyframes reveal {
+    0% {
+      scale: 0.8;
+      opacity: 0;
+      translate: 0 4lh;
+      filter: blur(20px);
+    }
+    30% {
+      filter: blur(10px);
+    }
+  }
+
+  @keyframes opacity-reveal {
+    0% {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
+  }
 }

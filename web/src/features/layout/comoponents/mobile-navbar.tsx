@@ -1,9 +1,11 @@
 import { Link } from '@tanstack/react-router'
-import { Coins, Menu } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import { useState } from 'react'
 
 import { useIsMobile } from '@/components/hooks/use-mobile'
+import { Logo } from '@/components/logo'
 import { Button } from '@/components/ui/button'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Sheet,
   SheetContent,
@@ -31,37 +33,41 @@ export function MobileNavbar() {
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" aria-describedby={undefined} className="gap-4">
+      <SheetContent
+        side="left"
+        aria-describedby={undefined}
+        className="gap-4 [view-transition-name:sheet-content]">
         <SheetHeader>
           <SheetTitle>
-            <p className="flex gap-2 px-4 py-4">
-              <Coins />
-              CoinControl
-            </p>
+            <div className="block">
+              <Logo />
+            </div>
           </SheetTitle>
         </SheetHeader>
-        <nav className="text-muted-foreground mx-4 flex flex-col gap-10 py-4 text-lg">
-          {rotues.map(({ icon: Icon, text, url }) => {
-            return (
-              <ul key={text}>
-                <li>
-                  <Link
-                    to={url}
-                    className="flex gap-4 rounded-md px-4 py-3"
-                    inactiveProps={{
-                      className: 'border border-transparent',
-                    }}
-                    activeProps={{
-                      className: 'text-foreground bg-muted border shadow',
-                    }}>
-                    <Icon />
-                    {text}
-                  </Link>
-                </li>
-              </ul>
-            )
-          })}
-        </nav>
+        <ScrollArea className="h-[calc(100dvh-14rem)]">
+          <nav className="text-muted-foreground mx-4 py-4 text-lg">
+            <ul className="flex flex-col gap-10">
+              {rotues.map(({ icon: Icon, text, url }) => {
+                return (
+                  <li key={text}>
+                    <Link
+                      to={url}
+                      className="flex gap-4 rounded-md px-4 py-3"
+                      inactiveProps={{
+                        className: 'border border-transparent',
+                      }}
+                      activeProps={{
+                        className: 'text-foreground bg-muted border shadow',
+                      }}>
+                      <Icon />
+                      {text}
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </nav>
+        </ScrollArea>
         <div className="mx-4 mt-auto mb-4">
           <UserMenu />
         </div>

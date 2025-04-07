@@ -129,6 +129,7 @@ services:
     depends_on:
       - api-dev
     volumes:
+      - ./web/index.html:/app/web/index.html
       - ./web/src:/app/web/src
       - ./shared:/app/shared
     ports:

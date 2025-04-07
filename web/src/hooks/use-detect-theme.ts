@@ -25,8 +25,11 @@ export const useDetectTheme = () => {
       root.classList.add('light')
     }
 
-    root.classList.add(themeClassName)
     darkModePreference.addEventListener('change', setThemeOnChange)
+
+    if (themeState === 'system') {
+      root.classList.add(themeClassName)
+    }
 
     return () => {
       darkModePreference.removeEventListener('change', setThemeOnChange)

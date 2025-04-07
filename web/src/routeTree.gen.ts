@@ -15,6 +15,8 @@ import { Route as PrivacyPolicyImport } from './routes/privacy-policy'
 import { Route as UnauthenticatedRouteImport } from './routes/_unauthenticated/route'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedTransactionsImport } from './routes/_authenticated/transactions'
+import { Route as AuthenticatedBudgetsImport } from './routes/_authenticated/budgets'
 import { Route as AuthenticatedAccountImport } from './routes/_authenticated/account'
 import { Route as UnauthenticatedAuthIndexImport } from './routes/_unauthenticated/auth/index'
 import { Route as UnauthenticatedAuthRegisterImport } from './routes/_unauthenticated/auth/register'
@@ -44,6 +46,18 @@ const AuthenticatedRouteRoute = AuthenticatedRouteImport.update({
 const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+
+const AuthenticatedTransactionsRoute = AuthenticatedTransactionsImport.update({
+  id: '/transactions',
+  path: '/transactions',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+
+const AuthenticatedBudgetsRoute = AuthenticatedBudgetsImport.update({
+  id: '/budgets',
+  path: '/budgets',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
@@ -125,6 +139,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/budgets': {
+      id: '/_authenticated/budgets'
+      path: '/budgets'
+      fullPath: '/budgets'
+      preLoaderRoute: typeof AuthenticatedBudgetsImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/transactions': {
+      id: '/_authenticated/transactions'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof AuthenticatedTransactionsImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/': {
       id: '/_authenticated/'
       path: '/'
@@ -181,12 +209,16 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  AuthenticatedBudgetsRoute: typeof AuthenticatedBudgetsRoute
+  AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedAuthVerifyEmailRoute: typeof AuthenticatedAuthVerifyEmailRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedBudgetsRoute: AuthenticatedBudgetsRoute,
+  AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedAuthVerifyEmailRoute: AuthenticatedAuthVerifyEmailRoute,
 }
@@ -218,6 +250,8 @@ export interface FileRoutesByFullPath {
   '': typeof UnauthenticatedRouteRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/budgets': typeof AuthenticatedBudgetsRoute
+  '/transactions': typeof AuthenticatedTransactionsRoute
   '/': typeof AuthenticatedIndexRoute
   '/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
   '/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
@@ -231,6 +265,8 @@ export interface FileRoutesByTo {
   '': typeof UnauthenticatedRouteRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/budgets': typeof AuthenticatedBudgetsRoute
+  '/transactions': typeof AuthenticatedTransactionsRoute
   '/': typeof AuthenticatedIndexRoute
   '/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
   '/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
@@ -246,6 +282,8 @@ export interface FileRoutesById {
   '/_unauthenticated': typeof UnauthenticatedRouteRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/_authenticated/budgets': typeof AuthenticatedBudgetsRoute
+  '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
   '/_unauthenticated/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
@@ -261,6 +299,8 @@ export interface FileRouteTypes {
     | ''
     | '/privacy-policy'
     | '/account'
+    | '/budgets'
+    | '/transactions'
     | '/'
     | '/auth/verify-email'
     | '/auth/forgot-password'
@@ -273,6 +313,8 @@ export interface FileRouteTypes {
     | ''
     | '/privacy-policy'
     | '/account'
+    | '/budgets'
+    | '/transactions'
     | '/'
     | '/auth/verify-email'
     | '/auth/forgot-password'
@@ -286,6 +328,8 @@ export interface FileRouteTypes {
     | '/_unauthenticated'
     | '/privacy-policy'
     | '/_authenticated/account'
+    | '/_authenticated/budgets'
+    | '/_authenticated/transactions'
     | '/_authenticated/'
     | '/_authenticated/auth/verify-email'
     | '/_unauthenticated/auth/forgot-password'
@@ -327,6 +371,8 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/route.tsx",
       "children": [
         "/_authenticated/account",
+        "/_authenticated/budgets",
+        "/_authenticated/transactions",
         "/_authenticated/",
         "/_authenticated/auth/verify-email"
       ]
@@ -346,6 +392,14 @@ export const routeTree = rootRoute
     },
     "/_authenticated/account": {
       "filePath": "_authenticated/account.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/budgets": {
+      "filePath": "_authenticated/budgets.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/transactions": {
+      "filePath": "_authenticated/transactions.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/": {

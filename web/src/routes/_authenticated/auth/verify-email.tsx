@@ -34,7 +34,6 @@ export const Route = createFileRoute('/_authenticated/auth/verify-email')({
 
     throw redirect({
       to: '/',
-      viewTransition: true,
     })
   },
   component: VerifySecondaryEmailPage,

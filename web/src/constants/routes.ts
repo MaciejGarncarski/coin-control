@@ -6,9 +6,11 @@ import {
   User,
 } from 'lucide-react'
 
+import type { FileRoutesByTo } from '@/routeTree.gen'
+
 type RoutesData = Array<{
   icon: LucideIcon
-  url: string
+  url: keyof FileRoutesByTo
   text: string
 }>
 

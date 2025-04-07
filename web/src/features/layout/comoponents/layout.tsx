@@ -1,8 +1,8 @@
 import { Link, type ReactNode, useLocation } from '@tanstack/react-router'
-import { Coins } from 'lucide-react'
 import { useMemo } from 'react'
 
 import { useIsMobile } from '@/components/hooks/use-mobile'
+import { Logo } from '@/components/logo'
 import { UserAvatar } from '@/components/user-avatar'
 import { rotues } from '@/constants/routes'
 import { MobileNavbar } from '@/features/layout/comoponents/mobile-navbar'
@@ -25,26 +25,19 @@ export function Layout({ children }: { children: ReactNode }) {
         <header className="bg-background/60 sticky top-0 z-50 flex h-16 w-full items-center justify-start gap-4 border-b px-4 backdrop-blur-md md:gap-1 lg:gap-12 lg:px-10">
           {isVerifyEmailPage ? (
             <Link to="/">
-              <h1 className="flex items-center gap-2 text-xl font-semibold">
-                <Coins />
-                CoinControl
-              </h1>
+              <Logo />
             </Link>
           ) : (
             <>
               <MobileNavbar />
               {isMobile ? (
-                <h1 className="mx-auto flex gap-2">
-                  <Coins />
-                  CoinControl
-                </h1>
+                <div className="flex w-full items-center justify-center">
+                  <Logo />
+                </div>
               ) : (
                 <>
                   <Link to="/">
-                    <h1 className="hidden items-center gap-2 text-xl font-semibold md:flex">
-                      <Coins />
-                      CoinControl
-                    </h1>
+                    <Logo />
                   </Link>
                   <nav className="text-muted-foreground ml-2 hidden gap-0 text-sm md:ml-6 md:flex lg:ml-8 lg:gap-10">
                     {rotues.map(({ text, url, icon: Icon }) => {
@@ -90,7 +83,7 @@ export function Layout({ children }: { children: ReactNode }) {
 
           <div
             className={cn(
-              'flex items-center gap-4 md:ml-auto',
+              'flex items-center gap-4 [view-transition-name:logos] md:ml-auto',
               isVerifyEmailPage && isMobile && 'hidden',
             )}>
             <ThemeSwitcher />
@@ -106,7 +99,7 @@ export function Layout({ children }: { children: ReactNode }) {
             )}
           </div>
         </header>
-        <main className="min-h-[calc(100dvh-4rem)] w-full p-4 md:rounded-tl-2xl md:p-10">
+        <main className="mx-auto min-h-[calc(100dvh-4rem)] w-full p-6 [view-transition-name:main-transition] md:container md:rounded-tl-2xl lg:p-10">
           {children}
         </main>
       </div>

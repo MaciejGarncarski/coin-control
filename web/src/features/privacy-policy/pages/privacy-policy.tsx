@@ -14,7 +14,6 @@ export function PrivacyPolicyPage() {
     if (!canGoBack) {
       navigate({
         to: '/',
-        viewTransition: true,
       })
       return
     }
