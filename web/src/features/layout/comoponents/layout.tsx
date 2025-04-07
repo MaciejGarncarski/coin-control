@@ -22,7 +22,7 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <div className={cn(!isMobile && 'flex', 'bg-background')}>
       <div className={cn('flex w-full flex-col')}>
-        <header className="bg-background/60 sticky top-0 z-50 flex h-16 w-full items-center justify-start gap-4 border-b px-4 backdrop-blur-md md:gap-1 lg:gap-12 lg:px-10">
+        <header className="bg-background/60 sticky top-0 z-50 flex h-16 w-full items-center justify-between gap-4 border-b px-4 backdrop-blur-md md:justify-start md:gap-1 lg:gap-12 lg:px-10">
           {isVerifyEmailPage ? (
             <Link to="/">
               <Logo />
@@ -39,13 +39,14 @@ export function Layout({ children }: { children: ReactNode }) {
                   <Link to="/">
                     <Logo />
                   </Link>
-                  <nav className="text-muted-foreground ml-2 hidden gap-0 text-sm md:ml-6 md:flex lg:ml-8 lg:gap-10">
-                    {rotues.map(({ text, url, icon: Icon }) => {
-                      return (
-                        <ul key={text}>
-                          <li>
+                  <nav className="text-muted-foreground hidden w-full text-sm md:ml-6 md:block lg:ml-8">
+                    <ul className="flex items-center justify-center gap-2 lg:justify-start lg:gap-10">
+                      {rotues.map(({ text, url, icon: Icon }) => {
+                        return (
+                          <li key={text}>
                             <Link
                               to={url}
+                              viewTransition={{ types: ['main-transition'] }}
                               className="flex items-center gap-2 rounded-md px-3 py-1 transition-all"
                               inactiveProps={{
                                 className: 'border border-transparent',
@@ -58,9 +59,9 @@ export function Layout({ children }: { children: ReactNode }) {
                               {text}
                             </Link>
                           </li>
-                        </ul>
-                      )
-                    })}
+                        )
+                      })}
+                    </ul>
                   </nav>
                 </>
               )}
@@ -99,7 +100,7 @@ export function Layout({ children }: { children: ReactNode }) {
             )}
           </div>
         </header>
-        <main className="mx-auto min-h-[calc(100dvh-4rem)] w-full p-6 [view-transition-name:main-transition] md:container md:rounded-tl-2xl lg:p-10">
+        <main className="mx-auto min-h-[calc(100dvh-4rem)] w-full p-6 [view-transition-name:content] md:container md:rounded-tl-2xl lg:p-10">
           {children}
         </main>
       </div>

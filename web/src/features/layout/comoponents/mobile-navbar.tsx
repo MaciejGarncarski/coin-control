@@ -52,6 +52,7 @@ export function MobileNavbar() {
                   <li key={text}>
                     <Link
                       to={url}
+                      viewTransition={{ types: ['main-transition'] }}
                       className="flex gap-4 rounded-md px-4 py-3"
                       inactiveProps={{
                         className: 'border border-transparent',

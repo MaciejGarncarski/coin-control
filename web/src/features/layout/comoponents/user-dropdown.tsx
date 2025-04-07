@@ -30,7 +30,9 @@ export function UserDropdown({ triggerComponent, side = 'right' }: Props) {
               asChild
               size={'sm'}
               className="w-full justify-start text-left font-normal">
-              <Link to="/account">
+              <Link
+                to="/account"
+                viewTransition={{ types: ['main-transition'] }}>
                 <User />
                 Account
               </Link>
