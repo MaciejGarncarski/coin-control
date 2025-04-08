@@ -1,11 +1,11 @@
 import { hash, verify } from '@node-rs/argon2'
+import { db } from '@shared/database'
 import { QUEUES } from '@shared/queues'
 import { type RegisterMutation, z } from '@shared/schemas'
 import ms from 'ms'
 import type { IResult } from 'ua-parser-js'
 import { v7 } from 'uuid'
 
-import { db } from '../../lib/db.js'
 import { HttpError } from '../../lib/http-error.js'
 import { emailVerificationQueue } from '../../lib/queues/email-verification.js'
 import { generateOTP } from '../../utils/generate-otp.js'

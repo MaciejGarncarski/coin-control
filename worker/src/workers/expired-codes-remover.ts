@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
+import { db } from '@shared/database'
 import { QUEUES, redisClient, Worker } from '@shared/queues'
-
-import { db } from '../db.js'
 
 export const createExpiredCodesRemoverWorker = () => {
   const worker = new Worker(

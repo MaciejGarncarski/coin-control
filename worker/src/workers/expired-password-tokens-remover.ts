@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { QUEUES, redisClient, Worker } from '@shared/queues'
 
-import { db } from '../db.js'
+import { db } from '@shared/database'
 
 export const createExpiredPasswordTokensRemoverWorker = () => {
   const worker = new Worker(

@@ -15,8 +15,7 @@ FROM base AS test
 COPY . /app
 WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install
-RUN pnpm "--filter=@shared/*" build && \
-    pnpm --filter "api" generate-prisma
+RUN pnpm "--filter=@shared/*" build
 
 # dev
 FROM base AS dev
@@ -27,7 +26,7 @@ COPY shared ./shared
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install 
 ENV NODE_ENV="development"
 EXPOSE ${PORT}
-RUN pnpm --filter "api" generate-prisma
+# RUN pnpm --filter "api" generate-prisma
 CMD [ "pnpm", "--filter", "api", "dev" ]
 
 # build prod
@@ -36,7 +35,6 @@ COPY . /app
 WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install --frozen-lockfile
 RUN pnpm "--filter=@shared/*" build && \
-    pnpm --filter "api" generate-prisma && \
     pnpm --filter=api build && \
     pnpm deploy --filter=api --prod /prod/api
 

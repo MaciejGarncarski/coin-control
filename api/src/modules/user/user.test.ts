@@ -1,3 +1,4 @@
+import { db } from '@shared/database'
 import type {
   AddEmailMutation,
   ResendEmailVerificationMutation,
@@ -9,7 +10,6 @@ import request from 'supertest'
 import { v7 } from 'uuid'
 
 import { buildApp } from '../../app.js'
-import { db } from '../../lib/db.js'
 
 const app = buildApp()
 

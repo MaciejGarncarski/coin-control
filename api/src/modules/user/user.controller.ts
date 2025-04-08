@@ -1,3 +1,4 @@
+import { db } from '@shared/database'
 import { QUEUES } from '@shared/queues'
 import type {
   AddEmailMutation,
@@ -14,7 +15,6 @@ import status from 'http-status'
 import ms from 'ms'
 import { v7 } from 'uuid'
 
-import { db } from '../../lib/db.js'
 import { HttpError } from '../../lib/http-error.js'
 import { secondaryEmailVerificationQueue } from '../../lib/queues/secondary-email-verification.js'
 import { getHashCode } from '../../utils/get-hash-code.js'

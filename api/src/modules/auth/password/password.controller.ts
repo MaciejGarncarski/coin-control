@@ -1,3 +1,4 @@
+import { db } from '@shared/database'
 import type {
   ForgotPasswordEmailMutation,
   ResetPasswordMutation,
@@ -5,7 +6,6 @@ import type {
 import type { Response } from 'express'
 import status from 'http-status'
 
-import { db } from '../../../lib/db.js'
 import { HttpError } from '../../../lib/http-error.js'
 import type { TypedRequestBody } from '../../../utils/typed-request.js'
 import {

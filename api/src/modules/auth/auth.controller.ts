@@ -1,3 +1,4 @@
+import { db } from '@shared/database'
 import type {
   EmailVerificationVerifyMutation,
   LogOutDeviceQuery,
@@ -8,7 +9,6 @@ import { status } from 'http-status'
 import ms from 'ms'
 import { UAParser } from 'ua-parser-js'
 
-import { db } from '../../lib/db.js'
 import { HttpError } from '../../lib/http-error.js'
 import type {
   TypedRequestBody,

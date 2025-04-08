@@ -1,13 +1,13 @@
 import { copyFile, mkdir, unlink } from 'node:fs/promises'
 import { join, normalize } from 'node:path'
 
+import { db } from '@shared/database'
 import { type Request, type Response } from 'express'
 import formidable from 'formidable'
 import status from 'http-status'
 import { nanoid } from 'nanoid'
 
 import { env } from '../../config/env.js'
-import { db } from '../../lib/db.js'
 import { HttpError } from '../../lib/http-error.js'
 
 const MAX_FILE_SIZE = 5_000_000 // 5 MB;

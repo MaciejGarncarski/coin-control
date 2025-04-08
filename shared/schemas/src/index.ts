@@ -11,5 +11,6 @@ export const apiErrorSchema = z.object({
 export type ApiError = z.infer<typeof apiErrorSchema>
 
 export * from './auth.js'
+export * from './transactions.js'
 export * from './user.js'
 export { z } from 'zod'

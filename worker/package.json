@@ -6,21 +6,18 @@
     "dev": "pnpm tsx watch --clear-screen=false  src/app.ts",
     "build": "pnpm tsc --build",
     "start": "pnpm build && node --env-file=.env ./dist/src/app.js",
-    "generate-prisma": "pnpm prisma generate",
     "lint": "eslint --fix .",
     "format": "prettier --write --cache .",
     "lint-format": "pnpm lint && pnpm format",
-    "check-types": "pnpm tsc --skipLibCheck --noEmit",
-    "db-pull": "pnpm prisma db pull"
+    "check-types": "pnpm tsc --skipLibCheck --noEmit"
   },
   "dependencies": {
-    "@prisma/client": "^6.5.0",
     "@react-email/render": "1.0.5",
     "@shared/email": "workspace:*",
     "@shared/queues": "workspace:*",
+    "@shared/database": "workspace:*",
     "@shared/schemas": "workspace:*",
     "nodemailer": "^6.10.0",
-    "prisma": "^6.5.0",
     "typescript": "^5.8.3",
     "zod": "^3.24.2"
   },

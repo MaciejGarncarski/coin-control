@@ -17,7 +17,7 @@ COPY worker ./worker
 COPY shared ./shared
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 ENV NODE_ENV="development"
-RUN pnpm --filter "worker" generate-prisma
+# RUN pnpm --filter "worker" generate-prisma
 CMD [ "pnpm", "--filter", "worker", "dev" ]
 
 # build prod
@@ -26,7 +26,6 @@ COPY . /app
 WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install --frozen-lockfile
 RUN pnpm "--filter=@shared/*" build && \
-    pnpm --filter "worker" generate-prisma && \
     pnpm --filter=worker build && \
     pnpm deploy --filter=worker --prod /prod/worker
 

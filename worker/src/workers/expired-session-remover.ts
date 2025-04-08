@@ -1,6 +1,5 @@
+import { db } from '@shared/database'
 import { QUEUES, redisClient, Worker } from '@shared/queues'
-
-import { db } from '../db.js'
 
 export const createExpiredSessionRemoverWorker = () => {
   const worker = new Worker(

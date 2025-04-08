@@ -1,8 +1,7 @@
+import { db } from '@shared/database'
 import session, { Session, type SessionData } from 'express-session'
 import ms from 'ms'
 import { v7 } from 'uuid'
-
-import { db } from './db.js'
 
 class PostgresSessionStore extends session.Store {
   private maxAge: number

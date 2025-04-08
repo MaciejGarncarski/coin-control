@@ -1,9 +1,9 @@
 import { hash } from '@node-rs/argon2'
+import { db } from '@shared/database'
 import { QUEUES } from '@shared/queues'
 import ms from 'ms'
 import { v7 } from 'uuid'
 
-import { db } from '../../../lib/db.js'
 import { resetPasswordLinkQueue } from '../../../lib/queues/reset-password-link.js'
 import { resetPasswordNotificationQueue } from '../../../lib/queues/reset-password-notification.js'
 import { getHashCode } from '../../../utils/get-hash-code.js'

@@ -1,5 +1,6 @@
+import { db } from '@shared/database'
+
 import { env } from '../config/env.js'
-import { db } from '../lib/db.js'
 
 export async function truncateAllTables() {
   if (env.NODE_ENV !== 'test') {

@@ -1,6 +1,6 @@
+import { db } from '@shared/database'
 import type { TestProject } from 'vitest/node'
 
-import { db } from '../src/lib/db.js'
 import { truncateAllTables } from './truncate-all-tables.js'
 
 export default async function setup(project: TestProject) {

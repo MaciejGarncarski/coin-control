@@ -1,0 +1,32 @@
+{
+  "private": "true",
+  "name": "@shared/database",
+  "author": "Maciej Garncarski",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "./dist/src/index.js",
+  "types": "./src/index.ts",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "copy-engine": "copyfiles -f ./src/generated/prisma/libquery* ./dist/src/generated/prisma",
+    "build": "pnpm prisma generate && pnpm clean && pnpm tsc -b ; sleep 2 && pnpm copy-engine",
+    "lint": "eslint --fix .",
+    "format": "prettier --write --cache .",
+    "lint-format": "pnpm lint && pnpm format",
+    "check-types": "pnpm tsc --skipLibCheck --noEmit",
+    "generate-prisma": "pnpm prisma generate",
+    "db-pull": "pnpm prisma db pull"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.6.0",
+    "prisma": "^6.6.0"
+  },
+  "devDependencies": {
+    "@shared/eslint-prettier": "workspace:*",
+    "@types/node": "^22.14.0",
+    "copyfiles": "^2.4.1",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.3"
+  },
+  "packageManager": "pnpm@10.6.1"
+}
