@@ -11,11 +11,9 @@ services:
       - ./web/index.html:/app/web/index.html
       - ./web/src:/app/web/src
       - ./shared:/app/shared
-    ports:
-      - "${WEB_PORT}:${WEB_PORT}"
     environment:
       - VITE_PORT=${WEB_PORT}
-      - VITE_API_URL=${API_URL}
+      - VITE_API_URL=http://localhost:3001
     command: pnpm --filter web test
 
   web-test-coverage:
@@ -30,11 +28,9 @@ services:
       - ./web/index.html:/app/web/index.html
       - ./web/src:/app/web/src
       - ./shared:/app/shared
-    ports:
-      - "${WEB_PORT}:${WEB_PORT}"
     environment:
-      - VITE_PORT=${WEB_PORT}
-      - VITE_API_URL=${API_URL}
+      - VITE_PORT=3000
+      - VITE_API_URL=http://localhost:3001
     command: pnpm --filter web test:coverage
 
   web-test-watch:
@@ -49,9 +45,7 @@ services:
       - ./web/index.html:/app/web/index.html
       - ./web/src:/app/web/src
       - ./shared:/app/shared
-    ports:
-      - "${WEB_PORT}:${WEB_PORT}"
     environment:
-      - VITE_PORT=${WEB_PORT}
-      - VITE_API_URL=${API_URL}
+      - VITE_PORT=3000
+      - VITE_API_URL=http://localhost:3001
     command: pnpm --filter web test:watch

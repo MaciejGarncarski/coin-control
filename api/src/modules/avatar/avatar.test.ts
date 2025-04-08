@@ -18,8 +18,6 @@ vi.mock('../../middlewares/authorize.js', () => ({
 
 describe('avatar.route.ts', async () => {
   it('should not upload if no file provided', async () => {
-    const formDataBody = new FormData()
-
     const response = await request(app).post('/avatar/upload')
 
     expect(response.status).toBe(status.BAD_REQUEST)
@@ -29,7 +27,7 @@ describe('avatar.route.ts', async () => {
   it('should upload avatar', async () => {
     const response = await request(app)
       .post('/avatar/upload')
-      .attach('avatar', path.resolve('./tests/test-avatar.jpg'))
+      .attach('avatar', path.resolve('./src/tests/test-avatar.jpg'))
 
     const avatars = await readdir('avatar-upload')
 
