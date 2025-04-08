@@ -99,8 +99,18 @@ export const EditAvatarForm = () => {
             This is your avatar. <br /> Click on the avatar to upload a custom
             one from your files.
           </p>
-          <label className="ml-auto cursor-pointer">
-            <Avatar className="h-20 w-20">
+          <label className="ml-auto cursor-pointer focus:scale-150">
+            <input
+              id="avatar-input"
+              type="file"
+              accept="image/*"
+              className="peer sr-only"
+              ref={inputRef}
+              onChange={handleUploadedFile}
+            />
+            <Avatar
+              className="h-20 w-20 peer-focus:ring-2 peer-focus:ring-offset-4"
+              data-id-avatar-form>
               {user.data?.avatarURL ? (
                 <AvatarImage src={user.data?.avatarURL} />
               ) : null}
@@ -108,14 +118,6 @@ export const EditAvatarForm = () => {
                 <User className="h-10 w-10" />
               </AvatarFallback>
             </Avatar>
-            <input
-              id="avatar-input"
-              type="file"
-              accept="image/*"
-              className="h-[0px] w-[0px] opacity-0"
-              ref={inputRef}
-              onChange={handleUploadedFile}
-            />
           </label>
         </CardDescription>
       </CardHeader>

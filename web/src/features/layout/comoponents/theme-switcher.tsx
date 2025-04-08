@@ -1,4 +1,4 @@
-import { Moon, Sun, SunMoon } from 'lucide-react'
+import { MonitorCog, Moon, Sun, SunMoon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -44,7 +44,7 @@ export function ThemeSwitcher({ withText = false }: ThemeSwitcherProps) {
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('system')}>
           <div className="flex items-center gap-2">
-            <SunMoon className="h-[1.2rem] w-[1.2rem]" />
+            <MonitorCog className="h-[1.2rem] w-[1.2rem]" />
             <span>System</span>
           </div>
         </DropdownMenuItem>

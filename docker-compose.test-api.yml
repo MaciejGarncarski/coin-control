@@ -48,6 +48,8 @@ services:
   api-test:
     container_name: coin-control-api-test
     tty: true
+    profiles:
+      - once
     depends_on:
       cache:
         condition: service_started
@@ -74,6 +76,73 @@ services:
       - REDIS_HOST=cache
       - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    command: pnpm --filter api test
+
+  api-test-coverage:
+    container_name: coin-control-api-test-coverage
+    tty: true
+    profiles:
+      - coverage
+    depends_on:
+      cache:
+        condition: service_started
+      database:
+        condition: service_healthy
+    networks:
+      - app-network
+    volumes:
+      - avatar-upload-test:/app/api/avatar-upload
+    build:
+      target: test
+      dockerfile: ./api/api.Dockerfile
+      args:
+        - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - PORT=3001
+      - APP_ORIGIN=http://localhost:3000
+      - API_URL=http://localhost:3001
+      - HOST=0.0.0.0
+      - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
+      - API_SECRET=randomsecretfortestingpurposes
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    command: pnpm --filter api test:coverage
+
+  api-test-watch:
+    container_name: coin-control-api-test-watch
+    tty: true
+    profiles:
+      - watch
+    depends_on:
+      cache:
+        condition: service_started
+      database:
+        condition: service_healthy
+    networks:
+      - app-network
+    volumes:
+      - avatar-upload-test:/app/api/avatar-upload
+    build:
+      target: test
+      dockerfile: ./api/api.Dockerfile
+      args:
+        - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - PORT=3001
+      - APP_ORIGIN=http://localhost:3000
+      - API_URL=http://localhost:3001
+      - HOST=0.0.0.0
+      - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
+      - API_SECRET=randomsecretfortestingpurposes
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    command: pnpm --filter api test:watch
 
 networks:
   app-network:

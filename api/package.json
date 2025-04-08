@@ -13,10 +13,10 @@
     "check-types": "pnpm tsc --skipLibCheck --noEmit",
     "generate-prisma": "pnpm prisma generate",
     "db-pull": "pnpm prisma db pull",
-    "test": "vitest run tests/smoke.test.ts && vitest run",
-    "test:watch": "vitest run tests/smoke.test.ts && vitest watch",
-    "test:coverage": "vitest run tests/smoke.test.ts && vitest run --coverage",
-    "test:watch-coverage": "vitest run tests/smoke.test.ts && vitest watch --coverage"
+    "test": "vitest run src/tests/smoke.test.ts && vitest run",
+    "test:watch": "vitest run src/tests/smoke.test.ts && vitest watch",
+    "test:coverage": "vitest run src/tests/smoke.test.ts && vitest run --coverage",
+    "test:watch-coverage": "vitest run src/tests/smoke.test.ts && vitest watch --coverage"
   },
   "license": "ISC",
   "packageManager": "pnpm@10.6.1",

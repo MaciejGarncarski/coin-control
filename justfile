@@ -13,5 +13,20 @@ up-prod-local:
 down-prod:
     docker compose -f docker-compose.prod.yml down
 
-test:
-	docker compose -f docker-compose.test.yml up --build --abort-on-container-exit 
+test-api:
+	docker compose -f docker-compose.test-api.yml --profile once up --build --abort-on-container-exit 
+
+test-api-coverage:
+	docker compose -f docker-compose.test-api.yml --profile coverage up --build --abort-on-container-exit 
+
+test-api-watch:
+	docker compose -f docker-compose.test-api.yml --profile watch up --build --abort-on-container-exit 
+
+test-web:
+	docker compose -f docker-compose.test-web.yml --profile once up --build --abort-on-container-exit 
+
+test-web-coverage:
+	docker compose -f docker-compose.test-web.yml --profile coverage up --build --abort-on-container-exit 
+
+test-web-watch:
+	docker compose -f docker-compose.test-web.yml --profile watch up --build --abort-on-container-exit 

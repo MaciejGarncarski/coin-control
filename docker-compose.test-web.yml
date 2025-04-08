@@ -1,0 +1,57 @@
+services:
+  web-test:
+    container_name: coin-control-web-test
+    tty: true
+    profiles:
+      - once
+    build:
+      target: test
+      dockerfile: ./web/web.Dockerfile
+    volumes:
+      - ./web/index.html:/app/web/index.html
+      - ./web/src:/app/web/src
+      - ./shared:/app/shared
+    ports:
+      - "${WEB_PORT}:${WEB_PORT}"
+    environment:
+      - VITE_PORT=${WEB_PORT}
+      - VITE_API_URL=${API_URL}
+    command: pnpm --filter web test
+
+  web-test-coverage:
+    container_name: coin-control-web-test-coverage
+    tty: true
+    profiles:
+      - coverage
+    build:
+      target: test
+      dockerfile: ./web/web.Dockerfile
+    volumes:
+      - ./web/index.html:/app/web/index.html
+      - ./web/src:/app/web/src
+      - ./shared:/app/shared
+    ports:
+      - "${WEB_PORT}:${WEB_PORT}"
+    environment:
+      - VITE_PORT=${WEB_PORT}
+      - VITE_API_URL=${API_URL}
+    command: pnpm --filter web test:coverage
+
+  web-test-watch:
+    container_name: coin-control-web-test-watch
+    tty: true
+    profiles:
+      - watch
+    build:
+      target: test
+      dockerfile: ./web/web.Dockerfile
+    volumes:
+      - ./web/index.html:/app/web/index.html
+      - ./web/src:/app/web/src
+      - ./shared:/app/shared
+    ports:
+      - "${WEB_PORT}:${WEB_PORT}"
+    environment:
+      - VITE_PORT=${WEB_PORT}
+      - VITE_API_URL=${API_URL}
+    command: pnpm --filter web test:watch

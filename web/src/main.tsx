@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
   defaultOptions: queryConfig,
 })
 
-const router = createRouter({
+export const router = createRouter({
   context: {
     auth: undefined!,
     queryClient: queryClient,
@@ -39,7 +39,7 @@ declare module '@tanstack/react-router' {
   }
 }
 
-const MainApp = () => {
+export const MainApp = () => {
   const userAuthenticated = useQuery(userQueryOptions)
 
   useEffect(() => {

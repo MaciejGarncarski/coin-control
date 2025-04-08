@@ -1,7 +1,7 @@
 import status from 'http-status'
 import request from 'supertest'
 
-import { buildApp } from '../src/app.js'
+import { buildApp } from '../app.js'
 
 const app = buildApp()
 

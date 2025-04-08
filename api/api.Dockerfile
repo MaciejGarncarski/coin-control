@@ -17,7 +17,6 @@ WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install
 RUN pnpm "--filter=@shared/*" build && \
     pnpm --filter "api" generate-prisma
-CMD [ "pnpm", "--filter", "api", "test" ]
 
 # dev
 FROM base AS dev

@@ -1,5 +1,5 @@
-import { env } from '../src/config/env.js'
-import { db } from '../src/lib/db.js'
+import { env } from '../config/env.js'
+import { db } from '../lib/db.js'
 
 export async function truncateAllTables() {
   if (env.NODE_ENV !== 'test') {
@@ -15,8 +15,10 @@ export async function truncateAllTables() {
   for (const tableName of tables) {
     try {
       await db.$executeRawUnsafe(`TRUNCATE TABLE "${tableName}" CASCADE;`)
+      // eslint-disable-next-line no-console
       console.log(`Truncated table: ${tableName}`)
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(`Error truncating table ${tableName}:`, error)
       throw error
     }

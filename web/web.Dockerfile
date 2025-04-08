@@ -10,6 +10,13 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
+# tests
+FROM base AS test
+COPY . /app
+WORKDIR /app
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install
+RUN pnpm "--filter=@shared/*" build
+
 # dev
 FROM base AS dev
 WORKDIR /app
