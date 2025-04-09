@@ -8,7 +8,7 @@ import status from 'http-status'
 import { nanoid } from 'nanoid'
 
 import { env } from '../../config/env.js'
-import { HttpError } from '../../lib/http-error.js'
+import { createErrorResponse } from '../../utils/create-http-error-response.js'
 
 const MAX_FILE_SIZE = 5_000_000 // 5 MB;
 
@@ -24,18 +24,20 @@ export async function uploadUserAvatarHandler(req: Request, res: Response) {
   const avatarFiles = files.avatar
 
   if (!avatarFiles) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'No image provided',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 
   const avatar = avatarFiles[0]
 
   if (!avatar) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'No image provided',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 

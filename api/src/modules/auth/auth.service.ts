@@ -6,10 +6,10 @@ import ms from 'ms'
 import type { IResult } from 'ua-parser-js'
 import { v7 } from 'uuid'
 
-import { HttpError } from '../../lib/http-error.js'
 import { emailVerificationQueue } from '../../lib/queues/email-verification.js'
 import { generateOTP } from '../../utils/generate-otp.js'
 import { getUserLocation } from '../../utils/get-user-location.js'
+import { failure, success } from '../../utils/result.js'
 import { userDTO } from './user.dto.js'
 
 type CheckUserExistsProps = {
@@ -36,10 +36,7 @@ export async function checkUserExists({ email }: CheckUserExistsProps) {
   })
 
   if (!userIdData?.id) {
-    throw new HttpError({
-      statusCode: 'UNAUTHORIZED',
-      message: 'Invalid email or password.',
-    })
+    return failure('User not found.')
   }
 
   if (!userEmail) {
@@ -72,13 +69,10 @@ export async function checkUserExists({ email }: CheckUserExistsProps) {
   })
 
   if (!user) {
-    throw new HttpError({
-      statusCode: 'UNAUTHORIZED',
-      message: 'Invalid email or password.',
-    })
+    return failure('User not found.')
   }
 
-  return user
+  return success(user)
 }
 
 type VerifyPasswordProps = {
@@ -90,11 +84,10 @@ export async function verifyPassword({ hash, password }: VerifyPasswordProps) {
   const passwordMatches = await verify(hash, password)
 
   if (!passwordMatches) {
-    throw new HttpError({
-      statusCode: 'UNAUTHORIZED',
-      message: 'Invalid email or password.',
-    })
+    return failure('Invalid credentials.')
   }
+
+  return success('success')
 }
 
 export async function registerUser(userData: RegisterMutation) {
@@ -109,11 +102,7 @@ export async function registerUser(userData: RegisterMutation) {
   })
 
   if (user) {
-    throw new HttpError({
-      toastMessage: 'User already exists.',
-      message: 'User already exists.',
-      statusCode: 'CONFLICT',
-    })
+    return failure({ toastMessage: 'User already exists.' })
   }
 
   const hashedPassword = await hash(userData.password)
@@ -149,11 +138,7 @@ export async function registerUser(userData: RegisterMutation) {
   })
 
   if (!newUser) {
-    throw new HttpError({
-      toastMessage: 'User not found.',
-      message: 'User not found.',
-      statusCode: 'NOT_FOUND',
-    })
+    return failure({ message: 'User not found.' })
   }
 
   const expires_at = Date.now() + ms('5 minutes')
@@ -192,7 +177,7 @@ export async function registerUser(userData: RegisterMutation) {
     },
   )
 
-  return {
+  return success({
     user: userDTO({
       email: newUser.user.email,
       email_verified: false,
@@ -201,7 +186,7 @@ export async function registerUser(userData: RegisterMutation) {
       avatar_url: newUser.user.avatar_url,
     }),
     userEmailData: newUser.userEmailData,
-  }
+  })
 }
 
 type VerifyAccountProps = {
@@ -222,18 +207,11 @@ export async function verifyAccount({ code, userId }: VerifyAccountProps) {
   })
 
   if (!otp) {
-    throw new HttpError({
-      message: 'Invalid OTP code.',
-      statusCode: 'UNAUTHORIZED',
-    })
+    return failure('Invalid OTP code.')
   }
 
   if (otp.expires_at < new Date()) {
-    throw new HttpError({
-      message: 'OTP code expired.',
-      toastMessage: 'Code expired.',
-      statusCode: 'UNAUTHORIZED',
-    })
+    return failure('OTP code expired.')
   }
 
   await db.$transaction(async (tx) => {
@@ -264,6 +242,8 @@ export async function verifyAccount({ code, userId }: VerifyAccountProps) {
       },
     })
   })
+
+  return success('success')
 }
 
 type GetOTPPRops = {
@@ -284,10 +264,7 @@ export async function getOTP({ email, userId }: GetOTPPRops) {
   })
 
   if (!userEmailData) {
-    throw new HttpError({
-      statusCode: 'BAD_REQUEST',
-      message: 'Bad request',
-    })
+    return failure('Bad request')
   }
 
   await db.$transaction(async (tx) => {
@@ -323,6 +300,8 @@ export async function getOTP({ email, userId }: GetOTPPRops) {
       },
     )
   })
+
+  return success(true)
 }
 
 export async function getUser({ userId }: { userId: string }) {
@@ -339,10 +318,7 @@ export async function getUser({ userId }: { userId: string }) {
   })
 
   if (!user) {
-    throw new HttpError({
-      message: 'User not found',
-      statusCode: 'BAD_REQUEST',
-    })
+    return failure('User not found')
   }
 
   const userEmail = await db.user_emails.findFirst({
@@ -352,13 +328,15 @@ export async function getUser({ userId }: { userId: string }) {
     },
   })
 
-  return userDTO({
-    email: user.email,
-    email_verified: userEmail ? userEmail.is_verified : false,
-    id: user.id,
-    name: user.name,
-    avatar_url: user.avatar_url,
-  })
+  return success(
+    userDTO({
+      email: user.email,
+      email_verified: userEmail ? userEmail.is_verified : false,
+      id: user.id,
+      name: user.name,
+      avatar_url: user.avatar_url,
+    }),
+  )
 }
 
 const IPResponseSchema = z.object({
@@ -400,16 +378,18 @@ export async function saveSessionData({
 }
 
 export async function getEmailVerificationCode({ userId }: { userId: string }) {
-  return db.email_verification.findFirst({
-    select: {
-      expires_at: true,
-    },
-    where: {
-      verified: false,
-      user_id: userId,
-    },
-    orderBy: {
-      expires_at: 'desc',
-    },
-  })
+  return success(
+    await db.email_verification.findFirst({
+      select: {
+        expires_at: true,
+      },
+      where: {
+        verified: false,
+        user_id: userId,
+      },
+      orderBy: {
+        expires_at: 'desc',
+      },
+    }),
+  )
 }

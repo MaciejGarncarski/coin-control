@@ -38,20 +38,22 @@ export const TransactionsPage = () => {
 
       <div className="flex flex-col gap-4">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <div className="flex flex-row gap-4">
-            <Input
-              placeholder="Search transactions..."
-              type="search"
-              className="h-8 w-52"
-            />
-            <Button
-              type="button"
-              size={'sm'}
-              variant={'outline'}
-              onClick={resetFilters}>
-              <X />
-              Reset
-            </Button>
+          <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:justify-start">
+            <div className="flex flex-row gap-4">
+              <Input
+                placeholder="Search transactions..."
+                type="search"
+                className="h-8 w-52"
+              />
+              <Button
+                type="button"
+                size={'sm'}
+                variant={'outline'}
+                onClick={resetFilters}>
+                <X />
+                Reset
+              </Button>
+            </div>
             <div>
               <DatePickerWithRange />
             </div>

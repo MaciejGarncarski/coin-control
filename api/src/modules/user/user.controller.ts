@@ -15,8 +15,8 @@ import status from 'http-status'
 import ms from 'ms'
 import { v7 } from 'uuid'
 
-import { HttpError } from '../../lib/http-error.js'
 import { secondaryEmailVerificationQueue } from '../../lib/queues/secondary-email-verification.js'
+import { createErrorResponse } from '../../utils/create-http-error-response.js'
 import { getHashCode } from '../../utils/get-hash-code.js'
 import type { TypedRequestBody } from '../../utils/typed-request.js'
 import { getUser } from '../auth/auth.service.js'
@@ -62,10 +62,10 @@ export async function addEmailHandler(
   })
 
   if (userEmailsCount >= USER_EMAILS_LIMIT) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: `Emails limit is ${USER_EMAILS_LIMIT}.`,
-      toastMessage: `Email limit is ${USER_EMAILS_LIMIT}.`,
-      statusCode: 'FORBIDDEN',
+      statusCode: status.FORBIDDEN,
     })
   }
 
@@ -76,10 +76,10 @@ export async function addEmailHandler(
   })
 
   if (someUserHasEmail?.id) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Already exists',
-      toastMessage: 'Email already taken',
-      statusCode: 'CONFLICT',
+      statusCode: status.CONFLICT,
     })
   }
 
@@ -90,10 +90,10 @@ export async function addEmailHandler(
   })
 
   if (emailExists?.user_id) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Already exists',
-      toastMessage: 'Email already taken',
-      statusCode: 'CONFLICT',
+      statusCode: status.CONFLICT,
     })
   }
 
@@ -104,10 +104,10 @@ export async function addEmailHandler(
   })
 
   if (myEmails.some((myEmails) => myEmails.email === email)) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Already exists',
-      toastMessage: 'Email already taken',
-      statusCode: 'CONFLICT',
+      statusCode: status.CONFLICT,
     })
   }
 
@@ -163,16 +163,18 @@ export async function resendEmailVerificationHandler(
   })
 
   if (!foundEmail) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Not found.',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 
   if (foundEmail.user_id !== userId) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Unauthorized.',
-      statusCode: 'UNAUTHORIZED',
+      statusCode: status.UNAUTHORIZED,
     })
   }
 
@@ -200,10 +202,10 @@ export async function resendEmailVerificationHandler(
   const tokenDate = latestToken.expires_at.getTime() - ms('3 minutes')
 
   if (tokenDate > Date.now()) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Wait two minutes before sending new code.',
-      toastMessage: 'Wait two minutes before sending new code.',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 
@@ -253,18 +255,20 @@ export async function verifySecondaryEmailHandler(
   })
 
   if (!foundToken?.id) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Bad request',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 
   const isExpired = foundToken.expires_at.getTime() < new Date().getTime()
 
   if (isExpired) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Token expired',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 
@@ -310,23 +314,26 @@ export async function setPrimaryEmailHandler(
   })
 
   if (!emailData) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Bad request.',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 
   if (emailData.is_primary) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Is primary already.',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 
   if (!emailData.is_verified) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Email not verified.',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 
@@ -341,9 +348,10 @@ export async function setPrimaryEmailHandler(
     })
 
     if (!prevPrimaryEmail) {
-      throw new HttpError({
+      return createErrorResponse({
+        res,
         message: 'Bad request.',
-        statusCode: 'BAD_REQUEST',
+        statusCode: status.BAD_REQUEST,
       })
     }
 
@@ -390,13 +398,21 @@ export async function deleteEmailHandler(
 
   const userData = await getUser({ userId })
 
-  const isPrimaryEmail = email === userData.email
+  if (!userData.ok) {
+    return createErrorResponse({
+      res,
+      message: userData.error,
+      statusCode: status.BAD_REQUEST,
+    })
+  }
+
+  const isPrimaryEmail = email === userData.value.email
 
   if (isPrimaryEmail) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Cannot delete primary email.',
-      statusCode: 'FORBIDDEN',
-      toastMessage: 'Cannot delete primary email.',
+      statusCode: status.FORBIDDEN,
     })
   }
 
@@ -409,9 +425,10 @@ export async function deleteEmailHandler(
   })
 
   if (!emailExistsForUser) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Email does not exist.',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 
@@ -464,9 +481,10 @@ export async function deleteUserAccountHandler(
   })
 
   if (!user) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Bad request',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 

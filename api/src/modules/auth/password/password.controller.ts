@@ -6,7 +6,7 @@ import type {
 import type { Response } from 'express'
 import status from 'http-status'
 
-import { HttpError } from '../../../lib/http-error.js'
+import { createErrorResponse } from '../../../utils/create-http-error-response.js'
 import type { TypedRequestBody } from '../../../utils/typed-request.js'
 import {
   getPasswordResetToken,
@@ -52,25 +52,29 @@ export async function resetPasswordHandler(
   })
 
   if (!code.expiresAt) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Invalid reset token',
       toastMessage: 'Invalid reset token.',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 
   if (code.expiresAt < new Date()) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Invalid reset token',
       toastMessage: 'Code expired!',
-      statusCode: 'BAD_REQUEST',
+      statusCode: status.BAD_REQUEST,
     })
   }
 
   if (!code.id) {
-    throw new HttpError({
+    return createErrorResponse({
+      res,
       message: 'Token not found',
-      statusCode: 'BAD_REQUEST',
+      toastMessage: 'Code expired!',
+      statusCode: status.BAD_REQUEST,
     })
   }
 
