@@ -59,7 +59,7 @@ export const transactionsTableColumns = [
   columnHelper.display({
     id: 'options',
     header: 'Options',
-    cell: ({ row }) => {
+    cell: () => {
       return <TransactionTableMenu />
     },
   }),
