@@ -1,5 +1,6 @@
 import { MoreHorizontal } from 'lucide-react'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -9,12 +10,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { TransactionCategoryIcon } from '@/features/transactions/components/transaction-category-icon'
+import { cn } from '@/lib/utils'
 
 const invoices = [
   {
     date: new Date().toISOString(),
     description: 'coffee store',
-    category: 'grocery',
+    category: 'groceries',
     amount: -10,
   },
   {
@@ -26,7 +29,7 @@ const invoices = [
   {
     date: new Date(new Date().getTime() - 172800000).toISOString(), // Two days ago
     description: 'online course',
-    category: 'education',
+    category: 'transportation',
     amount: -50,
   },
   {
@@ -38,7 +41,7 @@ const invoices = [
   {
     date: new Date(new Date().getTime() - 345600000).toISOString(), // Four days ago
     description: 'restaurant dinner',
-    category: 'food',
+    category: 'foodAndDrink',
     amount: -75,
   },
   {
@@ -73,6 +76,12 @@ const invoices = [
   },
 ]
 
+const formatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+})
+
 export const TransactionsTable = () => {
   return (
     <div className="flex flex-col rounded-lg border p-2">
@@ -101,11 +110,28 @@ export const TransactionsTable = () => {
           {invoices.map((invoice) => (
             <TableRow key={invoice.description}>
               <TableCell className="p-4 font-medium">
-                {new Date(invoice.date).toLocaleString()}
+                {formatter.format(new Date(invoice.date))}
               </TableCell>
-              <TableCell className="p-4">{invoice.description}</TableCell>
-              <TableCell className="p-4">{invoice.category}</TableCell>
-              <TableCell className="p-4 text-right">{invoice.amount}</TableCell>
+              <TableCell className="p-4">
+                <div className="flex items-center gap-2">
+                  <TransactionCategoryIcon category={invoice.category} />
+                  {invoice.description}
+                </div>
+              </TableCell>
+              <TableCell className="p-4">
+                <Badge variant={'outline'}>{invoice.category}</Badge>
+              </TableCell>
+              <TableCell className="p-4 text-right">
+                <span
+                  className={cn(
+                    invoice.amount > 0 ? 'text-green-500' : 'text-red-500',
+                    'font-semibold',
+                  )}>
+                  {invoice.amount > 0
+                    ? `+$${invoice.amount}`
+                    : `-${invoice.amount}`}
+                </span>
+              </TableCell>
               <TableCell className="p-4 text-right">
                 <Button type="button" size={'sm'} variant={'outline'}>
                   <MoreHorizontal />

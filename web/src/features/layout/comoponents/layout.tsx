@@ -100,7 +100,7 @@ export function Layout({ children }: { children: ReactNode }) {
             )}
           </div>
         </header>
-        <main className="mx-auto min-h-[calc(100dvh-4rem)] w-full p-6 [view-transition-name:content] md:container md:rounded-tl-2xl lg:p-10">
+        <main className="mx-auto min-h-[calc(100dvh-4rem)] w-full p-4 [view-transition-name:content] md:container md:rounded-tl-2xl lg:p-10">
           {children}
         </main>
       </div>

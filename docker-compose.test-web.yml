@@ -7,10 +7,6 @@ services:
     build:
       target: test
       dockerfile: ./web/web.Dockerfile
-    volumes:
-      - ./web/index.html:/app/web/index.html
-      - ./web/src:/app/web/src
-      - ./shared:/app/shared
     environment:
       - VITE_PORT=${WEB_PORT}
       - VITE_API_URL=http://localhost:3001
@@ -24,10 +20,6 @@ services:
     build:
       target: test
       dockerfile: ./web/web.Dockerfile
-    volumes:
-      - ./web/index.html:/app/web/index.html
-      - ./web/src:/app/web/src
-      - ./shared:/app/shared
     environment:
       - VITE_PORT=3000
       - VITE_API_URL=http://localhost:3001
@@ -41,10 +33,6 @@ services:
     build:
       target: test
       dockerfile: ./web/web.Dockerfile
-    volumes:
-      - ./web/index.html:/app/web/index.html
-      - ./web/src:/app/web/src
-      - ./shared:/app/shared
     environment:
       - VITE_PORT=3000
       - VITE_API_URL=http://localhost:3001

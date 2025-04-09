@@ -12,9 +12,22 @@ export const categoriesSchema = z.union([
 
 export type Category = z.infer<typeof categoriesSchema>
 
-export const addTransactionMutation = z.object({
-  description: z.string().optional(),
-  category: categoriesSchema,
-  amount: z.number().min(-999_999).max(999_999),
-  date: z.string(),
-})
+export const addTransactionMutation = z
+  .object({
+    description: z.string().optional(),
+    category: categoriesSchema,
+    amount: z.number().min(-999_999).max(999_999),
+    date: z.string(),
+  })
+  .refine(
+    ({ amount }) => {
+      if (amount === 0) {
+        return false
+      }
+      return true
+    },
+    {
+      message: 'Amount cannot be 0.',
+      path: ['amount'],
+    },
+  )
