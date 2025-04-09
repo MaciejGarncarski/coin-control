@@ -1,9 +1,9 @@
 generator client {
-  provider     = "prisma-client" 
-  output       = "../src/generated/prisma"
-  moduleFormat = "esm"
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
   previewFeatures = ["relationJoins"]
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
+  moduleFormat    = "esm"
 }
 
 datasource db {
@@ -87,7 +87,33 @@ model users {
   email_verification   email_verification[]
   reset_password_codes reset_password_codes[]
   sessions             sessions[]
+  transactions         transactions[]
   user_emails          user_emails[]
 
   @@index([email], map: "idx_users_email")
+}
+
+model transactions {
+  transaction_id   String                @id @db.Uuid
+  user_id          String                @db.Uuid
+  transaction_date DateTime              @db.Timestamptz(6)
+  amount           Decimal               @db.Decimal(15, 2)
+  description      String?
+  category         transaction_category?
+  users            users                 @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([transaction_date], map: "idx_transaction_date")
+  @@index([user_id], map: "idx_user_id")
+  @@index([category], map: "idx_category")
+}
+
+enum transaction_category {
+  other
+  transportation
+  groceries
+  income
+  foodAndDrink
+  utilities
+  housing
+  shopping
 }

@@ -1,8 +1,15 @@
-import type { Category } from '@shared/schemas'
-import { MoreHorizontal } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
+import { useNavigate, useSearch } from '@tanstack/react-router'
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useMemo } from 'react'
 
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -11,139 +18,148 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { TransactionCategoryIcon } from '@/features/transactions/components/transaction-category-icon'
-import { cn } from '@/lib/utils'
-
-const invoices = [
-  {
-    date: new Date().toISOString(),
-    description: 'coffee store',
-    category: 'groceries',
-    amount: -10,
-  },
-  {
-    date: new Date(new Date().getTime() - 86400000).toISOString(), // Yesterday
-    description: 'salary',
-    category: 'income',
-    amount: 2000,
-  },
-  {
-    date: new Date(new Date().getTime() - 172800000).toISOString(), // Two days ago
-    description: 'online course',
-    category: 'transportation',
-    amount: -50,
-  },
-  {
-    date: new Date(new Date().getTime() - 259200000).toISOString(), // Three days ago
-    description: 'gas station',
-    category: 'transport',
-    amount: -30,
-  },
-  {
-    date: new Date(new Date().getTime() - 345600000).toISOString(), // Four days ago
-    description: 'restaurant dinner',
-    category: 'foodAndDrink',
-    amount: -75,
-  },
-  {
-    date: new Date(new Date().getTime() - 432000000).toISOString(), // Five days ago
-    description: 'online store purchase',
-    category: 'shopping',
-    amount: -120,
-  },
-  {
-    date: new Date(new Date().getTime() - 518400000).toISOString(), // Six days ago
-    description: 'rent payment',
-    category: 'housing',
-    amount: -800,
-  },
-  {
-    date: new Date(new Date().getTime() - 604800000).toISOString(), // Seven days ago.
-    description: 'Interest Income',
-    category: 'income',
-    amount: 15,
-  },
-  {
-    date: new Date(new Date().getTime() - 691200000).toISOString(), // Eight days ago.
-    description: 'Streaming service',
-    category: 'entertainment',
-    amount: -12,
-  },
-  {
-    date: new Date(new Date().getTime() - 777600000).toISOString(), // Nine days ago.
-    description: 'Phone bill',
-    category: 'utilities',
-    amount: -60,
-  },
-]
-
-const formatter = new Intl.DateTimeFormat('en-US', {
-  month: 'short',
-  day: 'numeric',
-  year: 'numeric',
-})
+import {
+  getTransactionQueryOptions,
+  useGetTransactions,
+} from '@/features/transactions/api/get-transaction'
+import { transactionsTableColumns } from '@/features/transactions/components/transactions-table-columns'
 
 export const TransactionsTable = () => {
+  const transactions = useGetTransactions()
+  const search = useSearch({ from: '/_authenticated/transactions' })
+  const navigate = useNavigate({ from: '/transactions' })
+  const queryClient = useQueryClient()
+
+  const tableData = useMemo(
+    () =>
+      transactions.isLoading
+        ? Array(10).fill({})
+        : (transactions.data?.transactions ?? []),
+    [transactions.isLoading, transactions.data?.transactions],
+  )
+
+  const columnsMemo = useMemo(
+    () =>
+      transactions.isLoading
+        ? transactionsTableColumns.map((column) => ({
+            ...column,
+            cell: () => <Skeleton className="h-8" />,
+          }))
+        : transactionsTableColumns,
+    [transactions.isLoading],
+  )
+
+  const table = useReactTable({
+    columns: columnsMemo,
+    data: tableData,
+    getCoreRowModel: getCoreRowModel(),
+  })
+
   return (
-    <div className="flex flex-col rounded-lg border p-2">
-      <div className="p-4 text-2xl font-semibold">
-        <h3>All transactions</h3>
+    <div>
+      <div className="flex flex-col rounded-lg border">
+        <div className="p-4 text-2xl font-semibold">
+          <h3>All transactions</h3>
+        </div>
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      className="p-4">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}>
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <TableCell key={cell.id} className="p-4">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    )
+                  })}
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="text-muted-foreground w-[100px] p-4 text-sm">
-              Date
-            </TableHead>
-            <TableHead className="text-muted-foreground p-4 text-sm">
-              Description
-            </TableHead>
-            <TableHead className="text-muted-foreground p-4 text-sm">
-              Category
-            </TableHead>
-            <TableHead className="text-muted-foreground p-4 text-right text-sm">
-              Amount
-            </TableHead>
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.description}>
-              <TableCell className="p-4 font-medium">
-                {formatter.format(new Date(invoice.date))}
-              </TableCell>
-              <TableCell className="p-4">
-                <div className="flex items-center gap-2">
-                  <TransactionCategoryIcon
-                    category={invoice.category as Category}
-                  />
-                  {invoice.description}
-                </div>
-              </TableCell>
-              <TableCell className="p-4">
-                <Badge variant={'outline'}>{invoice.category}</Badge>
-              </TableCell>
-              <TableCell className="p-4 text-right">
-                <span
-                  className={cn(
-                    invoice.amount > 0 ? 'text-green-500' : 'text-red-500',
-                    'font-semibold',
-                  )}>
-                  {invoice.amount > 0
-                    ? `+$${invoice.amount}`
-                    : `-${invoice.amount}`}
-                </span>
-              </TableCell>
-              <TableCell className="p-4 text-right">
-                <Button type="button" size={'sm'} variant={'outline'}>
-                  <MoreHorizontal />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <div className="flex justify-center">
+        <div className="flex items-center justify-center gap-4 py-4">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={Number(search.page) - 1 < 1}
+            onClick={() =>
+              navigate({
+                search: {
+                  page: Number(search.page) - 1,
+                  dateFrom: search.dateFrom,
+                  dateTo: search.dateTo,
+                },
+                viewTransition: false,
+              })
+            }>
+            <ChevronLeft />
+            Previous
+          </Button>
+          <p className="text-muted-foreground">
+            Page <span className="font-semibold">{search.page}</span> from{' '}
+            <span className="font-semibold">
+              {transactions.data?.maxPages || 1}
+            </span>
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onMouseOver={() => {
+              queryClient.prefetchQuery(
+                getTransactionQueryOptions({
+                  dateFrom: search.dateFrom || null,
+                  dateTo: search.dateTo || null,
+                  page: (Number(search.page) + 1).toString(),
+                }),
+              )
+            }}
+            disabled={
+              Number(search.page) - 1 >= (transactions.data?.maxPages || 1) - 1
+            }
+            onClick={() =>
+              navigate({
+                search: {
+                  page: Number(search.page) + 1,
+                  dateFrom: search.dateFrom,
+                  dateTo: search.dateTo,
+                },
+                viewTransition: false,
+              })
+            }>
+            Next
+            <ChevronRight />
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }
