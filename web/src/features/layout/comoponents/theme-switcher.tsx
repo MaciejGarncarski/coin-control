@@ -1,4 +1,4 @@
-import { MonitorCog, Moon, Sun, SunMoon } from 'lucide-react'
+import { Laptop, Moon, Sun } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -22,10 +22,9 @@ export function ThemeSwitcher({ withText = false }: ThemeSwitcherProps) {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size={withText ? 'sm' : 'icon'}>
           {withText ? <span>Theme</span> : null}
-
           {theme === 'light' && <Sun className="h-[1.2rem] w-[1.2rem]" />}
           {theme === 'dark' && <Moon className="h-[1.2rem] w-[1.2rem]" />}
-          {theme === 'system' && <SunMoon className="h-[1.2rem] w-[1.2rem]" />}
+          {theme === 'system' && <Laptop className="h-[1.2rem] w-[1.2rem]" />}
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
@@ -44,7 +43,7 @@ export function ThemeSwitcher({ withText = false }: ThemeSwitcherProps) {
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('system')}>
           <div className="flex items-center gap-2">
-            <MonitorCog className="h-[1.2rem] w-[1.2rem]" />
+            <Laptop className="h-[1.2rem] w-[1.2rem]" />
             <span>System</span>
           </div>
         </DropdownMenuItem>

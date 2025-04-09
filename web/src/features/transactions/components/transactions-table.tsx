@@ -23,6 +23,7 @@ import {
   useGetTransactions,
 } from '@/features/transactions/api/get-transaction'
 import { transactionsTableColumns } from '@/features/transactions/components/transactions-table-columns'
+import { cn } from '@/lib/utils'
 
 export const TransactionsTable = () => {
   const transactions = useGetTransactions()
@@ -58,10 +59,7 @@ export const TransactionsTable = () => {
   return (
     <div>
       <div className="flex flex-col rounded-lg border">
-        <div className="p-4 text-2xl font-semibold">
-          <h3>All transactions</h3>
-        </div>
-        <Table>
+        <Table className="table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -70,7 +68,10 @@ export const TransactionsTable = () => {
                     <TableHead
                       key={header.id}
                       colSpan={header.colSpan}
-                      className="p-4">
+                      className={cn(
+                        'w-32 p-4',
+                        header.column.columnDef.meta?.isWide && 'w-[20rem]',
+                      )}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -83,7 +84,7 @@ export const TransactionsTable = () => {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="w-auto overflow-x-auto">
             {table.getRowModel().rows.map((row) => {
               return (
                 <TableRow
@@ -91,7 +92,7 @@ export const TransactionsTable = () => {
                   data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => {
                     return (
-                      <TableCell key={cell.id} className="p-4">
+                      <TableCell key={cell.id} className={'px-4 py-1'}>
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),
@@ -105,8 +106,8 @@ export const TransactionsTable = () => {
           </TableBody>
         </Table>
       </div>
-      <div className="flex justify-center">
-        <div className="flex items-center justify-center gap-4 py-4">
+      <div className="mt-4 flex justify-center">
+        <div className="flex items-center justify-center gap-8 p-4">
           <Button
             variant="outline"
             size="sm"
@@ -124,9 +125,9 @@ export const TransactionsTable = () => {
             <ChevronLeft />
             Previous
           </Button>
-          <p className="text-muted-foreground">
-            Page <span className="font-semibold">{search.page}</span> from{' '}
-            <span className="font-semibold">
+          <p className="text-muted-foreground text-sm">
+            Page <span className="font-medium">{search.page}</span> of{' '}
+            <span className="font-medium">
               {transactions.data?.maxPages || 1}
             </span>
           </p>

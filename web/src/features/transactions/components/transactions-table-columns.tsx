@@ -21,12 +21,14 @@ export const transactionsTableColumns = [
   }),
   columnHelper.accessor('description', {
     header: 'Description',
+    meta: {
+      isWide: true,
+    },
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-2">
-          <TransactionCategoryIcon category={row.original.category} />
+        <p className="inline-block max-w-full break-words break-all whitespace-pre-line">
           {row.original.description}
-        </div>
+        </p>
       )
     },
   }),
@@ -34,8 +36,14 @@ export const transactionsTableColumns = [
     header: 'Category',
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-2 font-semibold capitalize">
-          <Badge variant={'outline'}>{row.original.category}</Badge>
+        <div className="capitalize">
+          <Badge variant={'outline'} className="gap-2">
+            <TransactionCategoryIcon
+              category={row.original.category}
+              variant="small"
+            />
+            {row.original.category}
+          </Badge>
         </div>
       )
     },

@@ -24,6 +24,7 @@ export function DatePickerWithRange({
     from: search.dateFrom ? new Date(search.dateFrom) : undefined,
     to: search.dateTo ? new Date(search.dateTo) : undefined,
   })
+
   const navigate = useNavigate({ from: '/transactions' })
 
   const onSelect: SelectRangeEventHandler = (range) => {
@@ -45,9 +46,11 @@ export function DatePickerWithRange({
           <Button
             id="date"
             variant={'outline'}
+            size={'sm'}
             className={cn(
-              'w-[15rem] justify-start text-left font-normal',
+              'justify-start text-left font-normal transition-all duration-200',
               !date && 'text-muted-foreground',
+              date?.from ? (date.to ? 'w-64' : 'w-32') : 'w-32',
             )}>
             <CalendarIcon />
             {date?.from ? (
@@ -71,7 +74,7 @@ export function DatePickerWithRange({
             defaultMonth={date?.from}
             selected={date}
             onSelect={onSelect}
-            numberOfMonths={2}
+            numberOfMonths={1}
           />
         </PopoverContent>
       </Popover>
