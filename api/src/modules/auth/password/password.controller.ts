@@ -52,30 +52,33 @@ export async function resetPasswordHandler(
   })
 
   if (!code.expiresAt) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Invalid reset token',
       toastMessage: 'Invalid reset token.',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   if (code.expiresAt < new Date()) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Invalid reset token',
       toastMessage: 'Code expired!',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   if (!code.id) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Token not found',
       toastMessage: 'Code expired!',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   await resetPassword({

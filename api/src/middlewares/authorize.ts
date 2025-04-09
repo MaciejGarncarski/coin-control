@@ -12,19 +12,21 @@ export function authorize(req: Request, res: Response, next: NextFunction) {
   }
 
   if (!req.session.id) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Unauthorized.',
       statusCode: status.UNAUTHORIZED,
     })
+    return
   }
 
   if (!req.session.userId) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Unauthorized.',
       statusCode: status.UNAUTHORIZED,
     })
+    return
   }
 
   next()

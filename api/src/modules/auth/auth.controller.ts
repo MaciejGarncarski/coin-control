@@ -37,11 +37,12 @@ export async function postLoginHandler(
   const userExists = await checkUserExists({ email })
 
   if (!userExists.ok) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: userExists.error,
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
   const user = userExists.value
 
@@ -51,11 +52,12 @@ export async function postLoginHandler(
   })
 
   if (!passVerified?.ok) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: passVerified.error,
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   const isMinimumOneEmailVerified = user.user_emails.some(
@@ -84,11 +86,12 @@ export async function getUserHandler(req: Request, res: Response) {
   const userData = await getUser({ userId: req.session.userId })
 
   if (!userData.ok) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: userData.error,
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   res.status(status.OK).json(userData.value)
@@ -119,20 +122,22 @@ export async function getUserHandler(req: Request, res: Response) {
 
 export const logoutHandler = async (req: Request, res: Response) => {
   if (!req.session.userId) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Unauthorized.',
       statusCode: status.UNAUTHORIZED,
     })
+    return
   }
 
   req.session.destroy((err) => {
     if (err) {
-      return createErrorResponse({
+      createErrorResponse({
         res,
         message: 'Internal server error.',
         statusCode: status.INTERNAL_SERVER_ERROR,
       })
+      return
     }
 
     res.status(status.OK).json({ message: 'success' })
@@ -147,18 +152,20 @@ export async function registerHandler(
 
   if (!createdUser.ok) {
     if ('toastMessage' in createdUser.error) {
-      return createErrorResponse({
+      createErrorResponse({
         res,
         message: createdUser.error.toastMessage,
         statusCode: status.BAD_REQUEST,
       })
+      return
     }
 
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: createdUser.error.message,
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
   const user = createdUser.value.user
 
@@ -183,21 +190,23 @@ export async function sendEmailVerificationHandler(
   })
 
   if (!userData?.email) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'User email not found.',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   const newestOTP = await getEmailVerificationCode({ userId })
 
   if (!newestOTP.ok) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Internal server error',
       statusCode: status.INTERNAL_SERVER_ERROR,
     })
+    return
   }
 
   const newestOTPData = newestOTP.value
@@ -206,22 +215,25 @@ export async function sendEmailVerificationHandler(
     const codeDate = newestOTPData.expires_at.getTime() - ms('3 minutes')
 
     if (codeDate > Date.now()) {
-      return createErrorResponse({
+      createErrorResponse({
         res,
         message: 'Wait before sending new code.',
         statusCode: status.TOO_MANY_REQUESTS,
       })
+      return
     }
   }
 
   const sentOtp = await getOTP({ email: userData.email, userId: userId })
 
   if (!sentOtp.ok) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       statusCode: status.BAD_REQUEST,
       message: sentOtp.error,
     })
+
+    return
   }
 
   res.status(status.ACCEPTED).json({ message: 'success' })
@@ -238,11 +250,13 @@ export async function verifyAccountHandler(
   })
 
   if (!verified?.ok) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: verified.error,
       statusCode: status.BAD_REQUEST,
     })
+
+    return
   }
 
   res.status(status.OK).json({ message: 'success' })
@@ -281,11 +295,13 @@ export async function logOutEveryDeviceHandler(req: Request, res: Response) {
   req.session.destroy(async (err) => {
     if (err) {
       if (err instanceof Error) {
-        return createErrorResponse({
+        createErrorResponse({
           res,
           message: err.message,
           statusCode: status.INTERNAL_SERVER_ERROR,
         })
+
+        return
       }
     }
 
@@ -315,11 +331,13 @@ export async function logOutDeviceHandler(
   })
 
   if (foundSession?.user_id !== req.session.userId) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Bad request.',
       statusCode: status.BAD_REQUEST,
     })
+
+    return
   }
 
   if (req.sessionID === foundSession.sid) {

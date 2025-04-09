@@ -18,11 +18,12 @@ export const createRateLimiter = (options: Partial<Options>) => {
       sendCommand: (...args: string[]) => redisClient.call(...args),
     }),
     handler: (_, res) => {
-      return createErrorResponse({
+      createErrorResponse({
         res,
         message: 'Too many requests, please try again later.',
         statusCode: status.TOO_MANY_REQUESTS,
       })
+      return
     },
     ...options,
   })

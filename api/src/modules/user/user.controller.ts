@@ -62,11 +62,12 @@ export async function addEmailHandler(
   })
 
   if (userEmailsCount >= USER_EMAILS_LIMIT) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: `Emails limit is ${USER_EMAILS_LIMIT}.`,
       statusCode: status.FORBIDDEN,
     })
+    return
   }
 
   const someUserHasEmail = await db.users.findFirst({
@@ -76,11 +77,12 @@ export async function addEmailHandler(
   })
 
   if (someUserHasEmail?.id) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Already exists',
       statusCode: status.CONFLICT,
     })
+    return
   }
 
   const emailExists = await db.user_emails.findFirst({
@@ -90,11 +92,12 @@ export async function addEmailHandler(
   })
 
   if (emailExists?.user_id) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Already exists',
       statusCode: status.CONFLICT,
     })
+    return
   }
 
   const myEmails = await db.user_emails.findMany({
@@ -104,11 +107,12 @@ export async function addEmailHandler(
   })
 
   if (myEmails.some((myEmails) => myEmails.email === email)) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Already exists',
       statusCode: status.CONFLICT,
     })
+    return
   }
 
   await db.$transaction(async (tx) => {
@@ -163,19 +167,21 @@ export async function resendEmailVerificationHandler(
   })
 
   if (!foundEmail) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Not found.',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   if (foundEmail.user_id !== userId) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Unauthorized.',
       statusCode: status.UNAUTHORIZED,
     })
+    return
   }
 
   const latestToken = await db.email_verification.findFirst({
@@ -202,11 +208,12 @@ export async function resendEmailVerificationHandler(
   const tokenDate = latestToken.expires_at.getTime() - ms('3 minutes')
 
   if (tokenDate > Date.now()) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Wait two minutes before sending new code.',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   await db.email_verification.create({
@@ -255,21 +262,23 @@ export async function verifySecondaryEmailHandler(
   })
 
   if (!foundToken?.id) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Bad request',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   const isExpired = foundToken.expires_at.getTime() < new Date().getTime()
 
   if (isExpired) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Token expired',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   await db.$transaction(async (tx) => {
@@ -314,27 +323,30 @@ export async function setPrimaryEmailHandler(
   })
 
   if (!emailData) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Bad request.',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   if (emailData.is_primary) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Is primary already.',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   if (!emailData.is_verified) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Email not verified.',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   await db.$transaction(async (tx) => {
@@ -348,11 +360,12 @@ export async function setPrimaryEmailHandler(
     })
 
     if (!prevPrimaryEmail) {
-      return createErrorResponse({
+      createErrorResponse({
         res,
         message: 'Bad request.',
         statusCode: status.BAD_REQUEST,
       })
+      return
     }
 
     await db.user_emails.update({
@@ -399,21 +412,23 @@ export async function deleteEmailHandler(
   const userData = await getUser({ userId })
 
   if (!userData.ok) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: userData.error,
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   const isPrimaryEmail = email === userData.value.email
 
   if (isPrimaryEmail) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Cannot delete primary email.',
       statusCode: status.FORBIDDEN,
     })
+    return
   }
 
   const emailExistsForUser = await db.user_emails.findFirst({
@@ -425,11 +440,12 @@ export async function deleteEmailHandler(
   })
 
   if (!emailExistsForUser) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Email does not exist.',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   await db.user_emails.delete({
@@ -481,11 +497,12 @@ export async function deleteUserAccountHandler(
   })
 
   if (!user) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'Bad request',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   await db.users.delete({

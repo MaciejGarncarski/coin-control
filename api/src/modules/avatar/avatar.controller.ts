@@ -24,21 +24,23 @@ export async function uploadUserAvatarHandler(req: Request, res: Response) {
   const avatarFiles = files.avatar
 
   if (!avatarFiles) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'No image provided',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   const avatar = avatarFiles[0]
 
   if (!avatar) {
-    return createErrorResponse({
+    createErrorResponse({
       res,
       message: 'No image provided',
       statusCode: status.BAD_REQUEST,
     })
+    return
   }
 
   const userData = await db.users.findFirst({
