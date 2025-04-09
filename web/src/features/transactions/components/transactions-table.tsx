@@ -1,3 +1,4 @@
+import type { Category } from '@shared/schemas'
 import { MoreHorizontal } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
@@ -114,7 +115,9 @@ export const TransactionsTable = () => {
               </TableCell>
               <TableCell className="p-4">
                 <div className="flex items-center gap-2">
-                  <TransactionCategoryIcon category={invoice.category} />
+                  <TransactionCategoryIcon
+                    category={invoice.category as Category}
+                  />
                   {invoice.description}
                 </div>
               </TableCell>
