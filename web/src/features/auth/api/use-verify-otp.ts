@@ -1,4 +1,3 @@
-import { ApiError } from '@maciekdev/fetcher'
 import {
   EmailVerificationResponeSchema,
   type EmailVerificationVerifyMutation,
@@ -37,10 +36,8 @@ export const useVerifyOTP = () => {
         toast.dismiss(toastRef.current)
       }
 
-      if (error instanceof ApiError) {
-        if (error.message === 'Invalid OTP code.') {
-          toast.error('Invalid code.')
-        }
+      if (error.formMessage) {
+        toast.error(error.formMessage)
       }
     },
     onSuccess: async () => {

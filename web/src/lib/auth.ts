@@ -16,6 +16,7 @@ export const getUser = async () => {
     method: 'GET',
     url: '/auth/me',
     schema: userSchema,
+    throwOnError: true,
   })
 
   return response

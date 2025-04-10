@@ -1,4 +1,3 @@
-import { ApiError } from '@maciekdev/fetcher'
 import { Check } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
@@ -20,7 +19,7 @@ export function ResendEmailVerificationButton({ email, closeMenu }: Props) {
   const { isPending, mutate, error, reset } =
     useResendSecondaryEmailVerification()
 
-  const hasActiveOTPAlready = error instanceof ApiError
+  const hasActiveOTPAlready = error?.type === 'api'
 
   useEffect(() => {
     if (!hasActiveOTPAlready) {

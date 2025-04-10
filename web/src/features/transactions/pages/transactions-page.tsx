@@ -1,5 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { Download, X } from 'lucide-react'
+import { useState } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 
 import { Button } from '@/components/ui/button'
 import { DatePickerWithRange } from '@/components/ui/date-range-picker'
@@ -8,6 +10,33 @@ import { TransactionsForm } from '@/features/transactions/components/transaction
 import { TransactionsTable } from '@/features/transactions/components/transactions-table'
 
 export const TransactionsPage = () => {
+  const [inputVal, setInputVal] = useState<string>('')
+
+  const debounced = useDebouncedCallback(
+    (value) => {
+      if (value.trim() === '') {
+        navigate({
+          search: (prev) => ({
+            page: prev.page,
+            dateFrom: prev.dateFrom,
+            dateTo: prev.dateTo,
+          }),
+        })
+        return
+      }
+
+      navigate({
+        search: (prev) => ({
+          ...prev,
+          page: 1,
+          search: value,
+        }),
+      })
+    },
+    500,
+    { maxWait: 2000 },
+  )
+
   const navigate = useNavigate({ from: '/transactions' })
 
   const resetFilters = () => {
@@ -43,6 +72,11 @@ export const TransactionsPage = () => {
               <Input
                 placeholder="Search transactions..."
                 type="search"
+                value={inputVal}
+                onChange={(e) => {
+                  debounced(e.target.value)
+                  setInputVal(e.target.value)
+                }}
                 className="h-8 w-52"
               />
               <Button

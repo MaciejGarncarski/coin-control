@@ -1,6 +1,9 @@
-import { type ApiError, z } from '@shared/schemas'
 import type { NextFunction, Request, Response } from 'express'
 import { status } from 'http-status'
+import { z } from 'zod'
+
+import { ApiError } from '../utils/api-error.js'
+import { ValidationError } from '../utils/validation-error.js'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function validateData(schema: z.ZodObject<any, any> | z.ZodSchema<any>) {
@@ -10,23 +13,19 @@ export function validateData(schema: z.ZodObject<any, any> | z.ZodSchema<any>) {
       next()
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const errorMessages = error.errors.map((issue: z.ZodIssue) => ({
-          message: `${issue.path.join('.')} is ${issue.message}`,
-        }))
+        const errorMessages = error.errors.map((issue: z.ZodIssue) => {
+          return issue.path.map((el) => el.toString())
+        })
 
-        const apiError: ApiError = {
-          additionalMessage: JSON.stringify(errorMessages),
-          message: `Data validation error`,
-          statusCode: status.BAD_REQUEST,
-        }
-
-        res.status(status.BAD_REQUEST).json(apiError)
+        throw new ValidationError({
+          message: `Body validation error`,
+          paths: errorMessages.toString(),
+        })
       } else {
-        const apiError: ApiError = {
+        throw new ApiError({
           message: 'Internal server error',
           statusCode: status.INTERNAL_SERVER_ERROR,
-        }
-        res.status(status.INTERNAL_SERVER_ERROR).json(apiError)
+        })
       }
     }
   }

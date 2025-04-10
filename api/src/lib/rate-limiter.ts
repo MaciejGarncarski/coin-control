@@ -3,7 +3,7 @@ import rateLimit, { type Options } from 'express-rate-limit'
 import status from 'http-status'
 import { RedisStore } from 'rate-limit-redis'
 
-import { createErrorResponse } from '../utils/create-http-error-response.js'
+import { ApiError } from '../utils/api-error.js'
 
 export const createRateLimiter = (options: Partial<Options>) => {
   return rateLimit({
@@ -17,13 +17,11 @@ export const createRateLimiter = (options: Partial<Options>) => {
       // @ts-expect-error - Known issue: the `call` function is not present in @types/ioredis
       sendCommand: (...args: string[]) => redisClient.call(...args),
     }),
-    handler: (_, res) => {
-      createErrorResponse({
-        res,
+    handler: () => {
+      throw new ApiError({
         message: 'Too many requests, please try again later.',
         statusCode: status.TOO_MANY_REQUESTS,
       })
-      return
     },
     ...options,
   })

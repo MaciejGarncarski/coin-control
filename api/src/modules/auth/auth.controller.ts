@@ -9,7 +9,7 @@ import { status } from 'http-status'
 import ms from 'ms'
 import { UAParser } from 'ua-parser-js'
 
-import { createErrorResponse } from '../../utils/create-http-error-response.js'
+import { ApiError } from '../../utils/api-error.js'
 import type {
   TypedRequestBody,
   TypedRequestParams,
@@ -34,31 +34,12 @@ export async function postLoginHandler(
   const email = req.body.email
   const password = req.body.password
 
-  const userExists = await checkUserExists({ email })
+  const user = await checkUserExists({ email })
 
-  if (!userExists.ok) {
-    createErrorResponse({
-      res,
-      message: userExists.error,
-      statusCode: status.BAD_REQUEST,
-    })
-    return
-  }
-  const user = userExists.value
-
-  const passVerified = await verifyPassword({
+  await verifyPassword({
     password,
     hash: user.password_hash,
   })
-
-  if (!passVerified?.ok) {
-    createErrorResponse({
-      res,
-      message: passVerified.error,
-      statusCode: status.BAD_REQUEST,
-    })
-    return
-  }
 
   const isMinimumOneEmailVerified = user.user_emails.some(
     ({ is_verified }) => is_verified,
@@ -83,18 +64,9 @@ export async function postLoginHandler(
 }
 
 export async function getUserHandler(req: Request, res: Response) {
-  const userData = await getUser({ userId: req.session.userId })
+  const user = await getUser({ userId: req.session.userId })
 
-  if (!userData.ok) {
-    createErrorResponse({
-      res,
-      message: userData.error,
-      statusCode: status.BAD_REQUEST,
-    })
-    return
-  }
-
-  res.status(status.OK).json(userData.value)
+  res.status(status.OK).json(user)
 
   req.session.save(async (e) => {
     if (e) {
@@ -122,22 +94,18 @@ export async function getUserHandler(req: Request, res: Response) {
 
 export const logoutHandler = async (req: Request, res: Response) => {
   if (!req.session.userId) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Unauthorized.',
       statusCode: status.UNAUTHORIZED,
     })
-    return
   }
 
   req.session.destroy((err) => {
     if (err) {
-      createErrorResponse({
-        res,
+      throw new ApiError({
         message: 'Internal server error.',
         statusCode: status.INTERNAL_SERVER_ERROR,
       })
-      return
     }
 
     res.status(status.OK).json({ message: 'success' })
@@ -150,28 +118,9 @@ export async function registerHandler(
 ) {
   const createdUser = await registerUser(req.body)
 
-  if (!createdUser.ok) {
-    if ('toastMessage' in createdUser.error) {
-      createErrorResponse({
-        res,
-        message: createdUser.error.toastMessage,
-        statusCode: status.BAD_REQUEST,
-      })
-      return
-    }
+  req.session.userId = createdUser.user.id
 
-    createErrorResponse({
-      res,
-      message: createdUser.error.message,
-      statusCode: status.BAD_REQUEST,
-    })
-    return
-  }
-  const user = createdUser.value.user
-
-  req.session.userId = user.id
-
-  res.status(status.ACCEPTED).json(user)
+  res.status(status.ACCEPTED).json(createdUser.user)
   return
 }
 
@@ -190,51 +139,34 @@ export async function sendEmailVerificationHandler(
   })
 
   if (!userData?.email) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'User email not found.',
       statusCode: status.BAD_REQUEST,
     })
-    return
   }
 
   const newestOTP = await getEmailVerificationCode({ userId })
 
-  if (!newestOTP.ok) {
-    createErrorResponse({
-      res,
+  if (!newestOTP) {
+    throw new ApiError({
       message: 'Internal server error',
+      additionalMessage: 'Cannot generate OTP',
       statusCode: status.INTERNAL_SERVER_ERROR,
     })
-    return
   }
 
-  const newestOTPData = newestOTP.value
-
-  if (newestOTPData?.expires_at) {
-    const codeDate = newestOTPData.expires_at.getTime() - ms('3 minutes')
+  if (newestOTP.expires_at) {
+    const codeDate = newestOTP.expires_at.getTime() - ms('3 minutes')
 
     if (codeDate > Date.now()) {
-      createErrorResponse({
-        res,
+      throw new ApiError({
         message: 'Wait before sending new code.',
         statusCode: status.TOO_MANY_REQUESTS,
       })
-      return
     }
   }
 
-  const sentOtp = await getOTP({ email: userData.email, userId: userId })
-
-  if (!sentOtp.ok) {
-    createErrorResponse({
-      res,
-      statusCode: status.BAD_REQUEST,
-      message: sentOtp.error,
-    })
-
-    return
-  }
+  await getOTP({ email: userData.email, userId: userId })
 
   res.status(status.ACCEPTED).json({ message: 'success' })
   return
@@ -244,20 +176,10 @@ export async function verifyAccountHandler(
   req: TypedRequestBody<EmailVerificationVerifyMutation>,
   res: Response,
 ) {
-  const verified = await verifyAccount({
+  await verifyAccount({
     code: req.body.code,
     userId: req.session.userId,
   })
-
-  if (!verified?.ok) {
-    createErrorResponse({
-      res,
-      message: verified.error,
-      statusCode: status.BAD_REQUEST,
-    })
-
-    return
-  }
 
   res.status(status.OK).json({ message: 'success' })
 }
@@ -295,13 +217,10 @@ export async function logOutEveryDeviceHandler(req: Request, res: Response) {
   req.session.destroy(async (err) => {
     if (err) {
       if (err instanceof Error) {
-        createErrorResponse({
-          res,
+        throw new ApiError({
           message: err.message,
           statusCode: status.INTERNAL_SERVER_ERROR,
         })
-
-        return
       }
     }
 
@@ -331,13 +250,10 @@ export async function logOutDeviceHandler(
   })
 
   if (foundSession?.user_id !== req.session.userId) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Bad request.',
       statusCode: status.BAD_REQUEST,
     })
-
-    return
   }
 
   if (req.sessionID === foundSession.sid) {

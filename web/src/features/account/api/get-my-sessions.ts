@@ -1,6 +1,6 @@
 import { mySessionSchema } from '@shared/schemas'
-import { z } from '@shared/schemas'
 import { queryOptions, useQuery } from '@tanstack/react-query'
+import { z } from 'zod'
 
 import { fetcher } from '@/lib/fetcher'
 

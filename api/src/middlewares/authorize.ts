@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from 'express'
 import status from 'http-status'
 
 import { env } from '../config/env.js'
-import { createErrorResponse } from '../utils/create-http-error-response.js'
+import { ApiError } from '../utils/api-error.js'
 
 export function authorize(req: Request, res: Response, next: NextFunction) {
   if (env.NODE_ENV === 'test') {
@@ -12,21 +12,17 @@ export function authorize(req: Request, res: Response, next: NextFunction) {
   }
 
   if (!req.session.id) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Unauthorized.',
       statusCode: status.UNAUTHORIZED,
     })
-    return
   }
 
   if (!req.session.userId) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Unauthorized.',
       statusCode: status.UNAUTHORIZED,
     })
-    return
   }
 
   next()

@@ -1,4 +1,4 @@
-import { z } from '@shared/schemas'
+import { z } from 'zod'
 
 const createEnv = () => {
   const EnvSchema = z.object({

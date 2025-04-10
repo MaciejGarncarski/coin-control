@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ApiError } from '@maciekdev/fetcher'
 import { type CheckedState } from '@radix-ui/react-checkbox'
 import { registerMutationSchema } from '@shared/schemas'
 import { Link } from '@tanstack/react-router'
@@ -68,15 +67,14 @@ export function RegisterPage() {
           <Logo />
         </CardTitle>
         <CardDescription>Register to CoinControl</CardDescription>
-        {registerMutation.isError &&
-          registerMutation.error instanceof ApiError && (
-            <Alert variant={'destructive'} className="animate-in fade-in mt-3">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                {registerMutation.error.message}
-              </AlertDescription>
-            </Alert>
-          )}
+        {registerMutation.isError && (
+          <Alert variant={'destructive'} className="animate-in fade-in mt-3">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              {registerMutation.error.formMessage || 'Error, try again later.'}
+            </AlertDescription>
+          </Alert>
+        )}
       </CardHeader>
       <CardContent>
         <Form {...form}>

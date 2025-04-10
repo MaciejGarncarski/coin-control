@@ -53,7 +53,9 @@ export const LoginPage = () => {
         {loginMutation.isError && (
           <Alert variant={'destructive'} className={cn('bg-card mt-3')}>
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{loginMutation.error.message}</AlertDescription>
+            <AlertDescription>
+              {loginMutation.error.formMessage || 'Error, try again later.'}
+            </AlertDescription>
           </Alert>
         )}
       </CardHeader>

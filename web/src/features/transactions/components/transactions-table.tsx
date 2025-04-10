@@ -70,7 +70,7 @@ export const TransactionsTable = () => {
                       colSpan={header.colSpan}
                       className={cn(
                         'w-32 p-4',
-                        header.column.columnDef.meta?.isWide && 'w-[20rem]',
+                        header.column.columnDef.meta?.isWide && 'md:w-[20rem]',
                       )}>
                       {header.isPlaceholder
                         ? null
@@ -118,6 +118,7 @@ export const TransactionsTable = () => {
                   page: Number(search.page) - 1,
                   dateFrom: search.dateFrom,
                   dateTo: search.dateTo,
+                  search: search.search,
                 },
                 viewTransition: false,
               })
@@ -140,6 +141,7 @@ export const TransactionsTable = () => {
                   dateFrom: search.dateFrom || null,
                   dateTo: search.dateTo || null,
                   page: (Number(search.page) + 1).toString(),
+                  search: search.search || null,
                 }),
               )
             }}
@@ -152,6 +154,7 @@ export const TransactionsTable = () => {
                   page: Number(search.page) + 1,
                   dateFrom: search.dateFrom,
                   dateTo: search.dateTo,
+                  search: search.search,
                 },
                 viewTransition: false,
               })

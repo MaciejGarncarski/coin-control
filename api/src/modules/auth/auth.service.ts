@@ -1,15 +1,17 @@
 import { hash, verify } from '@node-rs/argon2'
 import { db } from '@shared/database'
 import { QUEUES } from '@shared/queues'
-import { type RegisterMutation, z } from '@shared/schemas'
+import { type RegisterMutation } from '@shared/schemas'
+import status from 'http-status'
 import ms from 'ms'
 import type { IResult } from 'ua-parser-js'
 import { v7 } from 'uuid'
+import { z } from 'zod'
 
 import { emailVerificationQueue } from '../../lib/queues/email-verification.js'
+import { ApiError } from '../../utils/api-error.js'
 import { generateOTP } from '../../utils/generate-otp.js'
 import { getUserLocation } from '../../utils/get-user-location.js'
-import { failure, success } from '../../utils/result.js'
 import { userDTO } from './user.dto.js'
 
 type CheckUserExistsProps = {
@@ -36,7 +38,10 @@ export async function checkUserExists({ email }: CheckUserExistsProps) {
   })
 
   if (!userIdData?.id) {
-    return failure('User not found.')
+    throw new ApiError({
+      message: 'User not found.',
+      statusCode: status.BAD_REQUEST,
+    })
   }
 
   if (!userEmail) {
@@ -69,10 +74,13 @@ export async function checkUserExists({ email }: CheckUserExistsProps) {
   })
 
   if (!user) {
-    return failure('User not found.')
+    throw new ApiError({
+      message: 'User not found.',
+      statusCode: status.BAD_REQUEST,
+    })
   }
 
-  return success(user)
+  return user
 }
 
 type VerifyPasswordProps = {
@@ -84,10 +92,14 @@ export async function verifyPassword({ hash, password }: VerifyPasswordProps) {
   const passwordMatches = await verify(hash, password)
 
   if (!passwordMatches) {
-    return failure('Invalid credentials.')
+    throw new ApiError({
+      message: 'Invalid credentials.',
+      formMessage: 'Invalid credentials.',
+      statusCode: status.BAD_REQUEST,
+    })
   }
 
-  return success('success')
+  return true
 }
 
 export async function registerUser(userData: RegisterMutation) {
@@ -102,7 +114,11 @@ export async function registerUser(userData: RegisterMutation) {
   })
 
   if (user) {
-    return failure({ toastMessage: 'User already exists.' })
+    throw new ApiError({
+      message: 'User already exists.',
+      formMessage: 'User already exists.',
+      statusCode: status.BAD_REQUEST,
+    })
   }
 
   const hashedPassword = await hash(userData.password)
@@ -138,7 +154,11 @@ export async function registerUser(userData: RegisterMutation) {
   })
 
   if (!newUser) {
-    return failure({ message: 'User not found.' })
+    throw new ApiError({
+      message: 'User not found.',
+      formMessage: 'User not found.',
+      statusCode: status.BAD_REQUEST,
+    })
   }
 
   const expires_at = Date.now() + ms('5 minutes')
@@ -177,7 +197,7 @@ export async function registerUser(userData: RegisterMutation) {
     },
   )
 
-  return success({
+  return {
     user: userDTO({
       email: newUser.user.email,
       email_verified: false,
@@ -186,7 +206,7 @@ export async function registerUser(userData: RegisterMutation) {
       avatar_url: newUser.user.avatar_url,
     }),
     userEmailData: newUser.userEmailData,
-  })
+  }
 }
 
 type VerifyAccountProps = {
@@ -207,11 +227,19 @@ export async function verifyAccount({ code, userId }: VerifyAccountProps) {
   })
 
   if (!otp) {
-    return failure('Invalid OTP code.')
+    throw new ApiError({
+      message: 'Invalid code.',
+      formMessage: 'Invalid code.',
+      statusCode: status.BAD_REQUEST,
+    })
   }
 
   if (otp.expires_at < new Date()) {
-    return failure('OTP code expired.')
+    throw new ApiError({
+      message: 'Invalid code.',
+      formMessage: 'Invalid code.',
+      statusCode: status.BAD_REQUEST,
+    })
   }
 
   await db.$transaction(async (tx) => {
@@ -243,7 +271,7 @@ export async function verifyAccount({ code, userId }: VerifyAccountProps) {
     })
   })
 
-  return success('success')
+  return 'success'
 }
 
 type GetOTPPRops = {
@@ -264,7 +292,10 @@ export async function getOTP({ email, userId }: GetOTPPRops) {
   })
 
   if (!userEmailData) {
-    return failure('Bad request')
+    throw new ApiError({
+      message: 'Invalid user.',
+      statusCode: status.BAD_REQUEST,
+    })
   }
 
   await db.$transaction(async (tx) => {
@@ -301,7 +332,7 @@ export async function getOTP({ email, userId }: GetOTPPRops) {
     )
   })
 
-  return success(true)
+  return true
 }
 
 export async function getUser({ userId }: { userId: string }) {
@@ -318,7 +349,10 @@ export async function getUser({ userId }: { userId: string }) {
   })
 
   if (!user) {
-    return failure('User not found')
+    throw new ApiError({
+      message: 'Invalid user.',
+      statusCode: status.BAD_REQUEST,
+    })
   }
 
   const userEmail = await db.user_emails.findFirst({
@@ -328,15 +362,13 @@ export async function getUser({ userId }: { userId: string }) {
     },
   })
 
-  return success(
-    userDTO({
-      email: user.email,
-      email_verified: userEmail ? userEmail.is_verified : false,
-      id: user.id,
-      name: user.name,
-      avatar_url: user.avatar_url,
-    }),
-  )
+  return userDTO({
+    email: user.email,
+    email_verified: userEmail ? userEmail.is_verified : false,
+    id: user.id,
+    name: user.name,
+    avatar_url: user.avatar_url,
+  })
 }
 
 const IPResponseSchema = z.object({
@@ -378,18 +410,16 @@ export async function saveSessionData({
 }
 
 export async function getEmailVerificationCode({ userId }: { userId: string }) {
-  return success(
-    await db.email_verification.findFirst({
-      select: {
-        expires_at: true,
-      },
-      where: {
-        verified: false,
-        user_id: userId,
-      },
-      orderBy: {
-        expires_at: 'desc',
-      },
-    }),
-  )
+  return db.email_verification.findFirst({
+    select: {
+      expires_at: true,
+    },
+    where: {
+      verified: false,
+      user_id: userId,
+    },
+    orderBy: {
+      expires_at: 'desc',
+    },
+  })
 }

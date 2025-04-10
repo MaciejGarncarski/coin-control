@@ -1,5 +1,6 @@
-import { tokenSchema, z } from '@shared/schemas'
+import { tokenSchema } from '@shared/schemas'
 import { createFileRoute, redirect } from '@tanstack/react-router'
+import { z } from 'zod'
 
 import { PasswordResetPage } from '@/features/auth/pages/password-reset-page'
 

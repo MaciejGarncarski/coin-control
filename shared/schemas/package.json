@@ -13,7 +13,7 @@
     "lint-format": "pnpm lint && pnpm format",
     "check-types": "pnpm tsc --skipLibCheck --noEmit"
   },
-  "dependencies": {
+  "peerDependencies": {
     "zod": "^3.24.2"
   },
   "devDependencies": {

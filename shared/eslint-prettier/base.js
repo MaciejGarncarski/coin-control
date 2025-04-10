@@ -19,6 +19,7 @@ export default tseslint.config(
       "unused-imports": unusedImports,
     },
     rules: {
+      "no-unreachable": "error",
       "no-console": "warn",
       "unused-imports/no-unused-imports": "warn",
       "unused-imports/no-unused-vars": "off",

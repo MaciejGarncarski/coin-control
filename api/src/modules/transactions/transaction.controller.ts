@@ -18,7 +18,8 @@ const TRANSACTIONS_PER_PAGE = 10
 type Query = {
   dateFrom: string
   dateTo: string
-  page: string
+  page?: string
+  search?: string
 }
 
 export async function getTransactionsHandler(
@@ -26,18 +27,51 @@ export async function getTransactionsHandler(
   res: Response,
 ) {
   const userId = req.session.userId
-  const currPage = req.query.page
+  const currPage = req.query.page || 1
   const dateFrom = req.query.dateFrom ? new Date(req.query.dateFrom) : undefined
   const dateTo = req.query.dateTo ? new Date(req.query.dateTo) : undefined
 
+  const search = req.query.search
+    ? req.query.search.trim() === ''
+      ? undefined
+      : req.query.search
+    : undefined
+
+  const whereClause = search
+    ? {
+        OR: [
+          {
+            description: {
+              contains: search,
+            },
+          },
+          {
+            description: {
+              startsWith: search,
+            },
+          },
+          {
+            description: {
+              endsWith: search,
+            },
+          },
+        ],
+        user_id: userId,
+        transaction_date: {
+          gte: dateFrom,
+          lte: dateTo,
+        },
+      }
+    : {
+        user_id: userId,
+        transaction_date: {
+          gte: dateFrom,
+          lte: dateTo,
+        },
+      }
+
   const transactions = await db.transactions.findMany({
-    where: {
-      user_id: userId,
-      transaction_date: {
-        gte: dateFrom,
-        lte: dateTo,
-      },
-    },
+    where: whereClause,
     orderBy: {
       transaction_date: 'desc',
     },
@@ -46,16 +80,7 @@ export async function getTransactionsHandler(
   })
 
   const transactionsCount = await db.transactions.count({
-    where: {
-      user_id: userId,
-      transaction_date: {
-        gte: dateFrom,
-        lte: dateTo,
-      },
-    },
-    orderBy: {
-      transaction_date: 'desc',
-    },
+    where: whereClause,
   })
 
   const maxPages = Math.ceil(transactionsCount / TRANSACTIONS_PER_PAGE)

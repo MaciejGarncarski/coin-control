@@ -16,7 +16,7 @@ import ms from 'ms'
 import { v7 } from 'uuid'
 
 import { secondaryEmailVerificationQueue } from '../../lib/queues/secondary-email-verification.js'
-import { createErrorResponse } from '../../utils/create-http-error-response.js'
+import { ApiError } from '../../utils/api-error.js'
 import { getHashCode } from '../../utils/get-hash-code.js'
 import type { TypedRequestBody } from '../../utils/typed-request.js'
 import { getUser } from '../auth/auth.service.js'
@@ -62,12 +62,10 @@ export async function addEmailHandler(
   })
 
   if (userEmailsCount >= USER_EMAILS_LIMIT) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: `Emails limit is ${USER_EMAILS_LIMIT}.`,
       statusCode: status.FORBIDDEN,
     })
-    return
   }
 
   const someUserHasEmail = await db.users.findFirst({
@@ -77,12 +75,10 @@ export async function addEmailHandler(
   })
 
   if (someUserHasEmail?.id) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Already exists',
       statusCode: status.CONFLICT,
     })
-    return
   }
 
   const emailExists = await db.user_emails.findFirst({
@@ -92,12 +88,10 @@ export async function addEmailHandler(
   })
 
   if (emailExists?.user_id) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Already exists',
       statusCode: status.CONFLICT,
     })
-    return
   }
 
   const myEmails = await db.user_emails.findMany({
@@ -107,12 +101,10 @@ export async function addEmailHandler(
   })
 
   if (myEmails.some((myEmails) => myEmails.email === email)) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Already exists',
       statusCode: status.CONFLICT,
     })
-    return
   }
 
   await db.$transaction(async (tx) => {
@@ -167,21 +159,17 @@ export async function resendEmailVerificationHandler(
   })
 
   if (!foundEmail) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Not found.',
       statusCode: status.BAD_REQUEST,
     })
-    return
   }
 
   if (foundEmail.user_id !== userId) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Unauthorized.',
       statusCode: status.UNAUTHORIZED,
     })
-    return
   }
 
   const latestToken = await db.email_verification.findFirst({
@@ -208,12 +196,10 @@ export async function resendEmailVerificationHandler(
   const tokenDate = latestToken.expires_at.getTime() - ms('3 minutes')
 
   if (tokenDate > Date.now()) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Wait two minutes before sending new code.',
       statusCode: status.BAD_REQUEST,
     })
-    return
   }
 
   await db.email_verification.create({
@@ -262,23 +248,19 @@ export async function verifySecondaryEmailHandler(
   })
 
   if (!foundToken?.id) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Bad request',
       statusCode: status.BAD_REQUEST,
     })
-    return
   }
 
   const isExpired = foundToken.expires_at.getTime() < new Date().getTime()
 
   if (isExpired) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Token expired',
       statusCode: status.BAD_REQUEST,
     })
-    return
   }
 
   await db.$transaction(async (tx) => {
@@ -323,30 +305,24 @@ export async function setPrimaryEmailHandler(
   })
 
   if (!emailData) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Bad request.',
       statusCode: status.BAD_REQUEST,
     })
-    return
   }
 
   if (emailData.is_primary) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Is primary already.',
       statusCode: status.BAD_REQUEST,
     })
-    return
   }
 
   if (!emailData.is_verified) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Email not verified.',
       statusCode: status.BAD_REQUEST,
     })
-    return
   }
 
   await db.$transaction(async (tx) => {
@@ -360,12 +336,10 @@ export async function setPrimaryEmailHandler(
     })
 
     if (!prevPrimaryEmail) {
-      createErrorResponse({
-        res,
+      throw new ApiError({
         message: 'Bad request.',
         statusCode: status.BAD_REQUEST,
       })
-      return
     }
 
     await db.user_emails.update({
@@ -411,24 +385,13 @@ export async function deleteEmailHandler(
 
   const userData = await getUser({ userId })
 
-  if (!userData.ok) {
-    createErrorResponse({
-      res,
-      message: userData.error,
-      statusCode: status.BAD_REQUEST,
-    })
-    return
-  }
-
-  const isPrimaryEmail = email === userData.value.email
+  const isPrimaryEmail = email === userData.email
 
   if (isPrimaryEmail) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Cannot delete primary email.',
       statusCode: status.FORBIDDEN,
     })
-    return
   }
 
   const emailExistsForUser = await db.user_emails.findFirst({
@@ -440,12 +403,10 @@ export async function deleteEmailHandler(
   })
 
   if (!emailExistsForUser) {
-    createErrorResponse({
-      res,
+    throw new ApiError({
       message: 'Email does not exist.',
       statusCode: status.BAD_REQUEST,
     })
-    return
   }
 
   await db.user_emails.delete({
@@ -497,12 +458,10 @@ export async function deleteUserAccountHandler(
   })
 
   if (!user) {
-    createErrorResponse({
-      res,
-      message: 'Bad request',
+    throw new ApiError({
+      message: 'Bad request.',
       statusCode: status.BAD_REQUEST,
     })
-    return
   }
 
   await db.users.delete({

@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from '@shared/schemas'
 import { useQuery } from '@tanstack/react-query'
 import { REGEXP_ONLY_DIGITS } from 'input-otp'
 import { MailWarning } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import { LogoutButton } from '@/components/logout-button'
 import { Button } from '@/components/ui/button'

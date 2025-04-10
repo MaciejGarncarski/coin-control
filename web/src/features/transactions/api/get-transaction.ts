@@ -8,19 +8,21 @@ type GetQuery = {
   dateFrom: string | null
   dateTo: string | null
   page: string
+  search: string | null
 }
 
 export const getTransactionQueryOptions = ({
   dateFrom,
   dateTo,
   page,
+  search,
 }: GetQuery) =>
   queryOptions({
-    queryKey: ['transactions', dateFrom, dateTo, page],
+    queryKey: ['transactions', dateFrom, dateTo, page, search],
     queryFn: () => {
       return fetcher({
         method: 'GET',
-        url: `/transactions?page=${page}&dateFrom=${dateFrom || ''}&dateTo=${dateTo || ''}`,
+        url: `/transactions?page=${page}&search=${search || ''}&dateFrom=${dateFrom || ''}&dateTo=${dateTo || ''}`,
         throwOnError: true,
         schema: getTransactionsResponse,
       })
@@ -35,6 +37,7 @@ export const useGetTransactions = () => {
       dateFrom: search.dateFrom || null,
       dateTo: search.dateTo || null,
       page: search.page.toString() || '1',
+      search: search.search || null,
     }),
   )
 }

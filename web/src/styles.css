@@ -135,6 +135,7 @@
     @apply bg-muted text-foreground;
     @apply m-0;
     @apply font-inter;
+    font-smooth: always;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

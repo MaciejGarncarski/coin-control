@@ -1,4 +1,3 @@
-import { ApiError } from '@maciekdev/fetcher'
 import { Check, Mail } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
@@ -14,7 +13,7 @@ export const GetOtpButton = () => {
 
   const { isPending, mutate, error, reset } = useSendEmailVerification()
 
-  const hasActiveOTPAlready = error instanceof ApiError
+  const hasActiveOTPAlready = error?.type === 'api'
 
   useEffect(() => {
     if (!hasActiveOTPAlready) {

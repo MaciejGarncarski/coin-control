@@ -1,5 +1,6 @@
 import './styles.css'
 
+import type { ApiError } from '@shared/schemas'
 import {
   QueryClient,
   QueryClientProvider,
@@ -15,6 +16,12 @@ import { userQueryOptions } from '@/lib/auth'
 import { queryConfig } from '@/lib/react-query'
 
 import { routeTree } from './routeTree.gen'
+
+declare module '@tanstack/react-query' {
+  interface Register {
+    defaultError: ApiError
+  }
+}
 
 const queryClient = new QueryClient({
   defaultOptions: queryConfig,

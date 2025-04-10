@@ -1,4 +1,4 @@
-import { z } from '@shared/schemas'
+import { z } from 'zod'
 
 import { httpLogger } from '../logger/logger.js'
 
@@ -24,7 +24,6 @@ const envSchema = z.object({
 const parsedEnv = envSchema.safeParse(process.env)
 
 if (!parsedEnv.success) {
-  console.log('api', parsedEnv.error.message)
   httpLogger.logger.error(parsedEnv.error.errors)
   process.exit(1)
 }
