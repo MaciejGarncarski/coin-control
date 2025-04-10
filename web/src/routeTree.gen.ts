@@ -16,7 +16,7 @@ import { Route as UnauthenticatedRouteImport } from './routes/_unauthenticated/r
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedTransactionsImport } from './routes/_authenticated/transactions'
-import { Route as AuthenticatedBudgetsImport } from './routes/_authenticated/budgets'
+import { Route as AuthenticatedAnalyticsImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedAccountImport } from './routes/_authenticated/account'
 import { Route as UnauthenticatedAuthIndexImport } from './routes/_unauthenticated/auth/index'
 import { Route as UnauthenticatedAuthRegisterImport } from './routes/_unauthenticated/auth/register'
@@ -55,9 +55,9 @@ const AuthenticatedTransactionsRoute = AuthenticatedTransactionsImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
-const AuthenticatedBudgetsRoute = AuthenticatedBudgetsImport.update({
-  id: '/budgets',
-  path: '/budgets',
+const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
@@ -139,11 +139,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAccountImport
       parentRoute: typeof AuthenticatedRouteImport
     }
-    '/_authenticated/budgets': {
-      id: '/_authenticated/budgets'
-      path: '/budgets'
-      fullPath: '/budgets'
-      preLoaderRoute: typeof AuthenticatedBudgetsImport
+    '/_authenticated/analytics': {
+      id: '/_authenticated/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AuthenticatedAnalyticsImport
       parentRoute: typeof AuthenticatedRouteImport
     }
     '/_authenticated/transactions': {
@@ -209,7 +209,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
-  AuthenticatedBudgetsRoute: typeof AuthenticatedBudgetsRoute
+  AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedAuthVerifyEmailRoute: typeof AuthenticatedAuthVerifyEmailRoute
@@ -217,7 +217,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
-  AuthenticatedBudgetsRoute: AuthenticatedBudgetsRoute,
+  AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
   AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedAuthVerifyEmailRoute: AuthenticatedAuthVerifyEmailRoute,
@@ -250,7 +250,7 @@ export interface FileRoutesByFullPath {
   '': typeof UnauthenticatedRouteRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/account': typeof AuthenticatedAccountRoute
-  '/budgets': typeof AuthenticatedBudgetsRoute
+  '/analytics': typeof AuthenticatedAnalyticsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/': typeof AuthenticatedIndexRoute
   '/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
@@ -265,7 +265,7 @@ export interface FileRoutesByTo {
   '': typeof UnauthenticatedRouteRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/account': typeof AuthenticatedAccountRoute
-  '/budgets': typeof AuthenticatedBudgetsRoute
+  '/analytics': typeof AuthenticatedAnalyticsRoute
   '/transactions': typeof AuthenticatedTransactionsRoute
   '/': typeof AuthenticatedIndexRoute
   '/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
@@ -282,7 +282,7 @@ export interface FileRoutesById {
   '/_unauthenticated': typeof UnauthenticatedRouteRouteWithChildren
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
-  '/_authenticated/budgets': typeof AuthenticatedBudgetsRoute
+  '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
   '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
@@ -299,7 +299,7 @@ export interface FileRouteTypes {
     | ''
     | '/privacy-policy'
     | '/account'
-    | '/budgets'
+    | '/analytics'
     | '/transactions'
     | '/'
     | '/auth/verify-email'
@@ -313,7 +313,7 @@ export interface FileRouteTypes {
     | ''
     | '/privacy-policy'
     | '/account'
-    | '/budgets'
+    | '/analytics'
     | '/transactions'
     | '/'
     | '/auth/verify-email'
@@ -328,7 +328,7 @@ export interface FileRouteTypes {
     | '/_unauthenticated'
     | '/privacy-policy'
     | '/_authenticated/account'
-    | '/_authenticated/budgets'
+    | '/_authenticated/analytics'
     | '/_authenticated/transactions'
     | '/_authenticated/'
     | '/_authenticated/auth/verify-email'
@@ -371,7 +371,7 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/route.tsx",
       "children": [
         "/_authenticated/account",
-        "/_authenticated/budgets",
+        "/_authenticated/analytics",
         "/_authenticated/transactions",
         "/_authenticated/",
         "/_authenticated/auth/verify-email"
@@ -394,8 +394,8 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/account.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/budgets": {
-      "filePath": "_authenticated/budgets.tsx",
+    "/_authenticated/analytics": {
+      "filePath": "_authenticated/analytics.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/transactions": {

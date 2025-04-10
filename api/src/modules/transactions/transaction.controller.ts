@@ -2,11 +2,14 @@ import { db, Prisma } from '@shared/database'
 import type {
   AddTransactionMutation,
   DeleteTransactionParams,
+  GetRecentTransactions,
   GetTransactionsQuery,
   GetTransactionsResponse,
+  RecentTransaction,
 } from '@shared/schemas'
-import { type Response } from 'express'
+import { type Request, type Response } from 'express'
 import status from 'http-status'
+import ms from 'ms'
 import { v7 } from 'uuid'
 
 import type {
@@ -155,5 +158,59 @@ export async function deleteTransactionHandler(
   })
 
   res.status(status.OK).json({ message: 'ok' })
+  return
+}
+
+const RECENT_TRANSACTIONS = 7
+
+export async function getRecentTransactionsHandler(
+  req: Request,
+  res: Response,
+) {
+  const userId = req.session.userId
+
+  const transactionCountThisMonth = await db.transactions.count({
+    where: {
+      user_id: userId,
+      transaction_date: {
+        gte: new Date(Date.now() - ms('30 days')),
+      },
+    },
+  })
+
+  const recentTransactions = await db.transactions.findMany({
+    where: {
+      user_id: userId,
+    },
+    orderBy: {
+      transaction_date: 'desc',
+    },
+    take: RECENT_TRANSACTIONS,
+  })
+
+  const transactionsDto = recentTransactions.map(
+    ({
+      amount,
+      category,
+      description,
+      transaction_id,
+      transaction_date,
+    }): RecentTransaction => {
+      return {
+        amount: parseFloat(parseFloat(amount.toString()).toFixed(2)),
+        category: category || 'other',
+        description,
+        date: transaction_date,
+        transactionId: transaction_id,
+      }
+    },
+  )
+
+  const response: GetRecentTransactions = {
+    recentTransactions: transactionsDto,
+    transactionCountThisMonth,
+  }
+
+  res.status(status.OK).send(response)
   return
 }

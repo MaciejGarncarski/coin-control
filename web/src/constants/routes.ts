@@ -1,8 +1,8 @@
 import {
   ArrowLeftRight,
   Blocks,
+  ChartArea,
   type LucideIcon,
-  PiggyBank,
   User,
 } from 'lucide-react'
 
@@ -26,9 +26,9 @@ export const rotues = [
     url: '/transactions',
   },
   {
-    icon: PiggyBank,
-    text: 'Budgets',
-    url: '/budgets',
+    icon: ChartArea,
+    text: 'Analytics',
+    url: '/analytics',
   },
   {
     icon: User,

@@ -1,17 +1,20 @@
 import { useQuery } from '@tanstack/react-query'
+import { formatRelative } from 'date-fns'
 import { DollarSign, Folder, TrendingDown, TrendingUp } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { TransactionBadge } from '@/components/transactions/transaction-badge'
+import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useRecentTransactions } from '@/features/homepage/api/get-recent-transactions'
 import { useStatistics } from '@/features/homepage/api/get-statistics'
-import { TransactionCategoryIcon } from '@/features/transactions/components/transaction-category-icon'
 import { userQueryOptions } from '@/lib/auth'
+import { cn } from '@/lib/utils'
 
 export const HomePage = () => {
   const user = useQuery(userQueryOptions)
   const stats = useStatistics()
+  const recentTransactions = useRecentTransactions()
 
   if (!user.data?.id) {
     return null
@@ -105,31 +108,67 @@ export const HomePage = () => {
         </Card>
       </div>
 
-      <div className="grid grid-cols-7 gap-4">
-        <Tabs
-          defaultValue="overview"
-          className="col-start-1 col-end-5 flex flex-col gap-4">
-          <TabsList className="md:w-[25rem]">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-            <TabsTrigger value="reports">Reports</TabsTrigger>
-          </TabsList>
-          <TabsContent value="overview">
-            <Card>
-              <CardHeader>Spending Overview</CardHeader>
-            </Card>
-          </TabsContent>
-          <TabsContent value="analytics">
-            Change your password here.
-          </TabsContent>
-        </Tabs>
+      <div className="flex grid-cols-7 flex-col gap-12 md:grid">
+        <Card className="col-start-1 col-end-5">
+          <CardHeader>Spending Overview</CardHeader>
+        </Card>
 
         <div className="col-start-5 col-end-8 flex flex-col gap-4">
-          <Button className="ml-auto" type="button">
-            Export data
-          </Button>
           <Card>
-            <CardHeader>Spending Overview</CardHeader>
+            <CardHeader>
+              <CardTitle>Recent transactions</CardTitle>
+              <span className="text-muted-foreground text-sm">
+                You have made{' '}
+                {recentTransactions.data?.transactionCountThisMonth || 0}{' '}
+                transactions this month.
+              </span>
+            </CardHeader>
+            <CardContent>
+              <ul className="flex flex-col gap-4">
+                {recentTransactions.isLoading
+                  ? Array.from({ length: 6 })
+                      .map((_, i) => i + 1)
+                      .map((i) => {
+                        return (
+                          <li key={i}>
+                            <Skeleton className="h-10" />
+                          </li>
+                        )
+                      })
+                  : null}
+
+                {recentTransactions.data?.recentTransactions.map(
+                  ({ transactionId, category, description, amount, date }) => {
+                    return (
+                      <li
+                        className="flex items-center gap-4"
+                        key={transactionId}>
+                        <TransactionCategoryIcon category={category} />
+                        <div className="flex flex-col">
+                          <h3 className="max-w-[20ch] overflow-hidden text-sm font-semibold overflow-ellipsis">
+                            {description}
+                          </h3>
+                          <p className="text-muted-foreground text-xs">
+                            {formatRelative(date, new Date())}
+                          </p>
+                        </div>
+
+                        <div className="ml-auto flex flex-col items-end">
+                          <p
+                            className={cn(
+                              amount > 0 ? 'text-green-600' : 'text-red-600',
+                            )}>
+                            {amount > 0 ? `+${amount}` : amount}
+                          </p>
+
+                          <TransactionBadge category={category} />
+                        </div>
+                      </li>
+                    )
+                  },
+                )}
+              </ul>
+            </CardContent>
           </Card>
         </div>
       </div>

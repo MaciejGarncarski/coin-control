@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
+import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -30,7 +31,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useAddTransaction } from '@/features/transactions/api/add-transaction'
-import { TransactionCategoryIcon } from '@/features/transactions/components/transaction-category-icon'
 
 export const TransactionsForm = () => {
   const [dialogOpen, setDialogOpen] = useState(false)

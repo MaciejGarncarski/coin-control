@@ -1,4 +1,4 @@
-import { getTransactionsResponse } from '@shared/schemas'
+import { type Category, getTransactionsResponse } from '@shared/schemas'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { useSearch } from '@tanstack/react-router'
 
@@ -10,6 +10,7 @@ type GetQuery = {
   dateTo: string | null
   page: string
   search: string | null
+  category?: Category
 }
 
 export const getTransactionQueryOptions = ({
@@ -17,6 +18,7 @@ export const getTransactionQueryOptions = ({
   dateTo,
   page,
   search,
+  category,
 }: GetQuery) =>
   queryOptions({
     queryKey: [
@@ -25,11 +27,12 @@ export const getTransactionQueryOptions = ({
       dateTo,
       page,
       search,
+      category,
     ],
     queryFn: () => {
       return fetcher({
         method: 'GET',
-        url: `/transactions?page=${page}&search=${search || ''}&dateFrom=${dateFrom || ''}&dateTo=${dateTo || ''}`,
+        url: `/transactions?page=${page}&search=${search || ''}&dateFrom=${dateFrom || ''}&dateTo=${dateTo || ''}&category=${category || ''}`,
         throwOnError: true,
         schema: getTransactionsResponse,
       })

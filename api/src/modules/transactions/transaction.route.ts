@@ -6,6 +6,7 @@ import { validateParams } from '../../middlewares/validator-params.js'
 import {
   addTransactionHandler,
   deleteTransactionHandler,
+  getRecentTransactionsHandler,
   getTransactionsHandler,
 } from './transaction.controller.js'
 
@@ -19,3 +20,4 @@ transactionsRouter.delete(
   validateParams(deleteTransactionParamsSchema),
   deleteTransactionHandler,
 )
+transactionsRouter.get('/recent', authorize, getRecentTransactionsHandler)

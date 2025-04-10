@@ -44,7 +44,7 @@ export const TransactionCategoryIcon = ({ category, variant }: Props) => {
   }
 
   return (
-    <div className="bg-muted/20 flex h-7 w-7 items-center justify-center rounded-full border">
+    <div className="bg-muted/20 flex h-8 w-8 items-center justify-center rounded-full border p-1">
       {categoryIcons[category]}
     </div>
   )

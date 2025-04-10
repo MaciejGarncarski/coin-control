@@ -62,3 +62,17 @@ export const deleteTransactionParamsSchema = z.object({
 export type DeleteTransactionParams = z.infer<
   typeof deleteTransactionParamsSchema
 >
+
+export const recentTransactionSchema = z.object({
+  transactionId: z.string(),
+  description: z.string().nullable(),
+  category: categoriesSchema,
+  amount: z.number(),
+  date: z.coerce.date(),
+})
+export type RecentTransaction = z.infer<typeof recentTransactionSchema>
+export const getRecentTransactions = z.object({
+  recentTransactions: z.array(recentTransactionSchema),
+  transactionCountThisMonth: z.number(),
+})
+export type GetRecentTransactions = z.infer<typeof getRecentTransactions>

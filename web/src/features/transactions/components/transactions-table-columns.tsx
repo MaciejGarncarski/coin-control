@@ -1,8 +1,7 @@
 import type { GetTransactionsQuery } from '@shared/schemas'
 import { createColumnHelper } from '@tanstack/react-table'
 
-import { Badge } from '@/components/ui/badge'
-import { TransactionCategoryIcon } from '@/features/transactions/components/transaction-category-icon'
+import { TransactionBadge } from '@/components/transactions/transaction-badge'
 import { TransactionTableMenu } from '@/features/transactions/components/transaction-table-menu'
 import { cn } from '@/lib/utils'
 
@@ -35,17 +34,7 @@ export const transactionsTableColumns = [
   columnHelper.accessor('category', {
     header: 'Category',
     cell: ({ row }) => {
-      return (
-        <div className="capitalize">
-          <Badge variant={'outline'} className="gap-2">
-            <TransactionCategoryIcon
-              category={row.original.category}
-              variant="small"
-            />
-            {row.original.category}
-          </Badge>
-        </div>
-      )
+      return <TransactionBadge category={row.original.category} withIcon />
     },
   }),
   columnHelper.accessor('amount', {
