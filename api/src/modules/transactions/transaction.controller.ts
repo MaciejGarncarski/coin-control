@@ -1,4 +1,4 @@
-import { db } from '@shared/database'
+import { db, Prisma } from '@shared/database'
 import type {
   AddTransactionMutation,
   GetTransactionsQuery,
@@ -37,22 +37,25 @@ export async function getTransactionsHandler(
       : req.query.search
     : undefined
 
-  const whereClause = search
+  const whereClause: Prisma.transactionsWhereInput = search
     ? {
         OR: [
           {
             description: {
               contains: search,
+              mode: 'insensitive',
             },
           },
           {
             description: {
               startsWith: search,
+              mode: 'insensitive',
             },
           },
           {
             description: {
               endsWith: search,
+              mode: 'insensitive',
             },
           },
         ],
