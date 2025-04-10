@@ -31,7 +31,7 @@ export const Route = createFileRoute('/_authenticated/transactions')({
         dateTo: dateTo || null,
         page: String(page || 1),
         search: search || null,
-        category: category,
+        category: category || null,
       }),
     )
   },
