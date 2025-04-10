@@ -75,9 +75,17 @@ export const TransactionTablePagination = () => {
         dateTo: search.dateTo || null,
         page: (Number(search.page) - 1).toString(),
         search: search.search || null,
+        category: search.category || null,
       }),
     )
-  }, [queryClient, search.dateFrom, search.dateTo, search.page, search.search])
+  }, [
+    queryClient,
+    search.category,
+    search.dateFrom,
+    search.dateTo,
+    search.page,
+    search.search,
+  ])
 
   const prefetchNextPage = useCallback(() => {
     queryClient.prefetchQuery(
@@ -86,9 +94,17 @@ export const TransactionTablePagination = () => {
         dateTo: search.dateTo || null,
         page: (Number(search.page) + 1).toString(),
         search: search.search || null,
+        category: search.category || null,
       }),
     )
-  }, [queryClient, search.dateFrom, search.dateTo, search.page, search.search])
+  }, [
+    queryClient,
+    search.category,
+    search.dateFrom,
+    search.dateTo,
+    search.page,
+    search.search,
+  ])
 
   return (
     <div className="mt-4 flex justify-center">
