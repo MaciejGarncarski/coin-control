@@ -3,6 +3,7 @@ import { DollarSign, Folder, TrendingDown, TrendingUp } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useStatistics } from '@/features/homepage/api/get-statistics'
 import { TransactionCategoryIcon } from '@/features/transactions/components/transaction-category-icon'
@@ -25,12 +26,19 @@ export const HomePage = () => {
             <DollarSign className="text-muted-foreground size-5" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">
-              {stats.data?.totalBalance.value}
-            </p>
-            <p className="text-muted-foreground text-xs">
-              {stats.data?.totalBalance.changeFromLastMonth}% from last month
-            </p>
+            {stats.isLoading ? (
+              <Skeleton className="h-12" />
+            ) : (
+              <>
+                <p className="text-2xl font-bold">
+                  {stats.data?.totalBalance.value}
+                </p>
+                <p className="text-muted-foreground text-xs">
+                  {stats.data?.totalBalance.changeFromLastMonth}% from last
+                  month
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
         <Card className="gap-3">
@@ -39,12 +47,19 @@ export const HomePage = () => {
             <TrendingUp className="text-muted-foreground size-5" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">
-              {stats.data?.thisMonthSpending.value}
-            </p>
-            <p className="text-muted-foreground text-xs">
-              {stats.data?.totalBalance.changeFromLastMonth}% from last month
-            </p>
+            {stats.isLoading ? (
+              <Skeleton className="h-12" />
+            ) : (
+              <>
+                <p className="text-2xl font-bold">
+                  {stats.data?.thisMonthSpending.value}
+                </p>
+                <p className="text-muted-foreground text-xs">
+                  {stats.data?.totalBalance.changeFromLastMonth}% from last
+                  month
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
         <Card className="gap-3">
@@ -53,12 +68,19 @@ export const HomePage = () => {
             <TrendingDown className="text-muted-foreground size-5" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">
-              {stats.data?.thisMonthIncome.value}
-            </p>
-            <p className="text-muted-foreground text-xs">
-              {stats.data?.totalBalance.changeFromLastMonth}% from last month
-            </p>
+            {stats.isLoading ? (
+              <Skeleton className="h-12" />
+            ) : (
+              <>
+                <p className="text-2xl font-bold">
+                  {stats.data?.thisMonthIncome.value}
+                </p>
+                <p className="text-muted-foreground text-xs">
+                  {stats.data?.totalBalance.changeFromLastMonth}% from last
+                  month
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
         <Card className="gap-3">
@@ -67,14 +89,18 @@ export const HomePage = () => {
             <Folder className="text-muted-foreground size-5" />
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-4">
-              <TransactionCategoryIcon
-                category={stats.data?.mostCommonCategoryThisMonth || 'other'}
-              />
-              <p className="text-2xl font-semibold capitalize">
-                {stats.data?.mostCommonCategoryThisMonth || 'other'}
-              </p>
-            </div>
+            {stats.isLoading ? (
+              <Skeleton className="h-12" />
+            ) : (
+              <div className="flex items-center gap-4">
+                <TransactionCategoryIcon
+                  category={stats.data?.mostCommonCategoryThisMonth || 'other'}
+                />
+                <p className="text-2xl font-semibold capitalize">
+                  {stats.data?.mostCommonCategoryThisMonth || 'other'}
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

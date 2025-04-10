@@ -18,31 +18,41 @@ export async function getStatisticsHandler(req: Request, res: Response) {
     },
   })
 
-  const totalBalance = transactions.reduce((result, el) => {
-    return result + Number(el.amount)
-  }, 0)
+  const totalBalance = parseFloat(
+    transactions
+      .reduce((result, el) => {
+        return result + parseFloat(parseFloat(el.amount.toString()).toFixed(2))
+      }, 0)
+      .toFixed(2),
+  )
 
-  const thisMonthSpending = transactions
-    .filter(({ amount, transaction_date }) => {
-      return (
-        Number(amount) < 0 &&
-        transaction_date.getTime() >= Date.now() - ms('30 days')
-      )
-    })
-    .reduce((result, el) => {
-      return result + Number(el.amount)
-    }, 0)
+  const thisMonthSpending = parseFloat(
+    transactions
+      .filter(({ amount, transaction_date }) => {
+        return (
+          Number(amount) < 0 &&
+          transaction_date.getTime() >= Date.now() - ms('30 days')
+        )
+      })
+      .reduce((result, el) => {
+        return result + parseFloat(parseFloat(el.amount.toString()).toFixed(2))
+      }, 0)
+      .toFixed(2),
+  )
 
-  const thisMonthIncome = transactions
-    .filter(({ amount, transaction_date }) => {
-      return (
-        Number(amount) > 0 &&
-        transaction_date.getTime() >= Date.now() - ms('30 days')
-      )
-    })
-    .reduce((result, el) => {
-      return result + Number(el.amount)
-    }, 0)
+  const thisMonthIncome = parseFloat(
+    transactions
+      .filter(({ amount, transaction_date }) => {
+        return (
+          Number(amount) > 0 &&
+          transaction_date.getTime() >= Date.now() - ms('30 days')
+        )
+      })
+      .reduce((result, el) => {
+        return result + parseFloat(parseFloat(el.amount.toString()).toFixed(2))
+      }, 0)
+      .toFixed(2),
+  )
 
   const commonCategories = new Map<Category, number>()
 

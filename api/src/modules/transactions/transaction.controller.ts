@@ -46,18 +46,6 @@ export async function getTransactionsHandler(
               mode: 'insensitive',
             },
           },
-          {
-            description: {
-              startsWith: search,
-              mode: 'insensitive',
-            },
-          },
-          {
-            description: {
-              endsWith: search,
-              mode: 'insensitive',
-            },
-          },
         ],
         user_id: userId,
         transaction_date: {
@@ -94,7 +82,7 @@ export async function getTransactionsHandler(
       transactionId: t.transaction_id,
       description: t.description,
       category: t.category ?? 'other',
-      amount: Number(t.amount),
+      amount: parseFloat(parseFloat(t.amount.toString()).toFixed(2)),
       date: t.transaction_date,
     }),
   )
@@ -139,7 +127,7 @@ export async function addTransactionHandler(
       transactionId: transaction.transaction_id,
       description: transaction.description,
       category: transaction.category ?? 'other',
-      amount: Number(transaction.amount),
+      amount: parseFloat(parseFloat(transaction.amount.toString()).toFixed(2)),
       date: transaction.transaction_date,
     }
 

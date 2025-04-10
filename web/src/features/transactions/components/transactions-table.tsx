@@ -1,14 +1,10 @@
-import { useQueryClient } from '@tanstack/react-query'
-import { useNavigate, useSearch } from '@tanstack/react-router'
 import {
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useMemo } from 'react'
 
-import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
@@ -18,18 +14,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  getTransactionQueryOptions,
-  useGetTransactions,
-} from '@/features/transactions/api/get-transaction'
+import { useGetTransactions } from '@/features/transactions/api/get-transaction'
+import { TransactionTablePagination } from '@/features/transactions/components/transaction-table-pagination'
 import { transactionsTableColumns } from '@/features/transactions/components/transactions-table-columns'
 import { cn } from '@/lib/utils'
 
 export const TransactionsTable = () => {
   const transactions = useGetTransactions()
-  const search = useSearch({ from: '/_authenticated/transactions' })
-  const navigate = useNavigate({ from: '/transactions' })
-  const queryClient = useQueryClient()
 
   const tableData = useMemo(
     () =>
@@ -106,64 +97,7 @@ export const TransactionsTable = () => {
           </TableBody>
         </Table>
       </div>
-      <div className="mt-4 flex justify-center">
-        <div className="flex items-center justify-center gap-8 p-4">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={Number(search.page) - 1 < 1}
-            onClick={() =>
-              navigate({
-                search: {
-                  page: Number(search.page) - 1,
-                  dateFrom: search.dateFrom,
-                  dateTo: search.dateTo,
-                  search: search.search,
-                },
-                viewTransition: false,
-              })
-            }>
-            <ChevronLeft />
-            Previous
-          </Button>
-          <p className="text-muted-foreground text-sm">
-            Page <span className="font-medium">{search.page}</span> of{' '}
-            <span className="font-medium">
-              {transactions.data?.maxPages || 1}
-            </span>
-          </p>
-          <Button
-            variant="outline"
-            size="sm"
-            onMouseOver={() => {
-              queryClient.prefetchQuery(
-                getTransactionQueryOptions({
-                  dateFrom: search.dateFrom || null,
-                  dateTo: search.dateTo || null,
-                  page: (Number(search.page) + 1).toString(),
-                  search: search.search || null,
-                }),
-              )
-            }}
-            disabled={
-              Number(search.page) - 1 >= (transactions.data?.maxPages || 1) - 1
-            }
-            onClick={() =>
-              navigate({
-                search: {
-                  page: Number(search.page) + 1,
-                  dateFrom: search.dateFrom,
-                  dateTo: search.dateTo,
-                  search: search.search,
-                },
-                viewTransition: false,
-              })
-            }>
-            Next
-            <ChevronRight />
-          </Button>
-        </div>
-      </div>
+      <TransactionTablePagination />
     </div>
   )
 }

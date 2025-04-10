@@ -36,7 +36,7 @@ export const TransactionTableMenu = () => {
               variant={'ghost'}
               size={'sm'}
               className="w-full justify-start text-left font-normal">
-              <Edit />
+              <Edit className="text-muted-foreground" />
               Edit
             </Button>
           </DropdownMenuItem>
@@ -50,7 +50,7 @@ export const TransactionTableMenu = () => {
                   variant={'ghost'}
                   size={'sm'}
                   className="w-full justify-start text-left font-normal">
-                  <Trash />
+                  <Trash className="text-muted-foreground" />
                   Delete
                 </Button>
               </AlertDialogTrigger>
