@@ -1,6 +1,7 @@
 import type { DeleteEmailMutation } from '@shared/schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
 import { fetcher } from '@/lib/fetcher'
 
 export const useDeleteEmail = () => {
@@ -16,8 +17,12 @@ export const useDeleteEmail = () => {
       })
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['emails'] })
-      await queryClient.invalidateQueries({ queryKey: ['user'] })
+      await queryClient.invalidateQueries({
+        queryKey: [AUTH_QUERY_KEYS.MY_EMAILS],
+      })
+      await queryClient.invalidateQueries({
+        queryKey: [AUTH_QUERY_KEYS.SESSION],
+      })
     },
   })
 }

@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouteContext } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
+import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
 import { fetcher } from '@/lib/fetcher'
 
 export const useRegisterMutation = () => {
@@ -31,7 +32,7 @@ export const useRegisterMutation = () => {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['user'],
+        queryKey: [AUTH_QUERY_KEYS.SESSION],
       })
       authContext.login()
       toast.success('Register completed.')

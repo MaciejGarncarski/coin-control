@@ -1,6 +1,7 @@
 import type { DeleteUserAccountMutation } from '@shared/schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
 import { fetcher } from '@/lib/fetcher'
 
 export const useDeleteAccount = () => {
@@ -16,7 +17,9 @@ export const useDeleteAccount = () => {
       })
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['user'] })
+      await queryClient.invalidateQueries({
+        queryKey: [AUTH_QUERY_KEYS.SESSION],
+      })
     },
   })
 }

@@ -1,6 +1,7 @@
 import { emailsResponseSchema } from '@shared/schemas'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 
+import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
 import { fetcher } from '@/lib/fetcher'
 
 export const getUserEmails = async () => {
@@ -14,7 +15,7 @@ export const getUserEmails = async () => {
 }
 
 export const getUserEmailsQueryOptions = queryOptions({
-  queryKey: ['emails'],
+  queryKey: [AUTH_QUERY_KEYS.MY_EMAILS],
   queryFn: getUserEmails,
 })
 
