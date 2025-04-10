@@ -7,6 +7,7 @@ export const notFoundMiddleware = (req: Request, res: Response) => {
     message: 'Route not found.',
     additionalMessage: `Route ${req.path} not found.`,
     statusCode: status.NOT_FOUND,
+    type: 'api',
   }
 
   res.status(status.NOT_FOUND).json(resMessage)
