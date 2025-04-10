@@ -20,8 +20,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useDeleteTransaction } from '@/features/transactions/api/delete-transaction'
 
-export const TransactionTableMenu = () => {
+type Props = {
+  transactionId: string
+}
+
+export const TransactionTableMenu = ({ transactionId }: Props) => {
+  const deleteMutation = useDeleteTransaction()
+
+  const deleteTransaction = () => {
+    deleteMutation.mutate(transactionId)
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -63,7 +74,9 @@ export const TransactionTableMenu = () => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction>Continue</AlertDialogAction>
+                  <AlertDialogAction onClick={deleteTransaction}>
+                    Continue
+                  </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>

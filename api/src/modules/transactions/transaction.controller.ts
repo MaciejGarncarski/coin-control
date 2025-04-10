@@ -1,6 +1,7 @@
 import { db, Prisma } from '@shared/database'
 import type {
   AddTransactionMutation,
+  DeleteTransactionParams,
   GetTransactionsQuery,
   GetTransactionsResponse,
 } from '@shared/schemas'
@@ -10,6 +11,7 @@ import { v7 } from 'uuid'
 
 import type {
   TypedRequestBody,
+  TypedRequestParams,
   TypedRequestQuery,
 } from '../../utils/typed-request.js'
 
@@ -136,4 +138,22 @@ export async function addTransactionHandler(
   } catch (error) {
     res.status(status.BAD_REQUEST).json({ message: 'Invalid data' })
   }
+}
+
+export async function deleteTransactionHandler(
+  req: TypedRequestParams<DeleteTransactionParams>,
+  res: Response,
+) {
+  const userId = req.session.userId
+  const transactionId = req.params.transactionId
+
+  await db.transactions.delete({
+    where: {
+      transaction_id: transactionId,
+      user_id: userId,
+    },
+  })
+
+  res.status(status.OK).json({ message: 'ok' })
+  return
 }

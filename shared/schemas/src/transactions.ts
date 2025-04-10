@@ -54,3 +54,11 @@ export const getTransactionsResponse = z.object({
   took: z.number(),
 })
 export type GetTransactionsResponse = z.infer<typeof getTransactionsResponse>
+
+export const deleteTransactionParamsSchema = z.object({
+  transactionId: z.string(),
+})
+
+export type DeleteTransactionParams = z.infer<
+  typeof deleteTransactionParamsSchema
+>

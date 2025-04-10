@@ -45,6 +45,7 @@ export const TransactionsPage = () => {
         page: 1,
       },
     })
+    setInputVal('')
   }
 
   return (
