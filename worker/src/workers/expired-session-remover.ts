@@ -5,6 +5,7 @@ export const createExpiredSessionRemoverWorker = () => {
   const worker = new Worker(
     QUEUES.EXPIRED_SESSION_REMOVER,
     async (job) => {
+      // eslint-disable-next-line no-console
       console.log(`Deleting expired sessions, job ID: ${job.id}`)
       const deletedCount = await db.sessions.deleteMany({
         where: {
@@ -20,10 +21,12 @@ export const createExpiredSessionRemoverWorker = () => {
   )
 
   worker.on('completed', (job) => {
+    // eslint-disable-next-line no-console
     console.log(`Expired sessions deleted count: ${job.returnvalue.count}`)
   })
 
   worker.on('error', (e) => {
+    // eslint-disable-next-line no-console
     console.error(`Cannot delete expired sessions, err: ${e.message}`)
   })
 }

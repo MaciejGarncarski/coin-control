@@ -10,7 +10,7 @@ type GetQuery = {
   dateTo: string | null
   page: string
   search: string | null
-  category?: Category
+  category: Category | null
 }
 
 export const getTransactionQueryOptions = ({
@@ -48,6 +48,7 @@ export const useGetTransactions = () => {
       dateTo: search.dateTo || null,
       page: search.page.toString() || '1',
       search: search.search || null,
+      category: search.category || null,
     }),
   )
 }

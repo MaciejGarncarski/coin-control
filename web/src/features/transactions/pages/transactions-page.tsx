@@ -6,6 +6,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import { Button } from '@/components/ui/button'
 import { DatePickerWithRange } from '@/components/ui/date-range-picker'
 import { Input } from '@/components/ui/input'
+import { TransactionCategoryFilter } from '@/features/transactions/components/transaction-category-filter'
 import { TransactionsForm } from '@/features/transactions/components/transactions-form'
 import { TransactionsTable } from '@/features/transactions/components/transactions-table'
 
@@ -16,6 +17,7 @@ export const TransactionsPage = () => {
     (value) => {
       if (value.trim() === '') {
         navigate({
+          viewTransition: false,
           search: (prev) => ({
             page: prev.page,
             dateFrom: prev.dateFrom,
@@ -26,6 +28,7 @@ export const TransactionsPage = () => {
       }
 
       navigate({
+        viewTransition: false,
         search: (prev) => ({
           ...prev,
           page: 1,
@@ -41,6 +44,7 @@ export const TransactionsPage = () => {
 
   const resetFilters = () => {
     navigate({
+      viewTransition: false,
       search: {
         page: 1,
       },
@@ -91,6 +95,9 @@ export const TransactionsPage = () => {
             </div>
             <div>
               <DatePickerWithRange />
+            </div>
+            <div>
+              <TransactionCategoryFilter />
             </div>
           </div>
         </div>

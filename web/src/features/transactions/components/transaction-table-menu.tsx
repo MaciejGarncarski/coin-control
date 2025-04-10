@@ -1,4 +1,5 @@
 import { Edit, MoreHorizontal, Trash } from 'lucide-react'
+import { useState } from 'react'
 
 import {
   AlertDialog,
@@ -27,14 +28,20 @@ type Props = {
 }
 
 export const TransactionTableMenu = ({ transactionId }: Props) => {
+  const [isOpen, setIsOpen] = useState(false)
+
   const deleteMutation = useDeleteTransaction()
 
   const deleteTransaction = () => {
-    deleteMutation.mutate(transactionId)
+    deleteMutation.mutate(transactionId, {
+      onSuccess: () => {
+        setIsOpen(false)
+      },
+    })
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon">
           <MoreHorizontal className="h-4 w-4" />

@@ -28,9 +28,9 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from '@/components/ui/select'
 import { useAddTransaction } from '@/features/transactions/api/add-transaction'
+import { formatTransactionCategory } from '@/utils/format-transaction-category'
 
 export const TransactionsForm = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -99,7 +99,13 @@ export const TransactionsForm = () => {
                     defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a category" />
+                        <div className="flex items-center gap-4 px-2">
+                          <TransactionCategoryIcon
+                            category={field.value}
+                            variant="small"
+                          />
+                          {formatTransactionCategory(field.value)}
+                        </div>
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>

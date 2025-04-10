@@ -2,17 +2,7 @@ import type { Category } from '@shared/schemas'
 
 import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
 import { Badge } from '@/components/ui/badge'
-
-const transactionNames: Record<Category, string> = {
-  foodAndDrink: 'Food and drink',
-  groceries: 'Groceries',
-  housing: 'Housing',
-  income: 'Income',
-  shopping: 'Shopping',
-  transportation: 'Transportation',
-  utilities: 'Utilities',
-  other: 'Other',
-}
+import { formatTransactionCategory } from '@/utils/format-transaction-category'
 
 type Props = {
   category: Category
@@ -25,7 +15,7 @@ export const TransactionBadge = ({ category, withIcon }: Props) => {
       {withIcon ? (
         <TransactionCategoryIcon category={category} variant="small" />
       ) : null}
-      {transactionNames[category]}
+      {formatTransactionCategory(category)}
     </Badge>
   )
 }

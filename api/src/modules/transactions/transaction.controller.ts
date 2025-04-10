@@ -1,6 +1,7 @@
 import { db, Prisma } from '@shared/database'
 import type {
   AddTransactionMutation,
+  Category,
   DeleteTransactionParams,
   GetRecentTransactions,
   GetTransactionsQuery,
@@ -25,6 +26,7 @@ type Query = {
   dateTo: string
   page?: string
   search?: string
+  category?: Category
 }
 
 export async function getTransactionsHandler(
@@ -35,6 +37,11 @@ export async function getTransactionsHandler(
   const currPage = req.query.page || 1
   const dateFrom = req.query.dateFrom ? new Date(req.query.dateFrom) : undefined
   const dateTo = req.query.dateTo ? new Date(req.query.dateTo) : undefined
+  const category = req.query.category
+    ? req.query.category.trim() === ''
+      ? undefined
+      : req.query.category
+    : undefined
 
   const search = req.query.search
     ? req.query.search.trim() === ''
@@ -52,6 +59,7 @@ export async function getTransactionsHandler(
             },
           },
         ],
+        category: category,
         user_id: userId,
         transaction_date: {
           gte: dateFrom,
@@ -59,6 +67,7 @@ export async function getTransactionsHandler(
         },
       }
     : {
+        category: category,
         user_id: userId,
         transaction_date: {
           gte: dateFrom,
