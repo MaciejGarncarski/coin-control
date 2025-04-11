@@ -60,7 +60,7 @@ export const TransactionsTable = () => {
                       key={header.id}
                       colSpan={header.colSpan}
                       className={cn(
-                        'w-32 p-4',
+                        'w-38 p-4',
                         header.column.columnDef.meta?.isWide && 'md:w-[20rem]',
                       )}>
                       {header.isPlaceholder

@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useCallback } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -68,43 +69,37 @@ export const TransactionTablePagination = () => {
     })
   }, [navigate, search.page, transactions.data?.maxPages])
 
-  const prefetchPrevPage = useCallback(() => {
-    queryClient.prefetchQuery(
-      getTransactionQueryOptions({
-        dateFrom: search.dateFrom || null,
-        dateTo: search.dateTo || null,
-        page: (Number(search.page) - 1).toString(),
-        search: search.search || null,
-        category: search.category || null,
-      }),
-    )
-  }, [
-    queryClient,
-    search.category,
-    search.dateFrom,
-    search.dateTo,
-    search.page,
-    search.search,
-  ])
+  const prefetchPrevPage = useDebouncedCallback(
+    () => {
+      queryClient.prefetchQuery(
+        getTransactionQueryOptions({
+          dateFrom: search.dateFrom || null,
+          dateTo: search.dateTo || null,
+          page: (Number(search.page) - 1).toString(),
+          search: search.search || null,
+          category: search.category || null,
+        }),
+      )
+    },
+    500,
+    { maxWait: 2000 },
+  )
 
-  const prefetchNextPage = useCallback(() => {
-    queryClient.prefetchQuery(
-      getTransactionQueryOptions({
-        dateFrom: search.dateFrom || null,
-        dateTo: search.dateTo || null,
-        page: (Number(search.page) + 1).toString(),
-        search: search.search || null,
-        category: search.category || null,
-      }),
-    )
-  }, [
-    queryClient,
-    search.category,
-    search.dateFrom,
-    search.dateTo,
-    search.page,
-    search.search,
-  ])
+  const prefetchNextPage = useDebouncedCallback(
+    () => {
+      queryClient.prefetchQuery(
+        getTransactionQueryOptions({
+          dateFrom: search.dateFrom || null,
+          dateTo: search.dateTo || null,
+          page: (Number(search.page) + 1).toString(),
+          search: search.search || null,
+          category: search.category || null,
+        }),
+      )
+    },
+    500,
+    { maxWait: 2000 },
+  )
 
   return (
     <div className="mt-4 flex justify-center">
@@ -118,7 +113,7 @@ export const TransactionTablePagination = () => {
           <ChevronLeft />
           Previous
         </Button>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-muted-foreground text-center text-sm">
           Page <span className="font-medium">{search.page}</span> of{' '}
           <span className="font-medium">
             {transactions.data?.maxPages || 1}

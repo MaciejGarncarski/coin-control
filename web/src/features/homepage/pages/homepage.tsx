@@ -21,7 +21,7 @@ export const HomePage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-10">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-4 xl:grid-cols-4 xl:gap-10">
         <Card className="gap-3">
           <CardHeader className="flex flex-row items-center justify-between">
@@ -35,10 +35,6 @@ export const HomePage = () => {
               <>
                 <p className="text-2xl font-bold">
                   {stats.data?.totalBalance.value}
-                </p>
-                <p className="text-muted-foreground text-xs">
-                  {stats.data?.totalBalance.changeFromLastMonth}% from last
-                  month
                 </p>
               </>
             )}
@@ -108,7 +104,7 @@ export const HomePage = () => {
         </Card>
       </div>
 
-      <div className="flex grid-cols-7 flex-col gap-12 md:grid">
+      <div className="flex grid-cols-7 flex-col gap-10 md:grid">
         <Card className="col-start-1 col-end-5">
           <CardHeader>Spending Overview</CardHeader>
         </Card>

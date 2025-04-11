@@ -93,10 +93,8 @@ export const TransactionsPage = () => {
                 Reset
               </Button>
             </div>
-            <div>
+            <div className="flex gap-4">
               <DatePickerWithRange />
-            </div>
-            <div>
               <TransactionCategoryFilter />
             </div>
           </div>

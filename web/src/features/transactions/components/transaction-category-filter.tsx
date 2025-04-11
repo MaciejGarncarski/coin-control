@@ -7,6 +7,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectSeparator,
   SelectTrigger,
 } from '@/components/ui/select'
 import { formatTransactionCategory } from '@/utils/format-transaction-category'
@@ -17,7 +18,20 @@ export const TransactionCategoryFilter = () => {
 
   const category = search.category
 
-  const onChange = (newCat: Category) => {
+  const onChange = (newCat: Category | 'all') => {
+    if (newCat === 'all') {
+      navigate({
+        viewTransition: false,
+        search: (prev) => {
+          return {
+            ...prev,
+            category: undefined,
+          }
+        },
+      })
+      return
+    }
+
     navigate({
       viewTransition: false,
       search: (prev) => {
@@ -30,10 +44,10 @@ export const TransactionCategoryFilter = () => {
   }
 
   return (
-    <Select onValueChange={onChange} defaultValue={category || ''}>
+    <Select onValueChange={onChange} defaultValue={category || 'all'}>
       <SelectTrigger size={'sm'}>
         {category ? (
-          <div className="flex items-center gap-4 px-2">
+          <div className="flex items-center gap-4 px-1">
             <TransactionCategoryIcon category={category} variant="small" />
             <span>{formatTransactionCategory(category)}</span>
           </div>
@@ -42,7 +56,7 @@ export const TransactionCategoryFilter = () => {
         )}
       </SelectTrigger>
       <SelectContent>
-        <ScrollArea className="h-[15rem]">
+        <ScrollArea className="h-[15rem] pr-3">
           <SelectItem value="groceries">
             <TransactionCategoryIcon category="groceries" />
             Groceries
@@ -76,6 +90,11 @@ export const TransactionCategoryFilter = () => {
             Other
           </SelectItem>
         </ScrollArea>
+        <SelectSeparator />
+        <SelectItem value="all">
+          {/* <TransactionCategoryIcon category="groceries" /> */}
+          All
+        </SelectItem>
       </SelectContent>
     </Select>
   )

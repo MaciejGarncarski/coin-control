@@ -75,13 +75,16 @@ export async function getTransactionsHandler(
         },
       }
 
+  const skipBase = (Number(currPage || 1) - 1) * TRANSACTIONS_PER_PAGE
+  const skipValue = skipBase < 0 ? 0 : skipBase
+
   const transactions = await db.transactions.findMany({
     where: whereClause,
     orderBy: {
       transaction_date: 'desc',
     },
     take: TRANSACTIONS_PER_PAGE,
-    skip: (Number(currPage || 1) - 1) * TRANSACTIONS_PER_PAGE,
+    skip: skipValue,
   })
 
   const transactionsCount = await db.transactions.count({

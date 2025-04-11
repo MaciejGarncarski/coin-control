@@ -11,6 +11,14 @@ import {
 } from 'lucide-react'
 import type { ReactNode } from 'react'
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { formatTransactionCategory } from '@/utils/format-transaction-category'
+
 const categoryIcons: Record<Category, ReactNode> = {
   foodAndDrink: <Coffee className="h-4 w-4 text-orange-600" />,
   groceries: <ShoppingCart className="h-4 w-4 text-pink-600" />,
@@ -35,12 +43,34 @@ const categoryIconsSmall: Record<Category, ReactNode> = {
 
 type Props = {
   category: Category
+  tooltipEnabled?: boolean
   variant?: 'small'
 }
 
-export const TransactionCategoryIcon = ({ category, variant }: Props) => {
+export const TransactionCategoryIcon = ({
+  category,
+  variant,
+  tooltipEnabled = true,
+}: Props) => {
   if (variant === 'small') {
     return <div>{categoryIconsSmall[category]}</div>
+  }
+
+  if (tooltipEnabled) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="bg-muted/20 flex h-8 w-8 items-center justify-center rounded-full border p-1">
+              {categoryIcons[category]}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{formatTransactionCategory(category)}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    )
   }
 
   return (
