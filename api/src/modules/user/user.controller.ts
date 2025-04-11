@@ -76,7 +76,8 @@ export async function addEmailHandler(
 
   if (someUserHasEmail?.id) {
     throw new ApiError({
-      message: 'Already exists',
+      message: 'Email already taken',
+      toastMessage: 'Email already taken',
       statusCode: status.CONFLICT,
     })
   }
@@ -89,7 +90,8 @@ export async function addEmailHandler(
 
   if (emailExists?.user_id) {
     throw new ApiError({
-      message: 'Already exists',
+      message: 'Email already taken',
+      toastMessage: 'Email already taken',
       statusCode: status.CONFLICT,
     })
   }
@@ -102,7 +104,8 @@ export async function addEmailHandler(
 
   if (myEmails.some((myEmails) => myEmails.email === email)) {
     throw new ApiError({
-      message: 'Already exists',
+      message: 'Email already taken',
+      toastMessage: 'Email already taken',
       statusCode: status.CONFLICT,
     })
   }

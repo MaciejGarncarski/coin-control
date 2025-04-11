@@ -49,8 +49,8 @@ export const TransactionsTable = () => {
 
   return (
     <div>
-      <div className="flex flex-col rounded-lg border">
-        <Table className="table-fixed">
+      <div className="flex flex-col">
+        <Table className="table-fixed border-separate border-spacing-0">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -60,7 +60,7 @@ export const TransactionsTable = () => {
                       key={header.id}
                       colSpan={header.colSpan}
                       className={cn(
-                        'w-38 p-4',
+                        'bg-card relative h-9 w-[10rem] border-y px-4 py-2 select-none first:rounded-l-lg first:border-l last:rounded-r-lg last:border-r',
                         header.column.columnDef.meta?.isWide && 'md:w-[20rem]',
                       )}>
                       {header.isPlaceholder
@@ -75,6 +75,7 @@ export const TransactionsTable = () => {
               </TableRow>
             ))}
           </TableHeader>
+          <TableBody className="table-row h-1" />
           <TableBody className="w-auto overflow-x-auto">
             {table.getRowModel().rows.map((row) => {
               return (
@@ -83,7 +84,9 @@ export const TransactionsTable = () => {
                   data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => {
                     return (
-                      <TableCell key={cell.id} className={'px-4 py-1'}>
+                      <TableCell
+                        key={cell.id}
+                        className="relative h-9 border-b px-4 py-1">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),

@@ -50,8 +50,12 @@ export const MainApp = () => {
   const userAuthenticated = useQuery(userQueryOptions)
 
   useEffect(() => {
+    if (userAuthenticated.isLoading) {
+      return
+    }
+
     router.invalidate()
-  }, [userAuthenticated?.data])
+  }, [userAuthenticated.data, userAuthenticated.isLoading])
 
   if (userAuthenticated.isLoading) return null
 

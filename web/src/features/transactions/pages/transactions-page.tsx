@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router'
-import { Download, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
@@ -63,40 +63,33 @@ export const TransactionsPage = () => {
         </div>
 
         <div className="flex gap-4 md:ml-auto">
-          <Button type="button" variant={'outline'}>
-            <Download /> Export
-          </Button>
           <TransactionsForm />
         </div>
       </div>
 
       <div className="flex flex-col gap-4">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:justify-start">
-            <div className="flex flex-row gap-4">
-              <Input
-                placeholder="Search transactions..."
-                type="search"
-                value={inputVal}
-                onChange={(e) => {
-                  debounced(e.target.value)
-                  setInputVal(e.target.value)
-                }}
-                className="h-8 w-52"
-              />
-              <Button
-                type="button"
-                size={'sm'}
-                variant={'outline'}
-                onClick={resetFilters}>
-                <X />
-                Reset
-              </Button>
-            </div>
-            <div className="flex gap-4">
-              <DatePickerWithRange />
-              <TransactionCategoryFilter />
-            </div>
+          <div className="flex flex-row flex-wrap items-center justify-center gap-4 md:flex-row md:justify-start">
+            <Input
+              placeholder="Search transactions..."
+              type="search"
+              value={inputVal}
+              onChange={(e) => {
+                debounced(e.target.value)
+                setInputVal(e.target.value)
+              }}
+              className="h-8 w-52"
+            />
+            <Button
+              type="button"
+              size={'sm'}
+              variant={'outline'}
+              onClick={resetFilters}>
+              <X />
+              Reset
+            </Button>
+            <DatePickerWithRange />
+            <TransactionCategoryFilter />
           </div>
         </div>
 

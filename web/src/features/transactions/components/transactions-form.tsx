@@ -58,10 +58,19 @@ export const TransactionsForm = () => {
     })
   })
 
+  const onCancel = () => {
+    setDialogOpen(false)
+    newTransactionForm.reset({
+      amount: 0,
+      category: 'other',
+      description: '',
+    })
+  }
+
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button type="button">
+        <Button type="button" size={'sm'}>
           <Plus />
           Add Transaction
         </Button>
@@ -165,7 +174,14 @@ export const TransactionsForm = () => {
               }}
             />
 
-            <div>
+            <div className="flex justify-between">
+              <Button
+                type="button"
+                size={'sm'}
+                variant={'destructive'}
+                onClick={onCancel}>
+                Cancel
+              </Button>
               <Button type="submit" size={'sm'}>
                 Submit
               </Button>

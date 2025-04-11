@@ -1,20 +1,54 @@
 import { useQuery } from '@tanstack/react-query'
 import { formatRelative } from 'date-fns'
-import { DollarSign, Folder, TrendingDown, TrendingUp } from 'lucide-react'
+import { DollarSign, type LucideIcon } from 'lucide-react'
+import { useMemo } from 'react'
 
 import { TransactionBadge } from '@/components/transactions/transaction-badge'
 import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useRecentTransactions } from '@/features/homepage/api/get-recent-transactions'
 import { useStatistics } from '@/features/homepage/api/get-statistics'
 import { userQueryOptions } from '@/lib/auth'
 import { cn } from '@/lib/utils'
+import { formatTransactionCategory } from '@/utils/format-transaction-category'
+
+type HomepageTiles = Array<{
+  title: string
+  icon: LucideIcon
+  value: number | string
+}>
 
 export const HomePage = () => {
   const user = useQuery(userQueryOptions)
   const stats = useStatistics()
   const recentTransactions = useRecentTransactions()
+
+  const homepageTilesData: HomepageTiles = useMemo(
+    () => [
+      {
+        icon: DollarSign,
+        title: 'TOTAL BALANCE',
+        value: stats.data?.totalBalance.value || 0,
+      },
+      {
+        icon: DollarSign,
+        title: 'MONTHLY INCOME',
+        value: stats.data?.thisMonthIncome.value || 0,
+      },
+      {
+        icon: DollarSign,
+        title: 'MONTHLY SPENDING',
+        value: stats.data?.thisMonthSpending.value || 0,
+      },
+    ],
+    [
+      stats.data?.thisMonthIncome.value,
+      stats.data?.thisMonthSpending.value,
+      stats.data?.totalBalance.value,
+    ],
+  )
 
   if (!user.data?.id) {
     return null
@@ -22,86 +56,46 @@ export const HomePage = () => {
 
   return (
     <div className="flex flex-col gap-10">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-4 xl:grid-cols-4 xl:gap-10">
-        <Card className="gap-3">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <h2 className="text-sm font-semibold">Total balance</h2>
-            <DollarSign className="text-muted-foreground size-5" />
-          </CardHeader>
-          <CardContent>
-            {stats.isLoading ? (
-              <Skeleton className="h-12" />
-            ) : (
-              <>
-                <p className="text-2xl font-bold">
-                  {stats.data?.totalBalance.value}
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
-        <Card className="gap-3">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <h2 className="text-sm font-semibold">Monthly Spending</h2>
-            <TrendingUp className="text-muted-foreground size-5" />
-          </CardHeader>
-          <CardContent>
-            {stats.isLoading ? (
-              <Skeleton className="h-12" />
-            ) : (
-              <>
-                <p className="text-2xl font-bold">
-                  {stats.data?.thisMonthSpending.value}
-                </p>
-                <p className="text-muted-foreground text-xs">
-                  {stats.data?.totalBalance.changeFromLastMonth}% from last
-                  month
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
-        <Card className="gap-3">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <h2 className="text-sm font-semibold">Monthly Income</h2>
-            <TrendingDown className="text-muted-foreground size-5" />
-          </CardHeader>
-          <CardContent>
-            {stats.isLoading ? (
-              <Skeleton className="h-12" />
-            ) : (
-              <>
-                <p className="text-2xl font-bold">
-                  {stats.data?.thisMonthIncome.value}
-                </p>
-                <p className="text-muted-foreground text-xs">
-                  {stats.data?.totalBalance.changeFromLastMonth}% from last
-                  month
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
-        <Card className="gap-3">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <h2 className="text-sm font-semibold">Most common category</h2>
-            <Folder className="text-muted-foreground size-5" />
-          </CardHeader>
-          <CardContent>
-            {stats.isLoading ? (
-              <Skeleton className="h-12" />
-            ) : (
-              <div className="flex items-center gap-4">
-                <TransactionCategoryIcon
-                  category={stats.data?.mostCommonCategoryThisMonth || 'other'}
-                />
-                <p className="text-2xl font-semibold capitalize">
-                  {stats.data?.mostCommonCategoryThisMonth || 'other'}
-                </p>
+      <div className="bg-card flex flex-col rounded-xl border py-2 shadow-xs md:h-32 md:flex-row md:py-4">
+        {homepageTilesData.map(({ icon: Icon, title, value }) => {
+          return (
+            <>
+              <div className="flex grow items-center gap-4 p-6">
+                <span className="bg-primary/20 border-primary text-primary flex h-10 w-10 items-center justify-center rounded-full border p-2 md:hidden xl:flex">
+                  <Icon />
+                </span>
+                <div className="flex flex-col gap-0">
+                  <span className="text-muted-foreground spacing text-sm font-semibold tracking-wide lg:tracking-widest">
+                    {title}
+                  </span>
+                  <span className="spacing text-xl font-bold tracking-widest">
+                    {value}
+                  </span>
+                </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
+              <Separator orientation="horizontal" className="md:hidden" />
+              <Separator orientation="vertical" className="hidden md:block" />
+            </>
+          )
+        })}
+        <div className="flex grow items-center gap-4 p-6">
+          <span className="bg-primary/20 border-primary text-primary flex h-10 w-10 items-center justify-center rounded-full border p-2 md:hidden xl:flex">
+            <TransactionCategoryIcon
+              variant="big"
+              category={stats.data?.mostCommonCategoryThisMonth || 'other'}
+            />
+          </span>
+          <div className="flex flex-col gap-0">
+            <span className="text-muted-foreground spacing text-sm font-semibold tracking-wide lg:tracking-widest">
+              COMMON CATEGORY
+            </span>
+            <span className="spacing text-xl font-bold tracking-widest">
+              {formatTransactionCategory(
+                stats.data?.mostCommonCategoryThisMonth || 'other',
+              )}
+            </span>
+          </div>
+        </div>
       </div>
 
       <div className="flex grid-cols-7 flex-col gap-10 md:grid">
@@ -139,7 +133,10 @@ export const HomePage = () => {
                       <li
                         className="flex items-center gap-4"
                         key={transactionId}>
-                        <TransactionCategoryIcon category={category} />
+                        <TransactionCategoryIcon
+                          category={category}
+                          tooltipEnabled
+                        />
                         <div className="flex flex-col">
                           <h3 className="max-w-[20ch] overflow-hidden text-sm font-semibold overflow-ellipsis">
                             {description}
