@@ -1,5 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { DollarSign, type LucideIcon } from 'lucide-react'
+import {
+  DollarSign,
+  type LucideIcon,
+  TrendingDown,
+  TrendingUp,
+} from 'lucide-react'
 import { useMemo } from 'react'
 
 import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
@@ -28,12 +33,12 @@ export const HomePage = () => {
         value: stats.data?.totalBalance.value || 0,
       },
       {
-        icon: DollarSign,
+        icon: TrendingUp,
         title: 'MONTHLY INCOME',
         value: stats.data?.thisMonthIncome.value || 0,
       },
       {
-        icon: DollarSign,
+        icon: TrendingDown,
         title: 'MONTHLY SPENDING',
         value: stats.data?.thisMonthSpending.value || 0,
       },
