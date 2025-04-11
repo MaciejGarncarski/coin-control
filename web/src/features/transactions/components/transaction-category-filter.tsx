@@ -1,4 +1,5 @@
 import type { Category } from '@shared/schemas'
+import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 
 import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
@@ -10,13 +11,37 @@ import {
   SelectSeparator,
   SelectTrigger,
 } from '@/components/ui/select'
+import { getTransactionQueryOptions } from '@/features/transactions/api/get-transaction'
 import { formatTransactionCategory } from '@/utils/format-transaction-category'
+
+const categories: Category[] = [
+  'foodAndDrink',
+  'groceries',
+  'housing',
+  'income',
+  'shopping',
+  'transportation',
+  'utilities',
+  'other',
+]
 
 export const TransactionCategoryFilter = () => {
   const search = useSearch({ from: '/_authenticated/transactions' })
   const navigate = useNavigate({ from: '/transactions' })
-
+  const queryClient = useQueryClient()
   const category = search.category
+
+  const prefetchOnHover = (category: Category) => {
+    queryClient.prefetchQuery(
+      getTransactionQueryOptions({
+        search: search.search || null,
+        category: category,
+        dateFrom: search.dateFrom || null,
+        dateTo: search.dateTo || null,
+        page: (search.page || 1).toString(),
+      }),
+    )
+  }
 
   const onChange = (newCat: Category | 'all') => {
     if (newCat === 'all') {
@@ -57,44 +82,20 @@ export const TransactionCategoryFilter = () => {
       </SelectTrigger>
       <SelectContent>
         <ScrollArea className="h-[15rem] pr-3">
-          <SelectItem value="groceries">
-            <TransactionCategoryIcon category="groceries" />
-            Groceries
-          </SelectItem>
-          <SelectItem value="income">
-            <TransactionCategoryIcon category="income" />
-            Income
-          </SelectItem>
-          <SelectItem value="foodAndDrink">
-            <TransactionCategoryIcon category="foodAndDrink" />
-            Food and Drink
-          </SelectItem>
-          <SelectItem value="utilities">
-            <TransactionCategoryIcon category="utilities" />
-            Utilities
-          </SelectItem>
-          <SelectItem value="housing">
-            <TransactionCategoryIcon category="housing" />
-            Housing
-          </SelectItem>
-          <SelectItem value="shopping">
-            <TransactionCategoryIcon category="shopping" />
-            Shopping
-          </SelectItem>
-          <SelectItem value="transportation">
-            <TransactionCategoryIcon category="transportation" />
-            Transportation
-          </SelectItem>
-          <SelectItem value="other">
-            <TransactionCategoryIcon category="other" />
-            Other
-          </SelectItem>
+          {categories.map((category) => {
+            return (
+              <SelectItem
+                key={category}
+                value={category}
+                onMouseOver={() => prefetchOnHover(category)}>
+                <TransactionCategoryIcon category={category} />
+                {formatTransactionCategory(category)}
+              </SelectItem>
+            )
+          })}
         </ScrollArea>
         <SelectSeparator />
-        <SelectItem value="all">
-          {/* <TransactionCategoryIcon category="groceries" /> */}
-          All
-        </SelectItem>
+        <SelectItem value="all">All</SelectItem>
       </SelectContent>
     </Select>
   )
