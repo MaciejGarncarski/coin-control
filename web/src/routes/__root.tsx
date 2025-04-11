@@ -50,10 +50,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       },
     ],
   }),
-  pendingComponent: () => <div>Loading...</div>,
   notFoundComponent: NotFoundPage,
-  pendingMinMs: 0,
-  pendingMs: 0,
   component: () => <RootComponent />,
   shouldReload({ context }) {
     return context.auth.status !== 'loggedIn'

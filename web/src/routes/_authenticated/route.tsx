@@ -13,6 +13,8 @@ import { userQueryOptions } from '@/lib/auth'
 
 export const Route = createFileRoute('/_authenticated')({
   component: App,
+  pendingMinMs: 0,
+  pendingMs: 0,
   beforeLoad: async ({ context }) => {
     if (!context.auth?.status) {
       return

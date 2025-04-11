@@ -7,7 +7,6 @@ import { TransactionsPage } from '@/features/transactions/pages/transactions-pag
 
 export const Route = createFileRoute('/_authenticated/transactions')({
   component: TransactionsPage,
-
   validateSearch: (search: Record<string, unknown>) => {
     const searchSchema = z.object({
       dateFrom: z.string().optional(),
