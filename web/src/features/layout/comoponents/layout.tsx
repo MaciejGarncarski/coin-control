@@ -47,13 +47,13 @@ export function Layout({ children }: { children: ReactNode }) {
                             <Link
                               to={url}
                               viewTransition={{ types: ['main-transition'] }}
-                              className="flex items-center gap-2 rounded-md px-3 py-1 transition-all"
+                              className="flex items-center gap-2 rounded-md px-3 py-1"
                               inactiveProps={{
                                 className: 'border border-transparent',
                               }}
                               activeProps={{
                                 className:
-                                  'text-foreground bg-primary/20 border border-primary shadow',
+                                  'text-foreground bg-primary/20 border-reflect shadow',
                               }}>
                               <Icon className="size-4" />
                               <span data-text>{text}</span>

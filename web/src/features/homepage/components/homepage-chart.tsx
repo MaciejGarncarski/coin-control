@@ -34,12 +34,12 @@ const chartConfig = {
 
 export function ChartHomepage() {
   return (
-    <Card>
+    <Card className="border-reflect border-none md:h-[58dvh]">
       <CardHeader>
         <CardTitle>Transactions Overview</CardTitle>
         <CardDescription>Your transactions from last week</CardDescription>
       </CardHeader>
-      <CardContent className="md:h-[45dvh]">
+      <CardContent>
         <ChartContainer config={chartConfig}>
           <AreaChart
             accessibilityLayer

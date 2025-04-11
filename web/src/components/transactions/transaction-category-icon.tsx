@@ -76,7 +76,7 @@ export const TransactionCategoryIcon = ({
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="bg-muted/20 flex h-8 w-8 items-center justify-center rounded-full border p-1">
+            <div className="bg-muted/20 border-reflect flex h-8 w-8 items-center justify-center rounded-full p-1">
               {categoryIcons[category]}
             </div>
           </TooltipTrigger>

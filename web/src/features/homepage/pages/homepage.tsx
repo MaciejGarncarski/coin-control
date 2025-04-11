@@ -51,12 +51,12 @@ export const HomePage = () => {
 
   return (
     <div className="flex flex-col gap-10 md:gap-12">
-      <div className="bg-card flex flex-col rounded-xl border py-2 shadow-xs md:h-32 md:flex-row md:py-4">
+      <div className="bg-card border-reflect flex flex-col rounded-xl py-2 shadow-xs md:h-32 md:flex-row md:py-4">
         {homepageTilesData.map(({ icon: Icon, title, value }) => {
           return (
             <>
               <div className="flex grow items-center gap-4 p-6">
-                <span className="bg-primary/10 border-primary text-primary flex h-10 w-10 items-center justify-center rounded-full border p-2 md:hidden xl:flex">
+                <span className="bg-primary/10 border-reflect text-primary flex h-10 w-10 items-center justify-center rounded-full p-2 md:hidden xl:flex">
                   <Icon />
                 </span>
                 <div className="flex flex-col gap-0">
@@ -74,7 +74,7 @@ export const HomePage = () => {
           )
         })}
         <div className="flex grow items-center gap-4 p-6">
-          <span className="bg-primary/10 border-primary text-primary flex h-10 w-10 items-center justify-center rounded-full border p-2 md:hidden xl:flex">
+          <span className="bg-primary/10 border-reflect text-primary flex h-10 w-10 items-center justify-center rounded-full p-2 md:hidden xl:flex">
             <TransactionCategoryIcon
               variant="big"
               category={stats.data?.mostCommonCategoryThisMonth || 'other'}

@@ -11,7 +11,7 @@ export const RecentTransactions = () => {
   const recentTransactions = useRecentTransactions()
 
   return (
-    <Card>
+    <Card className="border-reflect border-none md:h-[58dvh]">
       <CardHeader>
         <CardTitle>Recent Transactions</CardTitle>
         <span className="text-muted-foreground text-sm">
@@ -20,7 +20,7 @@ export const RecentTransactions = () => {
           this month.
         </span>
       </CardHeader>
-      <CardContent className="md:h-[45dvh]">
+      <CardContent>
         <ul className="flex flex-col gap-4">
           {recentTransactions.isLoading
             ? Array.from({ length: 6 })

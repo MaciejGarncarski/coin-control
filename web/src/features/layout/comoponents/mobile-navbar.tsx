@@ -59,7 +59,7 @@ export function MobileNavbar() {
                       }}
                       activeProps={{
                         className:
-                          'text-foreground bg-primary/10 text-primary border border-primary shadow',
+                          'text-primary-foreground bg-primary/10 text-primary border-reflect shadow',
                       }}>
                       <Icon />
                       {text}
