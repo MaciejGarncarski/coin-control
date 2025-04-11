@@ -1,17 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import { formatRelative } from 'date-fns'
 import { DollarSign, type LucideIcon } from 'lucide-react'
 import { useMemo } from 'react'
 
-import { TransactionBadge } from '@/components/transactions/transaction-badge'
 import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { Skeleton } from '@/components/ui/skeleton'
-import { useRecentTransactions } from '@/features/homepage/api/get-recent-transactions'
 import { useStatistics } from '@/features/homepage/api/get-statistics'
+import { ChartHomepage } from '@/features/homepage/components/homepage-chart'
+import { RecentTransactions } from '@/features/homepage/components/recent-transactions'
 import { userQueryOptions } from '@/lib/auth'
-import { cn } from '@/lib/utils'
 import { formatTransactionCategory } from '@/utils/format-transaction-category'
 
 type HomepageTiles = Array<{
@@ -23,7 +19,6 @@ type HomepageTiles = Array<{
 export const HomePage = () => {
   const user = useQuery(userQueryOptions)
   const stats = useStatistics()
-  const recentTransactions = useRecentTransactions()
 
   const homepageTilesData: HomepageTiles = useMemo(
     () => [
@@ -55,13 +50,13 @@ export const HomePage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-10 md:gap-12">
       <div className="bg-card flex flex-col rounded-xl border py-2 shadow-xs md:h-32 md:flex-row md:py-4">
         {homepageTilesData.map(({ icon: Icon, title, value }) => {
           return (
             <>
               <div className="flex grow items-center gap-4 p-6">
-                <span className="bg-primary/20 border-primary text-primary flex h-10 w-10 items-center justify-center rounded-full border p-2 md:hidden xl:flex">
+                <span className="bg-primary/10 border-primary text-primary flex h-10 w-10 items-center justify-center rounded-full border p-2 md:hidden xl:flex">
                   <Icon />
                 </span>
                 <div className="flex flex-col gap-0">
@@ -79,7 +74,7 @@ export const HomePage = () => {
           )
         })}
         <div className="flex grow items-center gap-4 p-6">
-          <span className="bg-primary/20 border-primary text-primary flex h-10 w-10 items-center justify-center rounded-full border p-2 md:hidden xl:flex">
+          <span className="bg-primary/10 border-primary text-primary flex h-10 w-10 items-center justify-center rounded-full border p-2 md:hidden xl:flex">
             <TransactionCategoryIcon
               variant="big"
               category={stats.data?.mostCommonCategoryThisMonth || 'other'}
@@ -98,71 +93,12 @@ export const HomePage = () => {
         </div>
       </div>
 
-      <div className="flex grid-cols-7 flex-col gap-10 md:grid">
-        <Card className="col-start-1 col-end-5">
-          <CardHeader>Spending Overview</CardHeader>
-        </Card>
-
+      <div className="flex grid-cols-7 flex-col gap-12 md:grid">
+        <div className="col-start-1 col-end-5">
+          <ChartHomepage />
+        </div>
         <div className="col-start-5 col-end-8 flex flex-col gap-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent transactions</CardTitle>
-              <span className="text-muted-foreground text-sm">
-                You have made{' '}
-                {recentTransactions.data?.transactionCountThisMonth || 0}{' '}
-                transactions this month.
-              </span>
-            </CardHeader>
-            <CardContent>
-              <ul className="flex flex-col gap-4">
-                {recentTransactions.isLoading
-                  ? Array.from({ length: 6 })
-                      .map((_, i) => i + 1)
-                      .map((i) => {
-                        return (
-                          <li key={i}>
-                            <Skeleton className="h-10" />
-                          </li>
-                        )
-                      })
-                  : null}
-
-                {recentTransactions.data?.recentTransactions.map(
-                  ({ transactionId, category, description, amount, date }) => {
-                    return (
-                      <li
-                        className="flex items-center gap-4"
-                        key={transactionId}>
-                        <TransactionCategoryIcon
-                          category={category}
-                          tooltipEnabled
-                        />
-                        <div className="flex flex-col">
-                          <h3 className="max-w-[20ch] overflow-hidden text-sm font-semibold overflow-ellipsis">
-                            {description}
-                          </h3>
-                          <p className="text-muted-foreground text-xs">
-                            {formatRelative(date, new Date())}
-                          </p>
-                        </div>
-
-                        <div className="ml-auto flex flex-col items-end">
-                          <p
-                            className={cn(
-                              amount > 0 ? 'text-green-600' : 'text-red-600',
-                            )}>
-                            {amount > 0 ? `+${amount}` : amount}
-                          </p>
-
-                          <TransactionBadge category={category} />
-                        </div>
-                      </li>
-                    )
-                  },
-                )}
-              </ul>
-            </CardContent>
-          </Card>
+          <RecentTransactions />
         </div>
       </div>
     </div>

@@ -53,7 +53,7 @@ export function Layout({ children }: { children: ReactNode }) {
                               }}
                               activeProps={{
                                 className:
-                                  'text-foreground bg-primary/10 border border-primary shadow text-primary [&_span:bg-red-200]',
+                                  'text-foreground bg-primary/20 border border-primary shadow',
                               }}>
                               <Icon className="size-4" />
                               <span data-text>{text}</span>

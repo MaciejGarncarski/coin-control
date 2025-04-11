@@ -173,7 +173,7 @@ export async function deleteTransactionHandler(
   return
 }
 
-const RECENT_TRANSACTIONS = 7
+const RECENT_TRANSACTIONS = 6
 
 export async function getRecentTransactionsHandler(
   req: Request,

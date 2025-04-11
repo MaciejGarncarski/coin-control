@@ -147,7 +147,7 @@
 
   html:active-view-transition-type(main-transition) {
     &::view-transition-old(content) {
-      animation: 200ms cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation: 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
       animation-name: reveal;
       animation-direction: reverse;
     }
@@ -159,7 +159,7 @@
   }
 
   html::view-transition-old(logos) {
-    animation: 200ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation: 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
     animation-name: opacity-reveal;
     animation-direction: reverse;
   }
@@ -169,7 +169,7 @@
   }
 
   html::view-transition-old(header) {
-    animation: 200ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation: 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
     animation-name: opacity-reveal;
     animation-direction: reverse;
   }
