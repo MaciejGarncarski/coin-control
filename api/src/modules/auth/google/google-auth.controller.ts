@@ -98,10 +98,10 @@ export async function googleAuthRedirectHandler(
 
   const { email, id, name, picture } = parsedUserInfo.data
 
-  // dodac tabelke w bazie google_user, chyba tylko user_id oraz google_id, aby sprawdzic usera
-  // ewwentualnie pole w tablece user
-
-  const user = await checkGoogleUserExists({ googleUserId: id })
+  const user = await checkGoogleUserExists({
+    googleUserId: id,
+    googleUserEmail: email,
+  })
 
   if (user) {
     const isMinimumOneEmailVerified = user.user_emails.some(

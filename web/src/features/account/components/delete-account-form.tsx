@@ -35,7 +35,7 @@ const deleteAccountShema = z
   .object({
     name: z
       .string()
-      .min(2)
+      .min(1)
       .max(32, { message: 'Please use 32 characters at maximum.' }),
     confirmation: z.union([
       z.literal('delete my personal account'),

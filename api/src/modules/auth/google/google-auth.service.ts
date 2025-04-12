@@ -8,22 +8,32 @@ import { userDTO } from '../user.dto.js'
 
 type Props = {
   googleUserId: string
+  googleUserEmail: string
 }
 
-export async function checkGoogleUserExists({ googleUserId }: Props) {
+export async function checkGoogleUserExists({
+  googleUserId,
+  googleUserEmail,
+}: Props) {
   const userIdData = await db.users.findFirst({
     where: {
-      google_user_id: googleUserId,
+      OR: [
+        {
+          google_user_id: googleUserId,
+        },
+        {
+          email: googleUserEmail,
+        },
+      ],
     },
     select: {
       id: true,
-      email: true,
     },
   })
 
   const userEmail = await db.user_emails.findFirst({
     where: {
-      email: userIdData?.email,
+      email: googleUserEmail,
     },
     select: {
       user_id: true,
@@ -38,7 +48,7 @@ export async function checkGoogleUserExists({ googleUserId }: Props) {
     await db.user_emails.create({
       data: {
         user_id: userIdData.id,
-        email: userIdData?.email,
+        email: googleUserEmail,
         is_primary: true,
         is_verified: true,
         email_id: v7(),

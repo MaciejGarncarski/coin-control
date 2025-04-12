@@ -91,7 +91,7 @@ export type UserAvatarMutation = z.infer<typeof userAvatarMutationSchema>
 export const userFullNameMutationSchema = z.object({
   name: z
     .string()
-    .min(2)
+    .min(1)
     .max(32, { message: 'Please use 32 characters at maximum.' }),
 })
 
@@ -100,7 +100,7 @@ export type UserFullNameMutation = z.infer<typeof userFullNameMutationSchema>
 export const deleteUserAccountMutationSchema = z.object({
   name: z
     .string()
-    .min(2)
+    .min(1)
     .max(32, { message: 'Please use 32 characters at maximum.' }),
 })
 
