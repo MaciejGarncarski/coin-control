@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useThemeStore } from '@/features/layout/comoponents/theme-state'
+import { cn } from '@/lib/utils'
 
 type ThemeSwitcherProps = {
   withText?: boolean
@@ -20,7 +21,10 @@ export function ThemeSwitcher({ withText = false }: ThemeSwitcherProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size={withText ? 'sm' : 'icon'}>
+        <Button
+          variant="outline"
+          size={withText ? 'sm' : 'icon'}
+          className={cn(withText && 'border-reflect border-0')}>
           {withText ? <span>Theme</span> : null}
           {theme === 'light' && <Sun className="h-[1.2rem] w-[1.2rem]" />}
           {theme === 'dark' && <Moon className="h-[1.2rem] w-[1.2rem]" />}
