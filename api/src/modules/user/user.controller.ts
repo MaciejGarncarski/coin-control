@@ -1,3 +1,6 @@
+import { unlink } from 'node:fs/promises'
+import { join, normalize } from 'node:path'
+
 import { db } from '@shared/database'
 import { QUEUES } from '@shared/queues'
 import type {
@@ -15,6 +18,7 @@ import status from 'http-status'
 import ms from 'ms'
 import { v7 } from 'uuid'
 
+import { env } from '../../config/env.js'
 import { secondaryEmailVerificationQueue } from '../../lib/queues/secondary-email-verification.js'
 import { ApiError } from '../../utils/api-error.js'
 import { getHashCode } from '../../utils/get-hash-code.js'
@@ -457,6 +461,7 @@ export async function deleteUserAccountHandler(
     },
     select: {
       password_hash: true,
+      avatar_url: true,
     },
   })
 
@@ -465,6 +470,13 @@ export async function deleteUserAccountHandler(
       message: 'Bad request.',
       statusCode: status.BAD_REQUEST,
     })
+  }
+
+  const avatarFileName = user.avatar_url?.split(env.API_URL + '/avatars/')
+  const avatarFile = avatarFileName ? avatarFileName[1] : undefined
+
+  if (avatarFile) {
+    await unlink(normalize(join('avatar-upload', avatarFile || '')))
   }
 
   await db.users.delete({

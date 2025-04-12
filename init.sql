@@ -17,6 +17,24 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: transaction_category; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.transaction_category AS ENUM (
+    'other',
+    'transportation',
+    'groceries',
+    'income',
+    'foodAndDrink',
+    'utilities',
+    'housing',
+    'shopping'
+);
+
+
+ALTER TYPE public.transaction_category OWNER TO postgres;
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -77,6 +95,22 @@ CREATE TABLE public.sessions (
 ALTER TABLE public.sessions OWNER TO postgres;
 
 --
+-- Name: transactions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.transactions (
+    transaction_id uuid NOT NULL,
+    user_id uuid NOT NULL,
+    transaction_date timestamp with time zone NOT NULL,
+    amount numeric(15,2) NOT NULL,
+    description text,
+    category public.transaction_category
+);
+
+
+ALTER TABLE public.transactions OWNER TO postgres;
+
+--
 -- Name: user_emails; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -98,10 +132,11 @@ ALTER TABLE public.user_emails OWNER TO postgres;
 CREATE TABLE public.users (
     id uuid NOT NULL,
     email text NOT NULL,
-    password_hash text NOT NULL,
+    password_hash text,
     created_at timestamp with time zone DEFAULT now(),
     name character varying(255),
-    avatar_url character varying(255)
+    avatar_url character varying(255),
+    google_user_id character varying(255)
 );
 
 
@@ -132,6 +167,14 @@ ALTER TABLE ONLY public.sessions
 
 
 --
+-- Name: transactions transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.transactions
+    ADD CONSTRAINT transactions_pkey PRIMARY KEY (transaction_id);
+
+
+--
 -- Name: user_emails user_emails_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -156,11 +199,26 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: users users_google_user_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_google_user_id_key UNIQUE (google_user_id);
+
+
+--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: idx_category; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_category ON public.transactions USING btree (category);
 
 
 --
@@ -248,6 +306,13 @@ CREATE INDEX idx_sessions_user_id ON public.sessions USING btree (user_id);
 
 
 --
+-- Name: idx_transaction_date; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_transaction_date ON public.transactions USING btree (transaction_date);
+
+
+--
 -- Name: idx_user_emails_is_primary; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -262,10 +327,24 @@ CREATE INDEX idx_user_emails_user_id ON public.user_emails USING btree (user_id)
 
 
 --
+-- Name: idx_user_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_user_id ON public.transactions USING btree (user_id);
+
+
+--
 -- Name: idx_users_email; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX idx_users_email ON public.users USING btree (email);
+
+
+--
+-- Name: idx_users_google_user_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_users_google_user_id ON public.users USING btree (google_user_id);
 
 
 --
@@ -298,6 +377,14 @@ ALTER TABLE ONLY public.reset_password_codes
 
 ALTER TABLE ONLY public.sessions
     ADD CONSTRAINT sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: transactions transactions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.transactions
+    ADD CONSTRAINT transactions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --

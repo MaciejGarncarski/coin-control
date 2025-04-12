@@ -28,7 +28,9 @@ import {
 import { Input } from '@/components/ui/input'
 import { InputPassword } from '@/components/ui/input-password'
 import { Label } from '@/components/ui/label'
+import { Separator } from '@/components/ui/separator'
 import { useRegisterMutation } from '@/features/auth/api/register'
+import { GoogleLoginButton } from '@/features/auth/components/google-login-button'
 
 export function RegisterPage() {
   const [isPrivacyPolicyRead, setIsPrivacyPolicyRead] =
@@ -61,7 +63,7 @@ export function RegisterPage() {
   )
 
   return (
-    <Card className="w-full">
+    <Card className="border-reflect w-full border-0">
       <CardHeader>
         <CardTitle>
           <Logo />
@@ -76,7 +78,7 @@ export function RegisterPage() {
           </Alert>
         )}
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-6">
         <Form {...form}>
           <form
             onSubmit={handleFormSubmit}
@@ -161,6 +163,10 @@ export function RegisterPage() {
             </Button>
           </form>
         </Form>
+        <Separator />
+        <div className="flex items-center justify-stretch">
+          <GoogleLoginButton />
+        </div>
       </CardContent>
     </Card>
   )

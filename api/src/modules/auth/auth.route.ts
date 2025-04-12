@@ -22,6 +22,7 @@ import {
   sendEmailVerificationHandler,
   verifyAccountHandler,
 } from './auth.controller.js'
+import { authGoogleRouter } from './google/google-auth.route.js'
 import { passwordRouter } from './password/password.route.js'
 
 const authLimiter = createRateLimiter({
@@ -39,6 +40,8 @@ const otpLimiter = createRateLimiter({
 export const authRouter = Router()
 
 authRouter.use('/password', passwordRouter)
+authRouter.use('/google', authGoogleRouter)
+
 authRouter.post(
   '/login',
   validateData(loginMutationSchema),

@@ -82,7 +82,7 @@ export const AddEmailForm = () => {
         setIsChecked(false)
       }}>
       <DialogTrigger asChild>
-        <Button type="button" variant={'outline'} size={'sm'}>
+        <Button type="button" variant={'default'} size={'sm'}>
           <Plus /> Add another
         </Button>
       </DialogTrigger>

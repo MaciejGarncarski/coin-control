@@ -76,6 +76,12 @@ services:
       - REDIS_HOST=cache
       - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_OAUTH_URL=${GOOGLE_OAUTH_URL}
+      - GOOGLE_ACCESS_TOKEN_URL=${GOOGLE_ACCESS_TOKEN_URL}
+      - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL}
+
     command: pnpm --filter api test
 
   api-test-coverage:
@@ -106,9 +112,7 @@ services:
       - HOST=0.0.0.0
       - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
       - API_SECRET=randomsecretfortestingpurposes
-      - REDIS_HOST=cache
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+
     command: pnpm --filter api test:coverage
 
   api-test-watch:
@@ -139,9 +143,7 @@ services:
       - HOST=0.0.0.0
       - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
       - API_SECRET=randomsecretfortestingpurposes
-      - REDIS_HOST=cache
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+
     command: pnpm --filter api test:watch
 
 networks:

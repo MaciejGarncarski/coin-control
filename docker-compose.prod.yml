@@ -107,6 +107,11 @@ services:
       - REDIS_HOST=cache
       - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_OAUTH_URL=${GOOGLE_OAUTH_URL}
+      - GOOGLE_ACCESS_TOKEN_URL=${GOOGLE_ACCESS_TOKEN_URL}
+      - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL}
 
   web:
     image: ghcr.io/maciejgarncarski/coin-control-web:latest

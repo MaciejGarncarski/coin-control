@@ -38,7 +38,7 @@ export async function postLoginHandler(
 
   await verifyPassword({
     password,
-    hash: user.password_hash,
+    hash: user.password_hash || '',
   })
 
   const isMinimumOneEmailVerified = user.user_emails.some(

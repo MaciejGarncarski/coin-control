@@ -25,7 +25,9 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { InputPassword } from '@/components/ui/input-password'
+import { Separator } from '@/components/ui/separator'
 import { useLoginMutation } from '@/features/auth/api/login'
+import { GoogleLoginButton } from '@/features/auth/components/google-login-button'
 import { cn } from '@/lib/utils'
 
 export const LoginPage = () => {
@@ -44,7 +46,7 @@ export const LoginPage = () => {
   })
 
   return (
-    <Card className="w-full">
+    <Card className="border-reflect w-full border-0">
       <CardHeader>
         <CardTitle>
           <Logo />
@@ -59,7 +61,7 @@ export const LoginPage = () => {
           </Alert>
         )}
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-6">
         <Form {...form}>
           <form onSubmit={handleLogin} className="flex flex-col gap-6">
             <FormField
@@ -111,6 +113,10 @@ export const LoginPage = () => {
             </Button>
           </form>
         </Form>
+        <Separator />
+        <div className="flex items-center justify-stretch">
+          <GoogleLoginButton />
+        </div>
       </CardContent>
     </Card>
   )

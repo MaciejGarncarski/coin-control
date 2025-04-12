@@ -40,6 +40,7 @@ export async function checkUserExists({ email }: CheckUserExistsProps) {
   if (!userIdData?.id) {
     throw new ApiError({
       message: 'User not found.',
+      formMessage: 'User not found.',
       statusCode: status.BAD_REQUEST,
     })
   }
@@ -76,6 +77,7 @@ export async function checkUserExists({ email }: CheckUserExistsProps) {
   if (!user) {
     throw new ApiError({
       message: 'User not found.',
+      formMessage: 'User not found.',
       statusCode: status.BAD_REQUEST,
     })
   }

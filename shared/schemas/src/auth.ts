@@ -107,3 +107,20 @@ export const logOutDeviceQuerySchema = z.object({
 })
 
 export type LogOutDeviceQuery = z.infer<typeof logOutDeviceQuerySchema>
+
+export const googleOauthAccessTokenSchema = z.object({
+  access_token: z.string(),
+})
+
+export type GoogleOauthAccessToken = z.infer<
+  typeof googleOauthAccessTokenSchema
+>
+
+export const googleOauthResponseSchema = z.object({
+  picture: z.string(),
+  email: z.string().email(),
+  name: z.string(),
+  id: z.string(),
+})
+
+export type GoogleOAuthResponse = z.infer<typeof googleOauthResponseSchema>

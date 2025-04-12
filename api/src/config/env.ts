@@ -1,7 +1,5 @@
 import { z } from 'zod'
 
-import { httpLogger } from '../logger/logger.js'
-
 const envSchema = z.object({
   DATABASE_URL: z.string().startsWith('postgresql://'),
   API_SECRET: z.string(),
@@ -16,15 +14,18 @@ const envSchema = z.object({
       z.literal('test'),
     ])
     .default('development'),
-  REDIS_HOST: z.string(),
-  REDIS_PORT: z.string(),
-  REDIS_PASSWORD: z.string(),
+  GOOGLE_CLIENT_ID: z.string(),
+  GOOGLE_CLIENT_SECRET: z.string(),
+  GOOGLE_OAUTH_URL: z.string(),
+  GOOGLE_CALLBACK_URL: z.string(),
+  GOOGLE_ACCESS_TOKEN_URL: z.string(),
 })
 
 const parsedEnv = envSchema.safeParse(process.env)
 
 if (!parsedEnv.success) {
-  httpLogger.logger.error(parsedEnv.error.errors)
+  // eslint-disable-next-line no-console
+  console.log(parsedEnv.error.errors)
   process.exit(1)
 }
 
