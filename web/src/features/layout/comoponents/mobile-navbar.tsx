@@ -53,15 +53,12 @@ export function MobileNavbar() {
                     <Link
                       to={url}
                       viewTransition={{ types: ['main-transition'] }}
-                      className="flex gap-4 rounded-md px-4 py-3"
-                      inactiveProps={{
-                        className: 'border border-transparent',
-                      }}
+                      className="flex items-center gap-4 rounded-md px-4 py-3"
                       activeProps={{
                         className:
-                          'text-primary-foreground bg-primary/10 text-primary border-reflect shadow',
+                          'text-primary bg-primary/10 border-reflect shadow',
                       }}>
-                      <Icon />
+                      <Icon className="size-5" />
                       {text}
                     </Link>
                   </li>

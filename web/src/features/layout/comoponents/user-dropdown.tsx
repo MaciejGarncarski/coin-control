@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { AccentSwitcher } from '@/features/layout/comoponents/accent-switcher'
 
 type Props = {
   side?: 'top' | 'right' | 'bottom' | 'left'
@@ -23,6 +24,13 @@ export function UserDropdown({ triggerComponent, side = 'right' }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{triggerComponent}</DropdownMenuTrigger>
       <DropdownMenuContent className="w-32" side={side} sideOffset={10}>
+        <DropdownMenuGroup></DropdownMenuGroup>
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <AccentSwitcher />
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Button
