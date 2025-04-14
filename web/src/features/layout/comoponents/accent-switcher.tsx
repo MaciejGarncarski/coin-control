@@ -6,19 +6,9 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  type Accent,
-  useThemeStore,
-} from '@/features/layout/comoponents/theme-state'
-
-const variables: Record<Accent, string> = {
-  blue: '--primary-blue',
-  green: '--primary-green',
-  pink: '--primary-pink',
-}
+import { useThemeStore } from '@/features/layout/comoponents/theme-state'
 
 export const AccentSwitcher = () => {
-  const accent = useThemeStore((s) => s.accent)
   const setAccent = useThemeStore((s) => s.setAccent)
 
   return (
