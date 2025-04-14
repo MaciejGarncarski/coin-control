@@ -1,4 +1,4 @@
-import { getRecentTransactions } from '@shared/schemas'
+import { getRecentTransactionsSchema } from '@shared/schemas'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 
 import { TRANSACTIONS_QUERY_KEYS } from '@/constants/query-keys/transactions'
@@ -11,7 +11,7 @@ export const recentTransactionsQueryOptions = queryOptions({
       method: 'GET',
       url: `/transactions/recent`,
       throwOnError: true,
-      schema: getRecentTransactions,
+      schema: getRecentTransactionsSchema,
     })
   },
 })

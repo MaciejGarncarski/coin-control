@@ -1,12 +1,14 @@
 import { db, Prisma } from '@shared/database'
-import type {
-  AddTransactionMutation,
-  Category,
-  DeleteTransactionParams,
-  GetRecentTransactions,
-  GetTransactionsQuery,
-  GetTransactionsResponse,
-  RecentTransaction,
+import {
+  type AddTransactionMutation,
+  type Category,
+  type DayName,
+  type DeleteTransactionParams,
+  type GetRecentTransactions,
+  type GetTransactionOverview,
+  type GetTransactionsQuery,
+  type GetTransactionsResponse,
+  type RecentTransaction,
 } from '@shared/schemas'
 import { type Request, type Response } from 'express'
 import status from 'http-status'
@@ -221,6 +223,54 @@ export async function getRecentTransactionsHandler(
   const response: GetRecentTransactions = {
     recentTransactions: transactionsDto,
     transactionCountThisMonth,
+  }
+
+  res.status(status.OK).send(response)
+  return
+}
+
+export async function getTransactionOverviewHandler(
+  req: Request,
+  res: Response,
+) {
+  const userId = req.session.userId
+
+  const userTransactions = await db.transactions.findMany({
+    where: {
+      user_id: userId,
+      transaction_date: {
+        gte: new Date(Date.now() - ms('7 days')),
+      },
+    },
+    orderBy: {
+      transaction_date: 'asc',
+    },
+    select: {
+      transaction_date: true,
+      transaction_id: true,
+    },
+  })
+
+  const transactionsGroupedByDay = userTransactions.reduce(
+    (result, element) => {
+      const dayName = element.transaction_date.toLocaleDateString('en-US', {
+        weekday: 'long',
+      }) as DayName
+
+      const prevVal = result[dayName] || 0
+
+      return {
+        ...result,
+        [dayName]: prevVal + 1,
+      }
+    },
+    {} as Record<DayName, number>,
+  )
+
+  const response: GetTransactionOverview = {
+    data: Object.entries(transactionsGroupedByDay).map(([key, val]) => {
+      return { day: key as DayName, transactions: val }
+    }),
   }
 
   res.status(status.OK).send(response)

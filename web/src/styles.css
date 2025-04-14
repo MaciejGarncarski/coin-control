@@ -83,7 +83,7 @@
 
 .blue {
   --primary: var(--primary-blue);
-  --accent: oklch(0.94 0.037 200.12);
+  --accent: oklch(0.97 0.01 200.12);
 }
 
 .pink {

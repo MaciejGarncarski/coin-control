@@ -6,7 +6,7 @@ import { AccountPage } from '@/features/account/pages/account'
 
 export const Route = createFileRoute('/_authenticated/account')({
   loader: async ({ context }) => {
-    return Promise.all([
+    return Promise.allSettled([
       context.queryClient.ensureQueryData(getMySessionsQueryOptions),
       context.queryClient.ensureQueryData(getUserEmailsQueryOptions),
     ])

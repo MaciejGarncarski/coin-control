@@ -9,9 +9,10 @@ export const Route = createFileRoute('/_authenticated/transactions')({
   component: TransactionsPage,
   validateSearch: (search: Record<string, unknown>) => {
     const searchSchema = z.object({
+      addTransaction: z.boolean().optional(),
       dateFrom: z.string().optional(),
       dateTo: z.string().optional(),
-      page: z.coerce.number().optional().default(1),
+      page: z.number().optional().default(1),
       search: z.string().optional(),
       category: categoriesSchema.optional(),
     })

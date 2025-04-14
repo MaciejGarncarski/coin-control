@@ -7,6 +7,7 @@ import {
   addTransactionHandler,
   deleteTransactionHandler,
   getRecentTransactionsHandler,
+  getTransactionOverviewHandler,
   getTransactionsHandler,
 } from './transaction.controller.js'
 
@@ -21,3 +22,4 @@ transactionsRouter.delete(
   deleteTransactionHandler,
 )
 transactionsRouter.get('/recent', authorize, getRecentTransactionsHandler)
+transactionsRouter.get('/overview', authorize, getTransactionOverviewHandler)

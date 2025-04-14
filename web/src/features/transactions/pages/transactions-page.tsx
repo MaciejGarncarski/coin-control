@@ -6,8 +6,8 @@ import { useDebouncedCallback } from 'use-debounce'
 import { Button } from '@/components/ui/button'
 import { DatePickerWithRange } from '@/components/ui/date-range-picker'
 import { Input } from '@/components/ui/input'
+import { AddTransactionForm } from '@/features/transactions/components/add-transaction-form'
 import { TransactionCategoryFilter } from '@/features/transactions/components/transaction-category-filter'
-import { TransactionsForm } from '@/features/transactions/components/transactions-form'
 import { TransactionsTable } from '@/features/transactions/components/transactions-table'
 
 export const TransactionsPage = () => {
@@ -63,7 +63,7 @@ export const TransactionsPage = () => {
         </div>
 
         <div className="flex gap-4 md:ml-auto">
-          <TransactionsForm />
+          <AddTransactionForm />
         </div>
       </div>
 

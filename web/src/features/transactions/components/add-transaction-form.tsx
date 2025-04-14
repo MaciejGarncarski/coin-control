@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { addTransactionMutation } from '@shared/schemas'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -32,8 +33,12 @@ import {
 import { useAddTransaction } from '@/features/transactions/api/add-transaction'
 import { formatTransactionCategory } from '@/utils/format-transaction-category'
 
-export const TransactionsForm = () => {
-  const [dialogOpen, setDialogOpen] = useState(false)
+export const AddTransactionForm = () => {
+  const search = useSearch({ from: '/_authenticated/transactions' })
+  const [dialogOpen, setDialogOpen] = useState<boolean>(
+    () => search.addTransaction || false,
+  )
+  const navigate = useNavigate({ from: '/transactions' })
   const addTransaction = useAddTransaction()
 
   const newTransactionForm = useForm({
@@ -45,10 +50,24 @@ export const TransactionsForm = () => {
     },
   })
 
+  const closeDialog = () => {
+    setDialogOpen(false)
+
+    navigate({
+      viewTransition: false,
+      search: (prev) => {
+        return {
+          ...prev,
+          addTransaction: undefined,
+        }
+      },
+    })
+  }
+
   const onSubmit = newTransactionForm.handleSubmit(async (data) => {
     await addTransaction.mutateAsync(data, {
       onSuccess: () => {
-        setDialogOpen(false)
+        closeDialog()
         newTransactionForm.reset({
           amount: 0,
           category: 'other',
@@ -59,7 +78,7 @@ export const TransactionsForm = () => {
   })
 
   const onCancel = () => {
-    setDialogOpen(false)
+    closeDialog()
     newTransactionForm.reset({
       amount: 0,
       category: 'other',
@@ -68,7 +87,20 @@ export const TransactionsForm = () => {
   }
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog
+      open={dialogOpen}
+      onOpenChange={(state) => {
+        setDialogOpen(state)
+        navigate({
+          viewTransition: false,
+          search: (prev) => {
+            return {
+              ...prev,
+              addTransaction: undefined,
+            }
+          },
+        })
+      }}>
       <DialogTrigger asChild>
         <Button type="button" size={'sm'}>
           <Plus />

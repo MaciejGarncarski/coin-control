@@ -19,9 +19,17 @@ export const useAddTransaction = () => {
     },
     onSuccess: async () => {
       toast.success('Added')
-      await queryClient.invalidateQueries({
-        queryKey: [TRANSACTIONS_QUERY_KEYS.TRANSACTIONS],
-      })
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: [TRANSACTIONS_QUERY_KEYS.TRANSACTIONS],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: [TRANSACTIONS_QUERY_KEYS.RECENT],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: [TRANSACTIONS_QUERY_KEYS.OVERVIEW],
+        }),
+      ])
     },
   })
 }

@@ -71,8 +71,41 @@ export const recentTransactionSchema = z.object({
   date: z.coerce.date(),
 })
 export type RecentTransaction = z.infer<typeof recentTransactionSchema>
-export const getRecentTransactions = z.object({
+
+export const getRecentTransactionsSchema = z.object({
   recentTransactions: z.array(recentTransactionSchema),
   transactionCountThisMonth: z.number(),
 })
-export type GetRecentTransactions = z.infer<typeof getRecentTransactions>
+export type GetRecentTransactions = z.infer<typeof getRecentTransactionsSchema>
+
+export const dayNameSchema = z.union([
+  z.literal('Monday'),
+  z.literal('Tuesday'),
+  z.literal('Wendsay'),
+  z.literal('Thursday'),
+  z.literal('Friday'),
+  z.literal('Saturday'),
+  z.literal('Sunday'),
+])
+
+export type DayName = z.infer<typeof dayNameSchema>;
+
+export const transactionOverviewSchema = z.object({
+  day: dayNameSchema,
+  transactions: z.number().min(0),
+})
+
+export type TransactionOverview = z.infer<typeof transactionOverviewSchema>
+
+export const getTransactionOverviewSchema = z.object({
+  data: z.array(
+    z.object({
+      day: dayNameSchema,
+      transactions: z.number().min(0),
+    }),
+  ),
+})
+
+export type GetTransactionOverview = z.infer<
+  typeof getTransactionOverviewSchema
+>

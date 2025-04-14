@@ -5,7 +5,7 @@ import {
   TrendingDown,
   TrendingUp,
 } from 'lucide-react'
-import { useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 
 import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
 import { Separator } from '@/components/ui/separator'
@@ -59,7 +59,7 @@ export const HomePage = () => {
       <div className="bg-card border-reflect flex flex-col rounded-xl py-2 shadow-xs md:h-32 md:flex-row md:py-4">
         {homepageTilesData.map(({ icon: Icon, title, value }) => {
           return (
-            <>
+            <Fragment key={title}>
               <div className="flex grow items-center gap-4 p-6">
                 <span className="bg-primary/10 border-reflect text-primary flex h-10 w-10 items-center justify-center rounded-full p-2 md:hidden xl:flex">
                   <Icon />
@@ -75,7 +75,7 @@ export const HomePage = () => {
               </div>
               <Separator orientation="horizontal" className="md:hidden" />
               <Separator orientation="vertical" className="hidden md:block" />
-            </>
+            </Fragment>
           )
         })}
         <div className="flex grow items-center gap-4 p-6">
