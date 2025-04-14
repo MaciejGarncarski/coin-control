@@ -252,9 +252,9 @@
   }
 
   .blue .border-reflect {
-    --min: #0009312e !important;
-    --max: #003979 !important;
-    --start: #000b31 !important;
+    --min: #0813472e !important;
+    --max: #0954a8 !important;
+    --start: #061447 !important;
     position: relative;
 
     --c: 320 100% 75%;
@@ -269,8 +269,8 @@
 
   .dark .blue .border-reflect {
     --gradientBorder-gradient:
-      linear-gradient(180deg, #00311e2e, #002079, #001731bd),
-      linear-gradient(15deg, #00311e2e 50%, #002a79);
+      linear-gradient(180deg, #0813472e, #0954a8, #032246bd),
+      linear-gradient(15deg, #0813472e 50%, #0954a8);
     --start: rgba(0, 0, 0, 0.92);
   }
 
