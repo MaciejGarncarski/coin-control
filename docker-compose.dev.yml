@@ -67,8 +67,6 @@ services:
     build:
       target: dev
       dockerfile: ./worker/worker.Dockerfile
-      args:
-        - DATABASE_URL=${DATABASE_URL}
     volumes:
       - ./worker/src:/app/worker/src
       - ./worker/prisma:/app/worker/prisma
@@ -80,7 +78,6 @@ services:
     networks:
       - app-network
     environment:
-      - DATABASE_URL=${DATABASE_URL}
       - APP_ORIGIN=${APP_URL}
       - MAIL_USER=${MAIL_USER}
       - MAIL_PASS=${MAIL_PASS}
@@ -98,8 +95,6 @@ services:
     build:
       target: dev
       dockerfile: ./api/api.Dockerfile
-      args:
-        - DATABASE_URL=${DATABASE_URL}
     volumes:
       - ./api/avatar-upload:/app/api/avatar-upload
       - ./api/src:/app/api/src
@@ -116,8 +111,8 @@ services:
       - APP_ORIGIN=${APP_URL}
       - API_URL=${API_URL}
       - HOST=${HOST}
-      - DATABASE_URL=${DATABASE_URL}
       - API_SECRET=${API_SECRET}
+      - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
       - REDIS_HOST=cache
       - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
