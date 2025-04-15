@@ -32,7 +32,7 @@ jobs:
 
       - name: Build and run tests with Docker Compose
         run: |
-          docker compose -f docker-compose.test-api.yml --profile once up --build --abort-on-container-exit --build-arg BUILDKIT_INLINE_CACHE=1
+          COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker compose -f docker-compose.test-api.yml --profile once up --build --abort-on-container-exit
           docker compose -f docker-compose.test-api.yml down
 
       - name: Compose down
