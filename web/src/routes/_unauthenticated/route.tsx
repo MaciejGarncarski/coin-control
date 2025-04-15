@@ -11,7 +11,7 @@ import { CookieBanner } from '@/features/privacy-policy/comopnents/cookie-banner
 
 export const Route = createFileRoute('/_unauthenticated')({
   beforeLoad: async ({ context }) => {
-    let shouldRedirect = true
+    let shouldRedirect = false
 
     if (context.auth.status === 'PENDING') {
       const data = await context.auth.ensureSession()
@@ -21,8 +21,8 @@ export const Route = createFileRoute('/_unauthenticated')({
       }
     }
 
-    if (!context.auth?.status) {
-      return
+    if (context.auth.status === 'AUTHENTICATED') {
+      shouldRedirect = true
     }
 
     if (shouldRedirect) {

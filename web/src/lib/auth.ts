@@ -5,7 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import { useRouteContext } from '@tanstack/react-router'
+import { useRouteContext, useRouter } from '@tanstack/react-router'
 
 import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
 import { fetcher } from '@/lib/fetcher'
@@ -39,6 +39,7 @@ export const useUser = (props?: UseUserOptions) => {
 }
 
 export const useLogoutMutation = () => {
+  const router = useRouter()
   const queryClient = useQueryClient()
   const authContext = useRouteContext({
     from: '__root__',
@@ -53,10 +54,11 @@ export const useLogoutMutation = () => {
         throwOnError: true,
       }),
     onSuccess: async () => {
+      authContext.logout()
+      router.invalidate()
       await queryClient.invalidateQueries({
         queryKey: [AUTH_QUERY_KEYS.SESSION],
       })
-      authContext.logout()
     },
   })
 }

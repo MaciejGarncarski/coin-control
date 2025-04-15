@@ -8,10 +8,8 @@ import { HomePage } from '@/features/homepage/pages/homepage'
 export const Route = createFileRoute('/_authenticated/')({
   component: HomePage,
   loader: ({ context }) => {
-    return Promise.allSettled([
-      context.queryClient.ensureQueryData(recentTransactionsQueryOptions),
-      context.queryClient.ensureQueryData(getStatisticsQueryOptions),
-      context.queryClient.ensureQueryData(overviewTransactionsQueryOptions),
-    ])
+    context.queryClient.ensureQueryData(recentTransactionsQueryOptions)
+    context.queryClient.ensureQueryData(getStatisticsQueryOptions)
+    context.queryClient.ensureQueryData(overviewTransactionsQueryOptions)
   },
 })

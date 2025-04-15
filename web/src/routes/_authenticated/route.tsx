@@ -26,8 +26,8 @@ export const Route = createFileRoute('/_authenticated')({
       }
     }
 
-    if (!context.auth?.status) {
-      return
+    if (context.auth.status === 'UNAUTHENTICATED') {
+      shouldRedirect = true
     }
 
     if (shouldRedirect) {

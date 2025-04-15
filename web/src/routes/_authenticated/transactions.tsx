@@ -22,10 +22,10 @@ export const Route = createFileRoute('/_authenticated/transactions')({
   loaderDeps: ({ search }) => {
     return search
   },
-  loader: async ({ context, deps }) => {
+  loader: ({ context, deps }) => {
     const { page, dateFrom, dateTo, search, category } = deps
 
-    await context.queryClient.prefetchQuery(
+    context.queryClient.prefetchQuery(
       getTransactionQueryOptions({
         dateFrom: dateFrom || null,
         dateTo: dateTo || null,
