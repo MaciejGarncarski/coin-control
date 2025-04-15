@@ -125,7 +125,7 @@ export const EditAvatarForm = () => {
               onChange={handleUploadedFile}
             />
             <Avatar
-              className="h-20 w-20 peer-focus:outline-3"
+              className="border-reflect h-20 w-20 border-0 peer-focus:outline-3"
               data-id-avatar-form>
               {user.data?.avatarURL ? (
                 <AvatarImage src={user.data?.avatarURL} />

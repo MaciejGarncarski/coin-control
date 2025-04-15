@@ -5,17 +5,6 @@ import { useEffect } from 'react'
 import { userQueryOptions } from '@/lib/auth'
 import { router } from '@/main'
 
-export const auth: Auth = {
-  status: 'PENDING',
-  isEmailVerified: false,
-  login: () => {
-    auth.status = 'AUTHENTICATED'
-  },
-  logout: () => {
-    auth.status = 'UNAUTHENTICATED'
-  },
-}
-
 export type Auth = {
   login: () => void
   logout: () => void
@@ -25,6 +14,17 @@ export type Auth = {
 
 export type AuthUtils = {
   ensureSession: () => Promise<User | null>
+}
+
+const auth: Auth = {
+  status: 'PENDING',
+  isEmailVerified: false,
+  login: () => {
+    auth.status = 'AUTHENTICATED'
+  },
+  logout: () => {
+    auth.status = 'UNAUTHENTICATED'
+  },
 }
 
 export const useAuth = (): Auth & AuthUtils => {

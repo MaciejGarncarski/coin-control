@@ -17,7 +17,7 @@ COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY web ./web
 COPY shared/schemas ./shared/schemas
 COPY shared/eslint-prettier ./shared/eslint-prettier
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 RUN pnpm "--filter=@shared/*" build
 
 # dev
@@ -25,7 +25,8 @@ FROM base AS dev
 WORKDIR /app
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY web ./web
-COPY shared ./shared
+COPY shared/schemas ./shared/schemas
+COPY shared/eslint-prettier ./shared/eslint-prettier
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 ENV NODE_ENV="development"
 EXPOSE ${PORT}

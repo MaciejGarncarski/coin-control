@@ -7,7 +7,7 @@ export function UserAvatar() {
   const userData = useUser()
 
   return (
-    <Avatar>
+    <Avatar className="border-reflect border-0">
       {userData.data?.avatarURL ? (
         <AvatarImage src={userData.data?.avatarURL} />
       ) : null}

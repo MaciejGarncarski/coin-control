@@ -2,9 +2,11 @@ import type { ApiError as TApiError } from '@shared/schemas'
 import type { NextFunction, Request, Response } from 'express'
 import status from 'http-status'
 
-import { isProd } from '../config/consatnts.js'
+import { env } from '../config/env.js'
 import { ApiError } from '../utils/api-error.js'
 import { ValidationError } from '../utils/validation-error.js'
+
+const isProd = env.NODE_ENV === 'production'
 
 export function errorMiddleware(
   error: Error,

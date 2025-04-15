@@ -106,6 +106,7 @@ export const TransactionTablePagination = () => {
       <div className="flex items-center justify-center gap-8 p-4">
         <Button
           variant="outline"
+          className="border-reflect border-0"
           size="sm"
           disabled={Number(search.page) - 1 < 1}
           onMouseOver={prefetchPrevPage}
@@ -122,6 +123,7 @@ export const TransactionTablePagination = () => {
         <Button
           variant="outline"
           size="sm"
+          className="border-reflect border-0"
           disabled={
             Number(search.page) - 1 >= (transactions.data?.maxPages || 1) - 1
           }

@@ -42,12 +42,14 @@ function RouteComponent() {
   }
 
   return (
-    <main className="mx-auto -mt-8 flex h-screen w-[20rem] flex-col items-center justify-center gap-2 md:w-[25rem]">
-      <div className="flex w-full justify-end">
-        <ThemeSwitcher withText />
-      </div>
-      <Outlet />
-      <CookieBanner />
-    </main>
+    <div className="bg-primary/5 h-screen w-full py-4">
+      <main className="mx-auto -mt-8 flex h-full w-[20rem] flex-col items-center justify-center gap-2 md:w-[25rem]">
+        <div className="flex w-full justify-end">
+          <ThemeSwitcher withText />
+        </div>
+        <Outlet />
+        <CookieBanner />
+      </main>
+    </div>
   )
 }
