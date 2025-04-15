@@ -1,6 +1,6 @@
 # CoinControl
 
-<img width="192" height="192" src="https://raw.githubusercontent.com/MaciejGarncarski/coin-control/main/.github/assets/logo.png">
+<img width="192" height="192" src="https://raw.githubusercontent.com/MaciejGarncarski/coin-control/refs/heads/main/.github/assets/logo.png">
 
 CoinControl is a budget tracking app designed to help users monitor their income and expenses. It addresses the common problem of lacking control over personal finances by providing tools for effective money management.
 
