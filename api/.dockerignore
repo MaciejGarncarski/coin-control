@@ -9,3 +9,4 @@ prisma
 .git
 .env
 /prod
+avatar-upload

@@ -15,7 +15,11 @@ FROM base AS test
 WORKDIR /app
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY api ./api
-COPY shared ./shared
+COPY shared/database ./shared/database
+COPY shared/queues ./shared/queues
+COPY shared/email ./shared/email
+COPY shared/schemas ./shared/schemas
+COPY shared/eslint-prettier ./shared/eslint-prettier
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install
 RUN pnpm "--filter=@shared/*" build
 
