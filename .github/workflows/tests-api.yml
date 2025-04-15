@@ -18,14 +18,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Docker Compose
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-compose-action@v1
+        with:
+          version: latest
 
-      - name: Build the backend image
+      - name: Build the frontend image with cache
         uses: docker/build-push-action@v6
         with:
           load: true
           context: .
           file: api/api.Dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Run tests
         run: docker compose -f docker-compose.test-api.yml --profile once up --abort-on-container-exit

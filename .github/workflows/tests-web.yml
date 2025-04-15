@@ -28,8 +28,8 @@ jobs:
           load: true
           context: .
           file: api/api.Dockerfile
-          cache-from: type=gha,scope=$GITHUB_REF_NAME-frontend-test
-          cache-to: type=gha,scope=$GITHUB_REF_NAME-frontend-test,mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Run tests
         run: docker compose -f docker-compose.test-web.yml --profile once up --abort-on-container-exit
