@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useUpdateUser } from '@/features/account/api/use-update-user'
 import { useUser } from '@/lib/auth'
 
@@ -34,7 +35,27 @@ export const EditNameForm = () => {
   })
 
   if (user.isPending) {
-    return null
+    return (
+      <Card className="pb-0">
+        <CardHeader>
+          <CardTitle>
+            <h2 className="text-2xl font-semibold">Display Name</h2>
+          </CardTitle>
+          <CardDescription>
+            Please enter your full name, or a display name you are comfortable
+            with.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-10 w-full" />
+        </CardContent>
+        <CardFooter className="bg-muted rounded-b-xl border-t px-6 py-3">
+          <p className="text-muted-foreground text-sm">
+            Please use 32 characters at maximum.
+          </p>
+        </CardFooter>
+      </Card>
+    )
   }
 
   const updateUserFullName = editNameForm.handleSubmit(({ name }) => {

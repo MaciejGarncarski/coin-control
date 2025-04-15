@@ -47,6 +47,17 @@ export const TransactionsTable = () => {
     getCoreRowModel: getCoreRowModel(),
   })
 
+  if (transactions.error) {
+    return (
+      <div className="text-foreground my-10 flex flex-col items-center justify-center gap-1 text-center">
+        <h2 className="text-muted-foreground text-3xl font-semibold">
+          Failed to load data
+        </h2>
+        <p className="text-muted-foreground">Try again later.</p>
+      </div>
+    )
+  }
+
   return (
     <div>
       <div className="flex flex-col">
@@ -77,6 +88,15 @@ export const TransactionsTable = () => {
           </TableHeader>
           <TableBody className="table-row h-1" />
           <TableBody className="w-auto overflow-x-auto">
+            {table.getRowModel().rows.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5}>
+                  <p className="text-muted-foreground px-10 py-4 text-center text-lg">
+                    No data yet.
+                  </p>
+                </TableCell>
+              </TableRow>
+            )}
             {table.getRowModel().rows.map((row) => {
               return (
                 <TableRow

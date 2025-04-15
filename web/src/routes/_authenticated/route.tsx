@@ -16,13 +16,21 @@ export const Route = createFileRoute('/_authenticated')({
   pendingMinMs: 0,
   pendingMs: 0,
   beforeLoad: async ({ context }) => {
+    let shouldRedirect = false
+
+    if (context.auth.status === 'PENDING') {
+      const data = await context.auth.ensureSession()
+
+      if (!data) {
+        shouldRedirect = true
+      }
+    }
+
     if (!context.auth?.status) {
       return
     }
 
-    const isLoggedIn = context.auth?.status === 'loggedIn'
-
-    if (!isLoggedIn) {
+    if (shouldRedirect) {
       throw redirect({
         to: '/auth/login',
       })

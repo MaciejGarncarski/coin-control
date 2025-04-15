@@ -21,13 +21,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useUploadAvatar } from '@/features/account/api/use-upload-avatar'
 import { useAvatarCrop } from '@/features/account/hooks/use-avatar-crop'
 import { useUser } from '@/lib/auth'
 
 export const EditAvatarForm = () => {
   const inputRef = useRef<HTMLInputElement>(null)
-
   const user = useUser()
   const {
     croppedImage,
@@ -47,7 +47,23 @@ export const EditAvatarForm = () => {
   const uploadAvatarMutation = useUploadAvatar()
 
   if (user.isPending) {
-    return null
+    return (
+      <Card className="pb-0">
+        <CardHeader>
+          <CardTitle>
+            <h2 className="text-2xl font-semibold">Avatar</h2>
+          </CardTitle>
+          <CardDescription className="flex items-center gap-6 text-balance">
+            <Skeleton className="h-20 w-full" />
+          </CardDescription>
+        </CardHeader>
+        <CardFooter className="bg-muted rounded-b-xl border-t px-6 py-3">
+          <p className="text-muted-foreground py-1 text-sm">
+            An avatar is optional but strongly recommended.
+          </p>
+        </CardFooter>
+      </Card>
+    )
   }
 
   const updateUserAvatar = () => {

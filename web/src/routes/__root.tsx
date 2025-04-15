@@ -8,13 +8,13 @@ import {
 import { lazy } from 'react'
 import { Toaster } from 'sonner'
 
-import type { Auth } from '@/config/auth'
 import { NotFoundPage } from '@/features/layout/pages/not-found'
+import type { Auth, AuthUtils } from '@/hooks/use-auth'
 import { useDetectTheme } from '@/hooks/use-detect-theme'
 
 interface RouterContext {
   queryClient: QueryClient
-  auth: Auth
+  auth: Auth & AuthUtils
 }
 
 const LazyRouterDevtools =
@@ -52,7 +52,4 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   }),
   notFoundComponent: NotFoundPage,
   component: () => <RootComponent />,
-  shouldReload({ context }) {
-    return context.auth.status !== 'loggedIn'
-  },
 })

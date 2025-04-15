@@ -1,18 +1,13 @@
 import './styles.css'
 
 import type { ApiError } from '@shared/schemas'
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
-import { StrictMode, useEffect } from 'react'
+import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 
-import { auth } from '@/config/auth'
 import { ErrorPage } from '@/features/layout/pages/error'
-import { userQueryOptions } from '@/lib/auth'
+import { useAuth } from '@/hooks/use-auth'
 import { queryConfig } from '@/lib/react-query'
 
 import { routeTree } from './routeTree.gen'
@@ -47,27 +42,13 @@ declare module '@tanstack/react-router' {
 }
 
 export const MainApp = () => {
-  const userAuthenticated = useQuery(userQueryOptions)
-
-  useEffect(() => {
-    if (userAuthenticated.isLoading) {
-      return
-    }
-
-    router.invalidate()
-  }, [userAuthenticated.data, userAuthenticated.isLoading])
-
-  if (userAuthenticated.isLoading) return null
+  const auth = useAuth()
 
   return (
     <RouterProvider
       router={router}
       context={{
-        auth: {
-          ...auth,
-          status: userAuthenticated?.data?.id ? 'loggedIn' : 'loggedOut',
-          isEmailVerified: userAuthenticated?.data?.isEmailVerified || false,
-        },
+        auth: auth,
       }}
     />
   )
