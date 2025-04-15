@@ -1,4 +1,11 @@
 dist
 prettier.config.cjs
-eslint.config.js
-node_modules
+eslint.config.mjs
+coverage
+prisma
+**/bin
+**/obj
+**/node_modules
+.git
+.env
+/prod

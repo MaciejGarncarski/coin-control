@@ -18,6 +18,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTransactionsOverview } from '@/features/homepage/api/get-overview'
 import { NoTransactions } from '@/features/homepage/components/no-transactions'
+import { cn } from '@/lib/utils'
 
 const chartConfig = {
   transactions: {
@@ -27,14 +28,20 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-const ChartCardContainer = ({ children }: { children: ReactNode }) => {
+const ChartCardContainer = ({
+  children,
+  isLoading = false,
+}: {
+  children: ReactNode
+  isLoading?: boolean
+}) => {
   return (
     <Card className="border-reflect border-none md:h-[30rem] lg:h-[58dvh]">
       <CardHeader>
         <CardTitle>Transactions Overview</CardTitle>
         <CardDescription>Your transactions from last week</CardDescription>
       </CardHeader>
-      <CardContent className="px-0">{children}</CardContent>
+      <CardContent className={cn(!isLoading && 'px-0')}>{children}</CardContent>
     </Card>
   )
 }
@@ -44,7 +51,7 @@ export function ChartHomepage() {
 
   if (overview.isLoading) {
     return (
-      <ChartCardContainer>
+      <ChartCardContainer isLoading>
         <Skeleton className="h-64" />
       </ChartCardContainer>
     )

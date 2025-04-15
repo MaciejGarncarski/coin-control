@@ -12,8 +12,10 @@ RUN corepack enable
 
 # tests
 FROM base AS test
-COPY . /app
 WORKDIR /app
+COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
+COPY api ./api
+COPY shared ./shared
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install
 RUN pnpm "--filter=@shared/*" build
 

@@ -22,8 +22,19 @@ jobs:
       - name: Set up Docker Compose
         uses: docker/setup-buildx-action@v3
 
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Build and run tests with Docker Compose
-        run: docker compose -f docker-compose.test-api.yml --profile once up --build --abort-on-container-exit
+        run: |
+          docker compose -f docker-compose.test-api.yml --profile once up --build --abort-on-container-exit --build-arg BUILDKIT_INLINE_CACHE=1
+          docker compose -f docker-compose.test-api.yml down
 
       - name: Compose down
+        if: always() # ensure compose down runs even if tests fail
         run: docker compose -f docker-compose.test-api.yml down
