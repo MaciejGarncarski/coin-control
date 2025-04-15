@@ -22,14 +22,12 @@ jobs:
         with:
           version: latest
 
-      - name: Build the frontend image with cache
+      - name: Build the frontend image
         uses: docker/build-push-action@v6
         with:
           load: true
           context: .
           file: api/api.Dockerfile
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Run tests
         run: docker compose -f docker-compose.test-web.yml --profile once up --abort-on-container-exit
