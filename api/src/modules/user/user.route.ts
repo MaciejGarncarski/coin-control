@@ -12,7 +12,7 @@ import ms from 'ms'
 
 import { createRateLimiter } from '../../lib/rate-limiter.js'
 import { authorize } from '../../middlewares/authorize.js'
-import { validateData } from '../../middlewares/validator.js'
+import { validateBody } from '../../middlewares/validator-body.js'
 import {
   addEmailHandler,
   deleteEmailHandler,
@@ -37,42 +37,42 @@ userRouter.post(
   '/emails',
   addNewEmailLimiter,
   authorize,
-  validateData(addEmailMutationSchema),
+  validateBody(addEmailMutationSchema),
   addEmailHandler,
 )
 
 userRouter.post(
   '/resend-email-verification',
   authorize,
-  validateData(resendEmailVerificationMutationSchema),
+  validateBody(resendEmailVerificationMutationSchema),
   resendEmailVerificationHandler,
 )
 
 userRouter.post(
   '/verify-secondary-email',
   authorize,
-  validateData(verifySecondaryEmailMutaitonSchema),
+  validateBody(verifySecondaryEmailMutaitonSchema),
   verifySecondaryEmailHandler,
 )
 
 userRouter.post(
   '/set-primary-email',
   authorize,
-  validateData(setPrimaryEmailMutationSchema),
+  validateBody(setPrimaryEmailMutationSchema),
   setPrimaryEmailHandler,
 )
 
 userRouter.post(
   '/delete-email',
   authorize,
-  validateData(deleteEmailMutationSchema),
+  validateBody(deleteEmailMutationSchema),
   deleteEmailHandler,
 )
 
 userRouter.patch(
   '/',
   authorize,
-  validateData(userFullNameMutationSchema),
+  validateBody(userFullNameMutationSchema),
   updateUserHandler,
 )
 
@@ -83,6 +83,6 @@ userRouter.post(
     windowMs: ms('1 minute'),
   }),
   authorize,
-  validateData(deleteUserAccountMutationSchema),
+  validateBody(deleteUserAccountMutationSchema),
   deleteUserAccountHandler,
 )

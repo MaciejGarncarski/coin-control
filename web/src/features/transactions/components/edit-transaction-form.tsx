@@ -1,9 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { addTransactionMutation } from '@shared/schemas'
-import { useNavigate, useSearch } from '@tanstack/react-router'
-import { Plus } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { categoriesSchema, type Category } from '@shared/schemas'
+import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
 import { Button } from '@/components/ui/button'
@@ -13,7 +12,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import {
   Form,
@@ -31,113 +29,124 @@ import {
   SelectItem,
   SelectTrigger,
 } from '@/components/ui/select'
-import { useAddTransaction } from '@/features/transactions/api/add-transaction'
+import { useEditTransaction } from '@/features/transactions/api/edit-transaction'
 import { AmountInput } from '@/features/transactions/components/amount-input'
 import { cn } from '@/lib/utils'
 import { formatTransactionCategory } from '@/utils/format-transaction-category'
 
-export const AddTransactionForm = () => {
-  const search = useSearch({ from: '/_authenticated/transactions' })
-  const [dialogOpen, setDialogOpen] = useState<boolean>(
-    () => search.addTransaction || false,
+type Props = {
+  isOpen: boolean
+  setIsOpen: (val: boolean) => void
+  amount: number
+  category: Category
+  description: string
+  transactionId: string
+}
+
+const editTransactionSchema = z
+  .object({
+    description: z
+      .string()
+      .max(64, { message: 'Description is too long.' })
+      .optional(),
+    category: categoriesSchema,
+    amount: z.coerce.number().min(-999_999).max(999_999),
+  })
+  .refine(
+    ({ amount }) => {
+      if (amount === 0) {
+        return false
+      }
+      return true
+    },
+    {
+      message: 'Amount cannot be 0.',
+      path: ['amount'],
+    },
   )
 
-  const navigate = useNavigate({ from: '/transactions' })
-  const addTransaction = useAddTransaction()
+export const EditTransactionForm = ({
+  isOpen,
+  setIsOpen,
+  amount,
+  category,
+  description,
+  transactionId,
+}: Props) => {
+  const editTransaction = useEditTransaction()
 
-  const newTransactionForm = useForm({
-    resolver: zodResolver(addTransactionMutation),
+  const editTransactionForm = useForm({
+    resolver: zodResolver(editTransactionSchema),
     defaultValues: {
-      amount: 0,
-      category: 'other',
-      description: '',
+      amount: amount,
+      category: category,
+      description: description,
     },
   })
 
-  const amountValue = newTransactionForm.watch().amount
+  const amountValue = editTransactionForm.watch().amount
 
   const closeDialog = useCallback(() => {
-    setDialogOpen(false)
+    setIsOpen(false)
+  }, [setIsOpen])
 
-    navigate({
-      viewTransition: false,
-      search: (prev) => {
-        return {
-          ...prev,
-          addTransaction: undefined,
-        }
+  const onSubmit = editTransactionForm.handleSubmit(async (data) => {
+    await editTransaction.mutateAsync(
+      {
+        transactionId: transactionId,
+        amount: data.amount,
+        category: data.category,
+        description: data.description,
       },
-    })
-  }, [navigate])
-
-  const onSubmit = newTransactionForm.handleSubmit(async (data) => {
-    await addTransaction.mutateAsync(data, {
-      onSuccess: () => {
-        closeDialog()
-        newTransactionForm.reset({
-          amount: 0,
-          category: 'other',
-          description: '',
-        })
+      {
+        onSuccess: () => {
+          closeDialog()
+          editTransactionForm.reset({
+            amount: 0,
+            category: 'other',
+            description: '',
+          })
+        },
       },
-    })
+    )
   })
 
   const onCancel = useCallback(() => {
     closeDialog()
-    newTransactionForm.reset({
+    editTransactionForm.reset({
       amount: 0,
       category: 'other',
       description: '',
     })
-  }, [closeDialog, newTransactionForm])
+  }, [closeDialog, editTransactionForm])
 
   const decreaseAmount = useCallback(() => {
-    newTransactionForm.setValue(
+    editTransactionForm.setValue(
       'amount',
       parseFloat(amountValue.toString()) - 10,
     )
-  }, [amountValue, newTransactionForm])
+  }, [amountValue, editTransactionForm])
 
   const increaseAmount = useCallback(() => {
-    newTransactionForm.setValue(
+    editTransactionForm.setValue(
       'amount',
       parseFloat(amountValue.toString()) + 10,
     )
-  }, [amountValue, newTransactionForm])
+  }, [amountValue, editTransactionForm])
 
   return (
-    <Dialog
-      open={dialogOpen}
-      onOpenChange={(state) => {
-        setDialogOpen(state)
-        navigate({
-          viewTransition: false,
-          search: (prev) => {
-            return {
-              ...prev,
-              addTransaction: undefined,
-            }
-          },
-        })
-      }}>
-      <DialogTrigger asChild>
-        <Button type="button" size={'sm'}>
-          <Plus />
-          Add Transaction
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New transaction</DialogTitle>
-          <DialogDescription>Add income or spending.</DialogDescription>
+          <DialogTitle>Edit transaction</DialogTitle>
+          <DialogDescription>Change income or spending.</DialogDescription>
         </DialogHeader>
 
-        <Form {...newTransactionForm}>
+        <Form {...editTransactionForm}>
           <form className="mt-4 flex flex-col gap-8" onSubmit={onSubmit}>
             <FormField
               name="amount"
-              control={newTransactionForm.control}
+              control={editTransactionForm.control}
               render={({ field }) => {
                 return (
                   <FormItem>
@@ -155,14 +164,14 @@ export const AddTransactionForm = () => {
               }}
             />
             <FormField
-              control={newTransactionForm.control}
+              control={editTransactionForm.control}
               name="category"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={category}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <div className="flex items-center gap-4 px-2">
@@ -217,7 +226,7 @@ export const AddTransactionForm = () => {
             />
             <FormField
               name="description"
-              control={newTransactionForm.control}
+              control={editTransactionForm.control}
               render={({ field }) => {
                 return (
                   <FormItem>

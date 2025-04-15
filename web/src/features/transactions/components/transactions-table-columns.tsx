@@ -57,7 +57,14 @@ export const transactionsTableColumns = [
     id: 'options',
     header: 'Options',
     cell: ({ row }) => {
-      return <TransactionTableMenu transactionId={row.original.transactionId} />
+      return (
+        <TransactionTableMenu
+          transactionId={row.original.transactionId}
+          amount={row.original.amount}
+          category={row.original.category}
+          description={row.original.description || ''}
+        />
+      )
     },
   }),
 ]

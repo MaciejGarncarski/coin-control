@@ -4,6 +4,8 @@ import {
   type Category,
   type DayName,
   type DeleteTransactionParams,
+  type EditTransactionMutation,
+  type EditTransactionParams,
   type GetRecentTransactions,
   type GetTransactionOverview,
   type GetTransactionsQuery,
@@ -285,5 +287,34 @@ export async function getTransactionOverviewHandler(
   }
 
   res.status(status.OK).send(response)
+  return
+}
+
+export async function editTransactionHandler(
+  req: TypedRequestBody<EditTransactionMutation> &
+    TypedRequestParams<EditTransactionParams>,
+  res: Response,
+) {
+  const transactionId = req.params.transactionId
+  const body = req.body
+  const userId = req.session.userId
+
+  const encryptedDescription = body.description
+    ? encrypt(body.description)
+    : undefined
+
+  const updated = await db.transactions.update({
+    where: {
+      transaction_id: transactionId,
+      user_id: userId,
+    },
+    data: {
+      amount: body.amount,
+      category: body.category,
+      description: encryptedDescription,
+    },
+  })
+
+  res.status(status.OK).send(updated)
   return
 }

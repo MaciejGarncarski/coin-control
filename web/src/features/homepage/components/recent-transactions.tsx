@@ -15,7 +15,7 @@ const RecentTransactionsCard = ({ children }: { children: ReactNode }) => {
   const recentTransactions = useRecentTransactions()
 
   return (
-    <Card className="border-reflect border-none md:h-[58dvh]">
+    <Card className="border-reflect border-none md:h-[30rem] lg:h-[58dvh]">
       <CardHeader>
         <CardTitle>Recent Transactions</CardTitle>
         {!recentTransactions.isError && (
@@ -75,7 +75,9 @@ export const RecentTransactions = () => {
           ({ transactionId, category, description, amount, date }) => {
             return (
               <li className="flex items-center gap-4" key={transactionId}>
-                <TransactionCategoryIcon category={category} tooltipEnabled />
+                <div className="shrink-0">
+                  <TransactionCategoryIcon category={category} tooltipEnabled />
+                </div>
                 <div className="flex flex-col">
                   <h3 className="inline max-w-[10ch] truncate overflow-hidden text-sm font-semibold xl:max-w-[28ch]">
                     {description}

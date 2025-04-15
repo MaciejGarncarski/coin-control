@@ -24,13 +24,6 @@ export function UserDropdown({ triggerComponent, side = 'right' }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{triggerComponent}</DropdownMenuTrigger>
       <DropdownMenuContent className="w-32" side={side} sideOffset={10}>
-        <DropdownMenuGroup></DropdownMenuGroup>
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <AccentSwitcher />
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Button
@@ -56,6 +49,12 @@ export function UserDropdown({ triggerComponent, side = 'right' }: Props) {
               size="sm"
               className="w-full justify-start text-left font-normal"
             />
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <AccentSwitcher />
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

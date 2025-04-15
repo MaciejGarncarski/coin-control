@@ -1,3 +1,4 @@
+import type { Category } from '@shared/schemas'
 import { Edit, MoreHorizontal, Trash } from 'lucide-react'
 import { useState } from 'react'
 
@@ -13,12 +14,6 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -27,12 +22,21 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useDeleteTransaction } from '@/features/transactions/api/delete-transaction'
+import { EditTransactionForm } from '@/features/transactions/components/edit-transaction-form'
 
 type Props = {
   transactionId: string
+  amount: number
+  category: Category
+  description: string
 }
 
-export const TransactionTableMenu = ({ transactionId }: Props) => {
+export const TransactionTableMenu = ({
+  transactionId,
+  amount,
+  category,
+  description,
+}: Props) => {
   const [isOpen, setIsOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
@@ -83,16 +87,14 @@ export const TransactionTableMenu = ({ transactionId }: Props) => {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit transaction</DialogTitle>
-          </DialogHeader>
-          heja
-        </DialogContent>
-      </Dialog>
-
+      <EditTransactionForm
+        isOpen={editOpen}
+        setIsOpen={setEditOpen}
+        amount={amount}
+        category={category}
+        description={description}
+        transactionId={transactionId}
+      />
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

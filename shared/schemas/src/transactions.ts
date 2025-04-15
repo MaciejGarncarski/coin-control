@@ -37,6 +37,35 @@ export const addTransactionMutation = z
 
 export type AddTransactionMutation = z.infer<typeof addTransactionMutation>
 
+export const editTransactionParamsSchema = z.object({
+  transactionId: z.string(),
+})
+export type EditTransactionParams = z.infer<typeof editTransactionParamsSchema>
+
+export const editTransactionMutation = z
+  .object({
+    description: z
+      .string()
+      .max(64, { message: 'Description is too long.' })
+      .optional(),
+    category: categoriesSchema.optional(),
+    amount: z.coerce.number().min(-999_999).max(999_999).optional(),
+  })
+  .refine(
+    ({ amount }) => {
+      if (amount === 0) {
+        return false
+      }
+      return true
+    },
+    {
+      message: 'Amount cannot be 0.',
+      path: ['amount'],
+    },
+  )
+
+export type EditTransactionMutation = z.infer<typeof editTransactionMutation>
+
 export const getTransactionsQuery = z.object({
   transactionId: z.string(),
   description: z.string().nullable(),
@@ -88,7 +117,7 @@ export const dayNameSchema = z.union([
   z.literal('Sunday'),
 ])
 
-export type DayName = z.infer<typeof dayNameSchema>;
+export type DayName = z.infer<typeof dayNameSchema>
 
 export const transactionOverviewSchema = z.object({
   day: dayNameSchema,

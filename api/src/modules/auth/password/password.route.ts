@@ -4,7 +4,7 @@ import {
 } from '@shared/schemas'
 import { Router } from 'express'
 
-import { validateData } from '../../../middlewares/validator.js'
+import { validateBody } from '../../../middlewares/validator-body.js'
 import {
   forgotPasswordLinkHandler,
   resetPasswordHandler,
@@ -14,12 +14,12 @@ export const passwordRouter = Router({ mergeParams: true })
 
 passwordRouter.post(
   '/forgot',
-  validateData(forgotPasswordEmailMutationSchema),
+  validateBody(forgotPasswordEmailMutationSchema),
   forgotPasswordLinkHandler,
 )
 
 passwordRouter.post(
   '/reset',
-  validateData(resetPasswordMutationSchema),
+  validateBody(resetPasswordMutationSchema),
   resetPasswordHandler,
 )

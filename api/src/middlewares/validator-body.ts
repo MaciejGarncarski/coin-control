@@ -6,7 +6,7 @@ import { ApiError } from '../utils/api-error.js'
 import { ValidationError } from '../utils/validation-error.js'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function validateData(schema: z.ZodObject<any, any> | z.ZodSchema<any>) {
+export function validateBody(schema: z.ZodObject<any, any> | z.ZodSchema<any>) {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       schema.parse(req.body)

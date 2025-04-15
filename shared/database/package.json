@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
-    "@types/node": "^22.14.0",
+    "@types/node": "^22.14.1",
     "copyfiles": "^2.4.1",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.3"

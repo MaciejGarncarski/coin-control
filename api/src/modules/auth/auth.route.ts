@@ -9,7 +9,7 @@ import ms from 'ms'
 
 import { createRateLimiter } from '../../lib/rate-limiter.js'
 import { authorize } from '../../middlewares/authorize.js'
-import { validateData } from '../../middlewares/validator.js'
+import { validateBody } from '../../middlewares/validator-body.js'
 import { validateParams } from '../../middlewares/validator-params.js'
 import {
   getMySessionsHandler,
@@ -44,14 +44,14 @@ authRouter.use('/google', authGoogleRouter)
 
 authRouter.post(
   '/login',
-  validateData(loginMutationSchema),
+  validateBody(loginMutationSchema),
   authLimiter,
   postLoginHandler,
 )
 
 authRouter.post(
   '/register',
-  validateData(registerMutationSchema),
+  validateBody(registerMutationSchema),
   authLimiter,
   registerHandler,
 )
@@ -87,6 +87,6 @@ authRouter.post(
   '/verify-otp',
   otpLimiter,
   authorize,
-  validateData(EmailVerificationVerifyMutationSchema),
+  validateBody(EmailVerificationVerifyMutationSchema),
   verifyAccountHandler,
 )
