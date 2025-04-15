@@ -22,6 +22,7 @@ I have used pnpm workspaces as monorepo for this project. I could use turborepo 
 - just (command runner)
 - Postgresql database
 - Redis
+- Github Actions CI/CD
 
 ### Frontend
 
@@ -40,10 +41,10 @@ I have used pnpm workspaces as monorepo for this project. I could use turborepo 
 - Express
 - Typescript
 - BullMQ for queues and cron
-- React Email for emails
-- nodemailer
 - Prisma
 - Zod
+- nodemailer
+- React Email for emails
 - Vitest
 - Supertest
 
@@ -58,5 +59,3 @@ Create .env file in root directory based on .env.example
 `pnpm --filter "@shared/*" build`
 
 `pnpm dev`
-
-## Screenshots
