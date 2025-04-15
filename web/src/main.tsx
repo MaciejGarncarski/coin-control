@@ -37,7 +37,7 @@ export const router = createRouter({
   defaultPreload: 'intent',
   scrollRestoration: true,
   defaultStructuralSharing: true,
-  defaultViewTransition: true,
+  defaultViewTransition: false,
 })
 
 declare module '@tanstack/react-router' {

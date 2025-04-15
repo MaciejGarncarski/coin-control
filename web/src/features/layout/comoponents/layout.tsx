@@ -20,9 +20,9 @@ export function Layout({ children }: { children: ReactNode }) {
   )
 
   return (
-    <div className={cn(!isMobile && 'flex', 'bg-background')}>
+    <div className={cn(!isMobile && 'flex')}>
       <div className={cn('flex w-full flex-col')}>
-        <header className="bg-background/70 sticky top-0 z-50 flex h-16 w-full items-center justify-between gap-4 border-b px-4 backdrop-blur-md md:justify-start md:gap-1 lg:gap-12 lg:px-10">
+        <header className="bg-background/75 sticky top-0 z-50 flex h-16 w-full items-center justify-between gap-4 border-b px-4 backdrop-blur-md md:justify-start md:gap-1 lg:gap-12 lg:px-10">
           {isVerifyEmailPage ? (
             <Link to="/">
               <Logo />

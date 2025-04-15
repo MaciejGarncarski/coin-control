@@ -15,6 +15,7 @@ import status from 'http-status'
 import ms from 'ms'
 import { v7 } from 'uuid'
 
+import { decrypt, encrypt } from '../../utils/encryption.js'
 import type {
   TypedRequestBody,
   TypedRequestParams,
@@ -96,15 +97,19 @@ export async function getTransactionsHandler(
   const maxPages = Math.ceil(transactionsCount / TRANSACTIONS_PER_PAGE)
   const currentPage = Number(currPage || 1)
 
-  const transactionsDTO = transactions.map(
-    (t): GetTransactionsQuery => ({
+  const transactionsDTO = transactions.map((t): GetTransactionsQuery => {
+    const decryptedDescription = t.description
+      ? decrypt(t.description)
+      : undefined
+
+    return {
       transactionId: t.transaction_id,
-      description: t.description,
+      description: decryptedDescription || null,
       category: t.category ?? 'other',
       amount: parseFloat(parseFloat(t.amount.toString()).toFixed(2)),
       date: t.transaction_date,
-    }),
-  )
+    }
+  })
 
   const took =
     transactions.length === TRANSACTIONS_PER_PAGE
@@ -130,11 +135,13 @@ export async function addTransactionHandler(
   const userId = req.session.userId
   const { description, category, amount } = req.body
 
+  const encryptedDescription = description ? encrypt(description) : undefined
+
   try {
     const transaction = await db.transactions.create({
       data: {
         user_id: userId,
-        description,
+        description: encryptedDescription,
         transaction_id: v7(),
         category,
         amount,
@@ -210,10 +217,14 @@ export async function getRecentTransactionsHandler(
       transaction_id,
       transaction_date,
     }): RecentTransaction => {
+      const decryptedDescription = description
+        ? decrypt(description)
+        : undefined
+
       return {
         amount: parseFloat(parseFloat(amount.toString()).toFixed(2)),
         category: category || 'other',
-        description,
+        description: decryptedDescription || null,
         date: transaction_date,
         transactionId: transaction_id,
       }

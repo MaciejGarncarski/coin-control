@@ -1,8 +1,10 @@
+import { Link } from '@tanstack/react-router'
 import { formatRelative } from 'date-fns'
 import type { ReactNode } from 'react'
 
 import { TransactionBadge } from '@/components/transactions/transaction-badge'
 import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useRecentTransactions } from '@/features/homepage/api/get-recent-transactions'
@@ -24,7 +26,7 @@ const RecentTransactionsCard = ({ children }: { children: ReactNode }) => {
           </span>
         )}
       </CardHeader>
-      <CardContent>{children}</CardContent>
+      <CardContent className="flex h-full flex-col">{children}</CardContent>
     </Card>
   )
 }
@@ -98,6 +100,18 @@ export const RecentTransactions = () => {
           },
         )}
       </ul>
+      <Button
+        asChild
+        type="button"
+        variant={'outline'}
+        className="mt-auto w-full">
+        <Link
+          to={'/transactions'}
+          search={{ page: 1 }}
+          viewTransition={{ types: ['main-transition'] }}>
+          View all transactions
+        </Link>
+      </Button>
     </RecentTransactionsCard>
   )
 }

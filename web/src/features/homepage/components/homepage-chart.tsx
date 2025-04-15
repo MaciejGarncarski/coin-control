@@ -34,7 +34,7 @@ const ChartCardContainer = ({ children }: { children: ReactNode }) => {
         <CardTitle>Transactions Overview</CardTitle>
         <CardDescription>Your transactions from last week</CardDescription>
       </CardHeader>
-      <CardContent>{children}</CardContent>
+      <CardContent className="px-0">{children}</CardContent>
     </Card>
   )
 }
@@ -57,6 +57,14 @@ export function ChartHomepage() {
   }
 
   if (overview.data?.data.length === 0) {
+    return (
+      <ChartCardContainer>
+        <NoTransactions />
+      </ChartCardContainer>
+    )
+  }
+
+  if ((overview.data?.data.length || 0) <= 2) {
     return (
       <ChartCardContainer>
         <NoTransactions />

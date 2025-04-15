@@ -14,6 +14,7 @@ const envSchema = z.object({
       z.literal('test'),
     ])
     .default('development'),
+  ENCRYPTION_SECRET: z.string().min(32),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   GOOGLE_OAUTH_URL: z.string(),

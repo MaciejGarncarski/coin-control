@@ -156,7 +156,7 @@
   }
 
   body {
-    @apply bg-muted text-foreground;
+    @apply bg-background text-foreground;
     @apply m-0;
     @apply font-inter;
     font-smooth: always;
@@ -171,35 +171,35 @@
 
   html:active-view-transition-type(main-transition) {
     &::view-transition-old(content) {
-      animation: 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
       animation-name: reveal;
       animation-direction: reverse;
     }
 
     &::view-transition-new(content) {
-      animation: 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
       animation-name: reveal;
     }
-  }
 
-  html::view-transition-old(logos) {
-    animation: 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-name: opacity-reveal;
-    animation-direction: reverse;
-  }
-  html::view-transition-new(logos) {
-    animation: 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-name: opacity-reveal;
-  }
+    html::view-transition-old(logos) {
+      animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation-name: opacity-reveal;
+      animation-direction: reverse;
+    }
+    html::view-transition-new(logos) {
+      animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation-name: opacity-reveal;
+    }
 
-  html::view-transition-old(header) {
-    animation: 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-name: opacity-reveal;
-    animation-direction: reverse;
-  }
-  html::view-transition-new(header) {
-    animation: 250ms cubic-bezier(0.4, 0, 0.2, 1) both;
-    animation-name: opacity-reveal;
+    html::view-transition-old(header) {
+      animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation-name: opacity-reveal;
+      animation-direction: reverse;
+    }
+    html::view-transition-new(header) {
+      animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation-name: opacity-reveal;
+    }
   }
 
   @keyframes reveal {

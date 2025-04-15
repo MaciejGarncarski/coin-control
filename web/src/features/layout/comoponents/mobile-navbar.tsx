@@ -28,7 +28,7 @@ export function MobileNavbar() {
         <Button
           type="button"
           size="icon"
-          className="md:hidden"
+          className="border-reflect bg-primary/10 border-0 md:hidden"
           variant={'outline'}>
           <Menu />
         </Button>

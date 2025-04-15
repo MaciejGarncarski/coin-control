@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -110,6 +111,7 @@ export const AddTransactionForm = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New transaction</DialogTitle>
+          <DialogDescription>Add income or spending.</DialogDescription>
         </DialogHeader>
 
         <Form {...newTransactionForm}>
