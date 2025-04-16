@@ -129,8 +129,8 @@ export type TransactionOverview = z.infer<typeof transactionOverviewSchema>
 export const getTransactionOverviewSchema = z.object({
   data: z.array(
     z.object({
-      day: dayNameSchema,
-      transactions: z.number().min(0),
+      transactionDate: z.string(),
+      transactionId: z.string(),
     }),
   ),
 })

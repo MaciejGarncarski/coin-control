@@ -73,8 +73,14 @@ export const HomePage = () => {
                   </span>
                 </div>
               </div>
-              <Separator orientation="horizontal" className="md:hidden" />
-              <Separator orientation="vertical" className="hidden md:block" />
+              <Separator
+                orientation="horizontal"
+                className="bg-primary/30 md:hidden"
+              />
+              <Separator
+                orientation="vertical"
+                className="from-primary/10 via-primary/50 to-primary/10 hidden bg-gradient-to-b md:block"
+              />
             </Fragment>
           )
         })}

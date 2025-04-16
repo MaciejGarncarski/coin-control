@@ -2,7 +2,6 @@ import { db, Prisma } from '@shared/database'
 import {
   type AddTransactionMutation,
   type Category,
-  type DayName,
   type DeleteTransactionParams,
   type EditTransactionMutation,
   type EditTransactionParams,
@@ -271,25 +270,12 @@ export async function getTransactionOverviewHandler(
     },
   })
 
-  const transactionsGroupedByDay = userTransactions.reduce(
-    (result, element) => {
-      const dayName = element.transaction_date.toLocaleDateString('en-US', {
-        weekday: 'long',
-      }) as DayName
-
-      const prevVal = result[dayName] || 0
-
-      return {
-        ...result,
-        [dayName]: prevVal + 1,
-      }
-    },
-    {} as Record<DayName, number>,
-  )
-
   const response: GetTransactionOverview = {
-    data: Object.entries(transactionsGroupedByDay).map(([key, val]) => {
-      return { day: key as DayName, transactions: val }
+    data: userTransactions.map((tr) => {
+      return {
+        transactionDate: tr.transaction_date,
+        transactionId: tr.transaction_id,
+      }
     }),
   }
 

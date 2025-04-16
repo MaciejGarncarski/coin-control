@@ -71,7 +71,7 @@ export function ChartHomepage() {
     )
   }
 
-  if (overview.data?.data.length === 0) {
+  if (overview.data?.length === 0) {
     return (
       <ChartCardContainer>
         <NoTransactions />
@@ -84,7 +84,7 @@ export function ChartHomepage() {
       <ChartContainer config={chartConfig}>
         <AreaChart
           accessibilityLayer
-          data={overview.data?.data || []}
+          data={overview.data || []}
           margin={{
             left: 25,
             right: 25,
