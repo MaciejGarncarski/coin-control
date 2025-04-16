@@ -101,11 +101,13 @@ export const EditTransactionForm = ({
       {
         onSuccess: () => {
           closeDialog()
-          editTransactionForm.reset({
-            amount: 0,
-            category: 'other',
-            description: '',
-          })
+          setTimeout(() => {
+            editTransactionForm.reset({
+              amount: 0,
+              category: 'other',
+              description: '',
+            })
+          }, 300)
         },
       },
     )
@@ -113,11 +115,14 @@ export const EditTransactionForm = ({
 
   const onCancel = useCallback(() => {
     closeDialog()
-    editTransactionForm.reset({
-      amount: 0,
-      category: 'other',
-      description: '',
-    })
+
+    setTimeout(() => {
+      editTransactionForm.reset({
+        amount: 0,
+        category: 'other',
+        description: '',
+      })
+    }, 300)
   }, [closeDialog, editTransactionForm])
 
   const decreaseAmount = useCallback(() => {

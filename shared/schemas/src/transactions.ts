@@ -110,7 +110,7 @@ export type GetRecentTransactions = z.infer<typeof getRecentTransactionsSchema>
 export const dayNameSchema = z.union([
   z.literal('Monday'),
   z.literal('Tuesday'),
-  z.literal('Wendsay'),
+  z.literal('Wednesday'),
   z.literal('Thursday'),
   z.literal('Friday'),
   z.literal('Saturday'),

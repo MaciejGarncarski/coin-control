@@ -54,6 +54,13 @@ export async function getTransactionsHandler(
       : req.query.search
     : undefined
 
+  const formattedDateFrom = dateFrom
+    ? new Date(new Date(dateFrom).setUTCHours(0, 0, 0, 0))
+    : undefined
+  const formattedDateTo = dateTo
+    ? new Date(new Date(dateTo).setUTCHours(23, 59, 59, 999))
+    : undefined
+
   const whereClause: Prisma.transactionsWhereInput = search
     ? {
         OR: [
@@ -67,8 +74,8 @@ export async function getTransactionsHandler(
         category: category,
         user_id: userId,
         transaction_date: {
-          gte: dateFrom,
-          lte: dateTo,
+          gte: formattedDateFrom,
+          lte: formattedDateTo,
         },
       }
     : {
@@ -252,7 +259,7 @@ export async function getTransactionOverviewHandler(
     where: {
       user_id: userId,
       transaction_date: {
-        gte: new Date(Date.now() - ms('7 days')),
+        gte: new Date(new Date().setUTCHours(23, 59, 59, 999) - ms('7 days')),
       },
     },
     orderBy: {

@@ -74,22 +74,26 @@ export const AddTransactionForm = () => {
     await addTransaction.mutateAsync(data, {
       onSuccess: () => {
         closeDialog()
-        newTransactionForm.reset({
-          amount: 0,
-          category: 'other',
-          description: '',
-        })
+        setTimeout(() => {
+          newTransactionForm.reset({
+            amount: 0,
+            category: 'other',
+            description: '',
+          })
+        }, 300)
       },
     })
   })
 
   const onCancel = useCallback(() => {
     closeDialog()
-    newTransactionForm.reset({
-      amount: 0,
-      category: 'other',
-      description: '',
-    })
+    setTimeout(() => {
+      newTransactionForm.reset({
+        amount: 0,
+        category: 'other',
+        description: '',
+      })
+    }, 300)
   }, [closeDialog, newTransactionForm])
 
   const decreaseAmount = useCallback(() => {

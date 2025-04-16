@@ -106,10 +106,12 @@ export const RecentTransactions = () => {
         asChild
         type="button"
         variant={'outline'}
-        className="mt-auto w-full">
+        className="mt-5 w-full md:mt-auto">
         <Link
           to={'/transactions'}
-          search={{ page: 1 }}
+          search={{
+            page: 1,
+          }}
           viewTransition={{ types: ['main-transition'] }}>
           View all transactions
         </Link>

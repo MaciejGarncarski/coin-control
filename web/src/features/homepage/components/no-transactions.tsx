@@ -12,8 +12,8 @@ export const NoTransactions = () => {
         className="border-reflect bg-primary/30 flex w-fit items-center rounded-md px-3 py-1"
         viewTransition={false}
         search={{
-          addTransaction: true,
           page: 1,
+          addTransaction: true,
         }}>
         <Plus /> Add transaction
       </Link>

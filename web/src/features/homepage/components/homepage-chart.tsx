@@ -31,9 +31,11 @@ const chartConfig = {
 const ChartCardContainer = ({
   children,
   isLoading = false,
+  isError = false,
 }: {
   children: ReactNode
   isLoading?: boolean
+  isError?: boolean
 }) => {
   return (
     <Card className="border-reflect border-none md:h-[30rem] lg:h-[58dvh]">
@@ -41,7 +43,9 @@ const ChartCardContainer = ({
         <CardTitle>Transactions Overview</CardTitle>
         <CardDescription>Your transactions from last week</CardDescription>
       </CardHeader>
-      <CardContent className={cn(!isLoading && 'px-0')}>{children}</CardContent>
+      <CardContent className={cn(!isLoading && !isError && 'px-0', 'h-full')}>
+        {children}
+      </CardContent>
     </Card>
   )
 }
@@ -59,7 +63,11 @@ export function ChartHomepage() {
 
   if (overview.error) {
     return (
-      <ChartCardContainer>Error occured, try again later.</ChartCardContainer>
+      <ChartCardContainer isError>
+        <p className="text-muted-foreground flex h-full items-center justify-center text-center">
+          Error occured, try again later.
+        </p>
+      </ChartCardContainer>
     )
   }
 

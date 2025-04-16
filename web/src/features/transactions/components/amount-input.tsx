@@ -20,7 +20,10 @@ export function AmountInput({
 
   return (
     <div className="bg-primary/5 border-reflect flex rounded-lg">
-      <Button type="button" className="w-12 rounded-r-none" onClick={onReduce}>
+      <Button
+        type="button"
+        className="w-12 touch-manipulation rounded-r-none"
+        onClick={onReduce}>
         <Minus className="size-5" />
       </Button>
       <input
@@ -37,7 +40,7 @@ export function AmountInput({
       />
       <Button
         type="button"
-        className="w-16 rounded-l-none"
+        className="w-16 touch-manipulation rounded-l-none"
         onClick={onIncrease}>
         <Plus className="size-5" />
       </Button>

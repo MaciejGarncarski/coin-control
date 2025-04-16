@@ -20,7 +20,6 @@ export function DatePickerWithRange({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const search = useSearch({ from: '/_authenticated/transactions' })
   const navigate = useNavigate({ from: '/transactions' })
-
   const from = search.dateFrom ? new Date(search.dateFrom) : undefined
   const to = search.dateTo ? new Date(search.dateTo) : undefined
 
@@ -70,6 +69,9 @@ export function DatePickerWithRange({
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
+            disabled={{
+              after: new Date(),
+            }}
             initialFocus
             mode="range"
             defaultMonth={date?.from}
