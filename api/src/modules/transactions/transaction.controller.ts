@@ -273,7 +273,7 @@ export async function getTransactionOverviewHandler(
   const response: GetTransactionOverview = {
     data: userTransactions.map((tr) => {
       return {
-        transactionDate: tr.transaction_date,
+        transactionDate: tr.transaction_date.toString(),
         transactionId: tr.transaction_id,
       }
     }),
