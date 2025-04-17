@@ -1,6 +1,6 @@
 import type { ReactNode } from '@tanstack/react-router'
 import { Info } from 'lucide-react'
-import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 
 import {
   Card,
@@ -43,7 +43,11 @@ const ChartCardContainer = ({
         <CardTitle>Transactions Overview</CardTitle>
         <CardDescription>Your transactions from last week</CardDescription>
       </CardHeader>
-      <CardContent className={cn(!isLoading && !isError && 'px-0', 'h-full')}>
+      <CardContent
+        className={cn(
+          !isLoading && !isError && 'px-0',
+          'flex h-full w-full items-center justify-center',
+        )}>
         {children}
       </CardContent>
     </Card>
@@ -81,11 +85,13 @@ export function ChartHomepage() {
 
   return (
     <ChartCardContainer>
-      <ChartContainer config={chartConfig}>
-        <AreaChart
+      <ChartContainer config={chartConfig} className="w-full">
+        <BarChart
           accessibilityLayer
           data={overview.data || []}
           margin={{
+            top: 20,
+            bottom: 20,
             left: 25,
             right: 25,
           }}>
@@ -104,26 +110,26 @@ export function ChartHomepage() {
           <defs>
             <linearGradient id="fillTransactions" x1="0" y1="0" x2="0" y2="1">
               <stop
-                offset="5%"
+                offset="20%"
                 stopColor="var(--color-primary)"
                 stopOpacity={0.8}
               />
               <stop
-                offset="95%"
+                offset="90%"
                 stopColor="var(--color-primary)"
-                stopOpacity={0.1}
+                stopOpacity={0.2}
               />
             </linearGradient>
           </defs>
-          <Area
+          <Bar
             dataKey="transactions"
             type="natural"
             fill="url(#fillTransactions)"
             fillOpacity={0.4}
+            radius={8}
             stroke="var(--color-desktop)"
-            stackId="a"
           />
-        </AreaChart>
+        </BarChart>
       </ChartContainer>
     </ChartCardContainer>
   )

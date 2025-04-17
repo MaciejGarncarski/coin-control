@@ -11,6 +11,7 @@ import {
   type GetTransactionsResponse,
   type RecentTransaction,
 } from '@shared/schemas'
+import { fromZonedTime } from 'date-fns-tz'
 import { type Request, type Response } from 'express'
 import status from 'http-status'
 import ms from 'ms'
@@ -31,6 +32,7 @@ type Query = {
   page?: string
   search?: string
   category?: Category
+  tz?: string
 }
 
 export async function getTransactionsHandler(
@@ -39,8 +41,18 @@ export async function getTransactionsHandler(
 ) {
   const userId = req.session.userId
   const currPage = req.query.page || 1
-  const dateFrom = req.query.dateFrom ? new Date(req.query.dateFrom) : undefined
-  const dateTo = req.query.dateTo ? new Date(req.query.dateTo) : undefined
+  const timeZone = req.query.tz || 'Europe/Warsaw'
+
+  const dateFrom = req.query.dateFrom
+    ? fromZonedTime(new Date(req.query.dateFrom).setHours(0, 0, 0, 0), timeZone)
+    : undefined
+  const dateTo = req.query.dateTo
+    ? fromZonedTime(
+        new Date(req.query.dateTo).setHours(23, 59, 59, 999),
+        timeZone,
+      )
+    : undefined
+
   const category = req.query.category
     ? req.query.category.trim() === ''
       ? undefined
@@ -51,13 +63,6 @@ export async function getTransactionsHandler(
     ? req.query.search.trim() === ''
       ? undefined
       : req.query.search
-    : undefined
-
-  const formattedDateFrom = dateFrom
-    ? new Date(new Date(dateFrom).setUTCHours(0, 0, 0, 0))
-    : undefined
-  const formattedDateTo = dateTo
-    ? new Date(new Date(dateTo).setUTCHours(23, 59, 59, 999))
     : undefined
 
   const whereClause: Prisma.transactionsWhereInput = search
@@ -73,8 +78,8 @@ export async function getTransactionsHandler(
         category: category,
         user_id: userId,
         transaction_date: {
-          gte: formattedDateFrom,
-          lte: formattedDateTo,
+          gte: dateFrom,
+          lte: dateTo,
         },
       }
     : {
@@ -248,17 +253,29 @@ export async function getRecentTransactionsHandler(
   return
 }
 
+type OverviewQuery = {
+  tz?: string
+  currDate?: string
+}
+
 export async function getTransactionOverviewHandler(
-  req: Request,
+  req: TypedRequestQuery<OverviewQuery>,
   res: Response,
 ) {
   const userId = req.session.userId
+  const timeZone = req.query.tz || 'Europe/Warsaw'
+  const currDate = new Date(req.query.currDate || new Date())
+
+  const formattedDate = fromZonedTime(
+    new Date(currDate).setHours(23, 59, 59, 999),
+    timeZone,
+  )
 
   const userTransactions = await db.transactions.findMany({
     where: {
       user_id: userId,
       transaction_date: {
-        gte: new Date(new Date().setUTCHours(23, 59, 59, 999) - ms('7 days')),
+        gte: new Date(formattedDate.getTime() - ms('7 days')),
       },
     },
     orderBy: {

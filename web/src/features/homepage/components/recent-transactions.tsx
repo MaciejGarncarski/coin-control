@@ -106,7 +106,7 @@ export const RecentTransactions = () => {
         asChild
         type="button"
         variant={'outline'}
-        className="mt-5 w-full md:mt-auto">
+        className="border-reflect bg-primary/20 mt-5 w-full border-0 transition-colors md:mt-auto">
         <Link
           to={'/transactions'}
           search={{

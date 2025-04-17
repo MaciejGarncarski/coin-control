@@ -158,6 +158,7 @@ export const AddTransactionForm = () => {
                 )
               }}
             />
+
             <FormField
               control={newTransactionForm.control}
               name="category"

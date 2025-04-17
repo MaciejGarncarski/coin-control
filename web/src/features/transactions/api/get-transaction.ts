@@ -30,9 +30,11 @@ export const getTransactionQueryOptions = ({
       category,
     ],
     queryFn: () => {
+      const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
       return fetcher({
         method: 'GET',
-        url: `/transactions?page=${page}&search=${search || ''}&dateFrom=${dateFrom || ''}&dateTo=${dateTo || ''}&category=${category || ''}`,
+        url: `/transactions?page=${page}&search=${search || ''}&dateFrom=${dateFrom || ''}&dateTo=${dateTo || ''}&category=${category || ''}&tz=${userTimeZone}`,
         throwOnError: true,
         schema: getTransactionsResponse,
       })
