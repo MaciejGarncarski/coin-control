@@ -11,7 +11,7 @@ export function UserAvatar() {
       {userData.data?.avatarURL ? (
         <AvatarImage src={userData.data?.avatarURL} />
       ) : null}
-      <AvatarFallback>
+      <AvatarFallback className="bg-primary/10">
         <User className="opacity-80" />
       </AvatarFallback>
     </Avatar>

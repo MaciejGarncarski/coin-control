@@ -101,6 +101,10 @@ export const TransactionTablePagination = () => {
     { maxWait: 2000 },
   )
 
+  if (transactions.data?.maxPages === 1) {
+    return null
+  }
+
   return (
     <div className="mt-4 flex justify-center">
       <div className="flex items-center justify-center gap-8 p-4">

@@ -20,7 +20,7 @@ export const overviewTransactionsQueryOptions = queryOptions({
       const transactionsGroupedByDay = transactionData.data.reduce(
         (result, element) => {
           const dayName = new Date(element.transactionDate).toLocaleDateString(
-            'en-US',
+            'en-GB',
             {
               weekday: 'long',
             },

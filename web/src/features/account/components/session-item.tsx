@@ -26,7 +26,7 @@ type Props = {
   session: MySession
 }
 
-const dateFormatter = new Intl.DateTimeFormat('en-US', {
+const dateFormatter = new Intl.DateTimeFormat('en-GB', {
   timeZone: 'CET',
   dateStyle: 'medium',
   timeStyle: 'long',

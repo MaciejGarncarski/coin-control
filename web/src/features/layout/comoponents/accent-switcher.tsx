@@ -45,6 +45,14 @@ export const AccentSwitcher = () => {
                 <span>Pink</span>
               </div>
             </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => setAccent('red')}
+              className={cn(accent === 'red' && 'bg-primary/20')}>
+              <div className="flex items-center gap-2">
+                <div className="size-3 rounded-full border bg-[var(--primary-red)]" />
+                <span>Red</span>
+              </div>
+            </DropdownMenuItem>
           </DropdownMenuSubContent>
         </DropdownMenuPortal>
       </DropdownMenuSub>

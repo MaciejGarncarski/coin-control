@@ -29,6 +29,7 @@ type Props = {
   amount: number
   category: Category
   description: string
+  date: Date
 }
 
 export const TransactionTableMenu = ({
@@ -36,6 +37,7 @@ export const TransactionTableMenu = ({
   amount,
   category,
   description,
+  date,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -89,6 +91,7 @@ export const TransactionTableMenu = ({
       </DropdownMenu>
       <EditTransactionForm
         isOpen={editOpen}
+        date={date}
         setIsOpen={setEditOpen}
         amount={amount}
         category={category}

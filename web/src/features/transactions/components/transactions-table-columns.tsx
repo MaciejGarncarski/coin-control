@@ -11,7 +11,7 @@ export const transactionsTableColumns = [
   columnHelper.accessor('date', {
     header: 'Date',
     cell: ({ row }) => {
-      return new Intl.DateTimeFormat('en-US', {
+      return new Intl.DateTimeFormat('en-GB', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
@@ -62,6 +62,7 @@ export const transactionsTableColumns = [
           transactionId={row.original.transactionId}
           amount={row.original.amount}
           category={row.original.category}
+          date={row.original.date}
           description={row.original.description || ''}
         />
       )

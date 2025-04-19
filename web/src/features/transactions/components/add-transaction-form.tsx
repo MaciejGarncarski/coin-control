@@ -5,7 +5,6 @@ import { Plus } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -24,17 +23,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from '@/components/ui/select'
 import { useAddTransaction } from '@/features/transactions/api/add-transaction'
 import { AmountInput } from '@/features/transactions/components/amount-input'
-import { cn } from '@/lib/utils'
-import { formatTransactionCategory } from '@/utils/format-transaction-category'
+import { TransactionDatePicker } from '@/features/transactions/components/transaction-date-picker'
+import { TransactionSelect } from '@/features/transactions/components/transaction-select'
 
 export const AddTransactionForm = () => {
   const search = useSearch({ from: '/_authenticated/transactions' })
@@ -49,6 +41,7 @@ export const AddTransactionForm = () => {
     resolver: zodResolver(addTransactionMutation),
     defaultValues: {
       amount: 0,
+      date: new Date(),
       category: 'other',
       description: '',
     },
@@ -56,9 +49,16 @@ export const AddTransactionForm = () => {
 
   const amountValue = newTransactionForm.watch().amount
 
-  const closeDialog = useCallback(() => {
+  const closeAndReset = () => {
     setDialogOpen(false)
-
+    setTimeout(() => {
+      newTransactionForm.reset({
+        amount: 0,
+        category: 'other',
+        date: new Date(),
+        description: '',
+      })
+    }, 300)
     navigate({
       viewTransition: false,
       search: (prev) => {
@@ -68,33 +68,15 @@ export const AddTransactionForm = () => {
         }
       },
     })
-  }, [navigate])
+  }
 
-  const onSubmit = newTransactionForm.handleSubmit(async (data) => {
+  const addNewTransaction = newTransactionForm.handleSubmit(async (data) => {
     await addTransaction.mutateAsync(data, {
       onSuccess: () => {
-        closeDialog()
-        setTimeout(() => {
-          newTransactionForm.reset({
-            amount: 0,
-            category: 'other',
-            description: '',
-          })
-        }, 300)
+        closeAndReset()
       },
     })
   })
-
-  const onCancel = useCallback(() => {
-    closeDialog()
-    setTimeout(() => {
-      newTransactionForm.reset({
-        amount: 0,
-        category: 'other',
-        description: '',
-      })
-    }, 300)
-  }, [closeDialog, newTransactionForm])
 
   const decreaseAmount = useCallback(() => {
     newTransactionForm.setValue(
@@ -138,7 +120,9 @@ export const AddTransactionForm = () => {
         </DialogHeader>
 
         <Form {...newTransactionForm}>
-          <form className="mt-4 flex flex-col gap-8" onSubmit={onSubmit}>
+          <form
+            className="mt-4 flex flex-col gap-8"
+            onSubmit={addNewTransaction}>
             <FormField
               name="amount"
               control={newTransactionForm.control}
@@ -160,62 +144,32 @@ export const AddTransactionForm = () => {
             />
 
             <FormField
+              name="date"
+              control={newTransactionForm.control}
+              render={({ field }) => {
+                return (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Transaction date</FormLabel>
+                    <TransactionDatePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+
+            <FormField
               control={newTransactionForm.control}
               name="category"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <div className="flex items-center gap-4 px-2">
-                          <TransactionCategoryIcon
-                            category={field.value}
-                            variant="small"
-                          />
-                          {formatTransactionCategory(field.value)}
-                        </div>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <ScrollArea className={cn('h-[15rem]')}>
-                        <SelectItem value="income">
-                          <TransactionCategoryIcon category="income" />
-                          Income
-                        </SelectItem>
-                        <SelectItem value="groceries">
-                          <TransactionCategoryIcon category="groceries" />
-                          Groceries
-                        </SelectItem>
-                        <SelectItem value="foodAndDrink">
-                          <TransactionCategoryIcon category="foodAndDrink" />
-                          Food and Drink
-                        </SelectItem>
-                        <SelectItem value="utilities">
-                          <TransactionCategoryIcon category="utilities" />
-                          Utilities
-                        </SelectItem>
-                        <SelectItem value="housing">
-                          <TransactionCategoryIcon category="housing" />
-                          Housing
-                        </SelectItem>
-                        <SelectItem value="shopping">
-                          <TransactionCategoryIcon category="shopping" />
-                          Shopping
-                        </SelectItem>
-                        <SelectItem value="transportation">
-                          <TransactionCategoryIcon category="transportation" />
-                          Transportation
-                        </SelectItem>
-                        <SelectItem value="other">
-                          <TransactionCategoryIcon category="other" />
-                          Other
-                        </SelectItem>
-                      </ScrollArea>
-                    </SelectContent>
-                  </Select>
+                  <TransactionSelect
+                    onChange={field.onChange}
+                    value={field.value}
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -241,7 +195,7 @@ export const AddTransactionForm = () => {
                 type="button"
                 size={'sm'}
                 variant={'destructive'}
-                onClick={onCancel}>
+                onClick={closeAndReset}>
                 Cancel
               </Button>
               <Button type="submit" size={'sm'}>

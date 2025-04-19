@@ -15,6 +15,7 @@ export type Category = z.infer<typeof categoriesSchema>
 
 export const addTransactionMutation = z
   .object({
+    date: z.coerce.date(),
     description: z
       .string()
       .max(64, { message: 'Description is too long.' })
@@ -44,6 +45,7 @@ export type EditTransactionParams = z.infer<typeof editTransactionParamsSchema>
 
 export const editTransactionMutation = z
   .object({
+    date: z.coerce.date(),
     description: z
       .string()
       .max(64, { message: 'Description is too long.' })

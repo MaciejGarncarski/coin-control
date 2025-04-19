@@ -24,7 +24,7 @@ export function ThemeSwitcher({ withText = false }: ThemeSwitcherProps) {
         <Button
           variant="outline"
           size={withText ? 'sm' : 'icon'}
-          className={cn('border-reflect border-0')}>
+          className={cn('border-reflect bg-primary/10 border-0')}>
           {withText ? <span>Theme</span> : null}
           {theme === 'light' && <Sun className="h-[1.2rem] w-[1.2rem]" />}
           {theme === 'dark' && <Moon className="h-[1.2rem] w-[1.2rem]" />}

@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 
 import { transitionManager } from '@/utils/transition-manager'
 
-export type Accent = 'green' | 'blue' | 'pink'
+export type Accent = 'green' | 'blue' | 'pink' | 'red'
 type Theme = 'dark' | 'light' | 'system'
 
 type ThemeProviderState = {
@@ -13,7 +13,7 @@ type ThemeProviderState = {
   setTheme: (newTheme: Theme) => void
 }
 
-const ACCENT_CLASSES = ['green', 'blue', 'pink']
+const ACCENT_CLASSES = ['green', 'blue', 'pink', 'red']
 
 export const useThemeStore = create<ThemeProviderState>()(
   persist(

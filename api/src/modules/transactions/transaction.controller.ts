@@ -1,3 +1,4 @@
+import { TZDate } from '@date-fns/tz'
 import { db, Prisma } from '@shared/database'
 import {
   type AddTransactionMutation,
@@ -11,7 +12,6 @@ import {
   type GetTransactionsResponse,
   type RecentTransaction,
 } from '@shared/schemas'
-import { fromZonedTime } from 'date-fns-tz'
 import { type Request, type Response } from 'express'
 import status from 'http-status'
 import ms from 'ms'
@@ -44,13 +44,10 @@ export async function getTransactionsHandler(
   const timeZone = req.query.tz || 'Europe/Warsaw'
 
   const dateFrom = req.query.dateFrom
-    ? fromZonedTime(new Date(req.query.dateFrom).setHours(0, 0, 0, 0), timeZone)
+    ? new TZDate(new Date(req.query.dateFrom).setHours(0, 0, 0, 0), timeZone)
     : undefined
   const dateTo = req.query.dateTo
-    ? fromZonedTime(
-        new Date(req.query.dateTo).setHours(23, 59, 59, 999),
-        timeZone,
-      )
+    ? new TZDate(new Date(req.query.dateTo).setHours(23, 59, 59, 999), timeZone)
     : undefined
 
   const category = req.query.category
@@ -146,7 +143,7 @@ export async function addTransactionHandler(
   res: Response,
 ) {
   const userId = req.session.userId
-  const { description, category, amount } = req.body
+  const { description, category, amount, date } = req.body
 
   const encryptedDescription = description ? encrypt(description) : undefined
 
@@ -158,7 +155,7 @@ export async function addTransactionHandler(
         transaction_id: v7(),
         category,
         amount,
-        transaction_date: new Date(),
+        transaction_date: new Date(date),
       },
     })
 
@@ -203,7 +200,7 @@ export async function getRecentTransactionsHandler(
 ) {
   const userId = req.session.userId
 
-  const transactionCountThisMonth = await db.transactions.count({
+  const transactionsMonthBackward = await db.transactions.findMany({
     where: {
       user_id: userId,
       transaction_date: {
@@ -211,6 +208,13 @@ export async function getRecentTransactionsHandler(
       },
     },
   })
+
+  const thisMonth = new Date().getMonth()
+  const transactionsThisMonth = transactionsMonthBackward.filter(
+    ({ transaction_date }) => {
+      return thisMonth === transaction_date.getMonth()
+    },
+  ).length
 
   const recentTransactions = await db.transactions.findMany({
     where: {
@@ -246,7 +250,7 @@ export async function getRecentTransactionsHandler(
 
   const response: GetRecentTransactions = {
     recentTransactions: transactionsDto,
-    transactionCountThisMonth,
+    transactionCountThisMonth: transactionsThisMonth,
   }
 
   res.status(status.OK).send(response)
@@ -266,7 +270,7 @@ export async function getTransactionOverviewHandler(
   const timeZone = req.query.tz || 'Europe/Warsaw'
   const currDate = new Date(req.query.currDate || new Date())
 
-  const formattedDate = fromZonedTime(
+  const formattedDate = new TZDate(
     new Date(currDate).setHours(23, 59, 59, 999),
     timeZone,
   )
@@ -319,6 +323,7 @@ export async function editTransactionHandler(
       user_id: userId,
     },
     data: {
+      transaction_date: new Date(body.date),
       amount: body.amount,
       category: body.category,
       description: encryptedDescription,

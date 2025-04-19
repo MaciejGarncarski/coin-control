@@ -79,6 +79,7 @@
   --primary-green: oklch(0.59 0.1455 158.29);
   --primary-blue: oklch(0.54 0.1677 256.24);
   --primary-pink: oklch(0.66 0.1603 327.18);
+  --primary-red: oklch(0.55 0.1751 26.47);
 }
 
 .blue {
@@ -91,11 +92,20 @@
   --accent: oklch(0.94 0.0222 327.18);
 }
 
+.red {
+  --primary: var(--primary-red);
+  --accent: oklch(0.94 0.0222 26.47);
+}
+
 .dark.blue {
   --accent: oklch(0.269 0 0);
 }
 
 .dark.pink {
+  --accent: oklch(0.269 0 0);
+}
+
+.dark.red {
   --accent: oklch(0.269 0 0);
 }
 
@@ -294,6 +304,29 @@
     --gradientBorder-gradient:
       linear-gradient(180deg, #00311e2e, #610079, #310031bd),
       linear-gradient(15deg, #00311e2e 50%, #5d0079);
+    --start: rgba(0, 0, 0, 0.92);
+  }
+
+  .red .border-reflect {
+    --min: #31000f2e !important;
+    --max: #a30036 !important;
+    --start: #5e0061 !important;
+    position: relative;
+
+    --c: 320 100% 75%;
+    --min: hsl(var(--c) / 0.2);
+    --max: hsl(var(--c) / 1);
+    --gradientBorder-gradient:
+      linear-gradient(180deg, var(--min), var(--max), var(--min)),
+      linear-gradient(15deg, var(--min) 50%, var(--max));
+    --opacity: 1;
+    --start: rgba(0, 0, 0, 0.35);
+  }
+
+  .dark .red .border-reflect {
+    --gradientBorder-gradient:
+      linear-gradient(180deg, #00311e2e, #790039, #31000cbd),
+      linear-gradient(15deg, #00311e2e 50%, #79001e);
     --start: rgba(0, 0, 0, 0.92);
   }
 
