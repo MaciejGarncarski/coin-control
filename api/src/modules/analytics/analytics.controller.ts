@@ -1,6 +1,12 @@
 import { TZDate } from '@date-fns/tz'
 import { db } from '@shared/database'
-import type { CategoriesAnalytics, Category } from '@shared/schemas'
+import type {
+  CategoriesAnalytics,
+  Category,
+  Month,
+  TransactionsByMonth,
+} from '@shared/schemas'
+import { format } from 'date-fns'
 import type { Request, Response } from 'express'
 import status from 'http-status'
 import ms from 'ms'
@@ -80,6 +86,9 @@ export async function getLargestExpenseIncomeHandler(
   const largestIncomeRequest = db.transactions.findFirst({
     where: {
       user_id: userId,
+      amount: {
+        gt: 0,
+      },
     },
     orderBy: {
       amount: 'desc',
@@ -93,6 +102,9 @@ export async function getLargestExpenseIncomeHandler(
   const largestExpenseRequest = db.transactions.findFirst({
     where: {
       user_id: userId,
+      amount: {
+        lt: 0,
+      },
     },
     orderBy: {
       amount: 'asc',
@@ -126,5 +138,82 @@ export async function getLargestExpenseIncomeHandler(
         : null,
     },
   })
+  return
+}
+
+export async function getTransactionsByMonthHandler(
+  req: Request,
+  res: Response,
+) {
+  const userId = req.session.userId
+
+  const transactions = await db.transactions.findMany({
+    where: {
+      user_id: userId,
+      transaction_date: {
+        gte: new Date(Date.now() - ms('1 year')),
+      },
+    },
+    select: {
+      transaction_date: true,
+      amount: true,
+    },
+  })
+
+  const defaultValue = {
+    January: { income: 0, expense: 0 },
+    February: { income: 0, expense: 0 },
+    March: { income: 0, expense: 0 },
+    April: { income: 0, expense: 0 },
+    May: { income: 0, expense: 0 },
+    June: { income: 0, expense: 0 },
+    July: { income: 0, expense: 0 },
+    August: { income: 0, expense: 0 },
+    September: { income: 0, expense: 0 },
+    October: { income: 0, expense: 0 },
+    November: { income: 0, expense: 0 },
+    December: { income: 0, expense: 0 },
+  } satisfies Record<
+    Month,
+    {
+      income: number
+      expense: number
+    }
+  >
+
+  const transactionsData = transactions.reduce((acc, el) => {
+    const monthName = format(el.transaction_date, 'LLLL') as Month
+
+    const prevExpense = acc[monthName].expense || 0
+    const prevIncome = acc[monthName].income || 0
+
+    const currentValue = decimalToNumber(el.amount || 0)
+
+    if (currentValue > 0) {
+      return {
+        ...acc,
+        [monthName]: {
+          income: prevIncome + decimalToNumber(el.amount),
+          expense: acc[monthName].expense,
+        },
+      }
+    }
+
+    return {
+      ...acc,
+      [monthName]: {
+        income: acc[monthName].income,
+        expense: prevExpense + Math.abs(decimalToNumber(el.amount)),
+      },
+    }
+  }, defaultValue)
+
+  const resposneDto = Object.entries(transactionsData).map(([key, val]) => {
+    return { month: key as Month, income: val.income, expense: val.expense }
+  })
+
+  const responseData = { data: resposneDto } satisfies TransactionsByMonth
+
+  res.status(status.OK).send(responseData)
   return
 }

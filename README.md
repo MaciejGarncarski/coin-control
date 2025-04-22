@@ -4,6 +4,8 @@
 
 CoinControl is a budget tracking app designed to help users monitor their income and expenses. It addresses the common problem of lacking control over personal finances by providing tools for effective money management.
 
+I have created this app mostly for myself, but feel free to use it :P
+
 ## Live deployment
 
 This app is hosted on my VPS.

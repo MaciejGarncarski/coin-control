@@ -25,3 +25,32 @@ export const largestIncomeExpenseSchema = z.object({
 })
 
 export type LargestIncomeExpense = z.infer<typeof largestIncomeExpenseSchema>
+
+export const monthsSchema = z.enum([
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+])
+
+export type Month = z.infer<typeof monthsSchema>
+
+export const transactionsByMonthSchema = z.object({
+  data: z.array(
+    z.object({
+      month: monthsSchema,
+      income: z.number().nullable(),
+      expense: z.number().nullable(),
+    }),
+  ),
+})
+
+export type TransactionsByMonth = z.infer<typeof transactionsByMonthSchema>

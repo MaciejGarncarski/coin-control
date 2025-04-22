@@ -57,10 +57,8 @@ export const BiggestTransactionCard = () => {
   return (
     <BiggestTransactionCardContainer>
       <div className="flex h-full flex-col items-center justify-center gap-6 text-center md:flex-row xl:gap-20">
-        <div className="flex flex-col gap-1 text-xl md:text-2xl">
-          <h2 className="text-muted-foreground text-lg md:text-xl">
-            Largest income
-          </h2>
+        <div className="flex flex-col gap-1">
+          <h2 className="text-muted-foreground">Largest income</h2>
           <Link
             to={'/transactions'}
             search={{
@@ -74,7 +72,7 @@ export const BiggestTransactionCard = () => {
               {transactions.data?.income.description ? (
                 <p>&quot;{transactions.data?.income.description}&quot;</p>
               ) : null}
-              <p className="font-semibold text-green-700">
+              <p className="text-3xl font-semibold text-green-700">
                 {transactions.data?.income.value
                   ? `+${transactions.data.income.value}`
                   : 0}
@@ -83,10 +81,8 @@ export const BiggestTransactionCard = () => {
           </Link>
         </div>
 
-        <div className="flex flex-col gap-1 text-xl md:text-2xl">
-          <h2 className="text-muted-foreground text-lg md:text-xl">
-            Largest expense
-          </h2>
+        <div className="flex flex-col gap-1">
+          <h2 className="text-muted-foreground">Largest expense</h2>
           <Link
             to={'/transactions'}
             search={{
@@ -100,7 +96,7 @@ export const BiggestTransactionCard = () => {
               {transactions.data?.expense.description ? (
                 <p>&quot;{transactions.data?.expense.description}&quot;</p>
               ) : null}
-              <p className="font-semibold text-red-700">
+              <p className="text-3xl font-semibold text-red-700">
                 {transactions.data?.expense.value || 0}
               </p>
             </div>

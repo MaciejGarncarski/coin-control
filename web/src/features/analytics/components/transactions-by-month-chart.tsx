@@ -16,7 +16,7 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useTransactionsOverview } from '@/features/homepage/api/get-overview'
+import { useTransactionsByMonth } from '@/features/analytics/api/get-transactions-by-month'
 import { NoTransactions } from '@/features/homepage/components/no-transactions'
 import { cn } from '@/lib/utils'
 
@@ -30,69 +30,6 @@ const chartConfig = {
     color: 'hsl(var(--chart-2))',
   },
 } satisfies ChartConfig
-
-const mockedData = [
-  {
-    month: 'January',
-    income: 4500,
-    expense: 3800,
-  },
-  {
-    month: 'February',
-    income: 4800,
-    expense: 4100,
-  },
-  {
-    month: 'March',
-    income: 5100,
-    expense: 4000,
-  },
-  {
-    month: 'April',
-    income: 4950,
-    expense: 4250,
-  },
-  {
-    month: 'May',
-    income: 5300,
-    expense: 4500,
-  },
-  {
-    month: 'June',
-    income: 5500,
-    expense: 4800,
-  },
-  {
-    month: 'July',
-    income: 5200,
-    expense: 4900, // Summer vacation costs?
-  },
-  {
-    month: 'August',
-    income: 5400,
-    expense: 4700,
-  },
-  {
-    month: 'September',
-    income: 5000,
-    expense: 4300,
-  },
-  {
-    month: 'October',
-    income: 0,
-    expense: 4450,
-  },
-  {
-    month: 'November',
-    income: 5600, // Holiday bonus?
-    expense: 4600,
-  },
-  {
-    month: 'December',
-    income: 6000, // Holiday bonus/gifts?
-    expense: 5500, // Holiday spending?
-  },
-]
 
 const ChartCardContainer = ({
   children,
@@ -121,10 +58,10 @@ const ChartCardContainer = ({
 }
 
 export function TransactionsByMonthChart() {
-  const overview = useTransactionsOverview()
+  const transactions = useTransactionsByMonth()
   const isMobile = useIsMobile()
 
-  if (overview.isLoading) {
+  if (transactions.isLoading) {
     return (
       <ChartCardContainer isLoading>
         <Skeleton className="h-80 w-full" />
@@ -132,7 +69,7 @@ export function TransactionsByMonthChart() {
     )
   }
 
-  if (overview.error) {
+  if (transactions.error) {
     return (
       <ChartCardContainer isError>
         <p className="text-muted-foreground flex h-full items-center justify-center text-center">
@@ -142,7 +79,7 @@ export function TransactionsByMonthChart() {
     )
   }
 
-  if (overview.data?.length === 0) {
+  if (transactions.data?.data.length === 0) {
     return (
       <ChartCardContainer>
         <NoTransactions />
@@ -169,7 +106,7 @@ export function TransactionsByMonthChart() {
                   right: 50,
                 }
           }
-          data={mockedData}>
+          data={transactions.data?.data}>
           <defs>
             <linearGradient id="incomeFill" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="var(--chart-2)" stopOpacity={0.8} />
