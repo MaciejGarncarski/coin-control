@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { X } from 'lucide-react'
 import { useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
@@ -11,7 +11,8 @@ import { TransactionCategoryFilter } from '@/features/transactions/components/tr
 import { TransactionsTable } from '@/features/transactions/components/transactions-table'
 
 export const TransactionsPage = () => {
-  const [inputVal, setInputVal] = useState<string>('')
+  const search = useSearch({ from: '/_authenticated/transactions' })
+  const [inputVal, setInputVal] = useState<string>(search.search || '')
 
   const debounced = useDebouncedCallback(
     (value) => {

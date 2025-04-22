@@ -54,7 +54,7 @@ const ChartCardContainer = ({
   )
 }
 
-export function ChartHomepage() {
+export function WeeklyTransactionCountChart() {
   const overview = useTransactionsOverview()
 
   if (overview.isLoading) {
@@ -75,7 +75,11 @@ export function ChartHomepage() {
     )
   }
 
-  if (overview.data?.length === 0) {
+  const totalTransactionCount = overview.data?.reduce((acc, el) => {
+    return el.transactions + acc
+  }, 0)
+
+  if (totalTransactionCount === 0) {
     return (
       <ChartCardContainer>
         <NoTransactions />

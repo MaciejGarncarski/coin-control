@@ -1,10 +1,12 @@
 import { TZDate } from '@date-fns/tz'
 import { db } from '@shared/database'
 import type { CategoriesAnalytics, Category } from '@shared/schemas'
-import type { Response } from 'express'
+import type { Request, Response } from 'express'
 import status from 'http-status'
 import ms from 'ms'
 
+import { decimalToNumber } from '../../utils/decimal-to-number.js'
+import { decrypt } from '../../utils/encryption.js'
 import type { TypedRequestQuery } from '../../utils/typed-request.js'
 
 type GetCategoriesQuery = {
@@ -67,4 +69,62 @@ export async function getCategoriesHandler(
   } satisfies CategoriesAnalytics
 
   res.status(status.OK).send(responseData)
+}
+
+export async function getLargestExpenseIncomeHandler(
+  req: Request,
+  res: Response,
+) {
+  const userId = req.session.userId
+
+  const largestIncomeRequest = db.transactions.findFirst({
+    where: {
+      user_id: userId,
+    },
+    orderBy: {
+      amount: 'desc',
+    },
+    select: {
+      amount: true,
+      description: true,
+    },
+  })
+
+  const largestExpenseRequest = db.transactions.findFirst({
+    where: {
+      user_id: userId,
+    },
+    orderBy: {
+      amount: 'asc',
+    },
+    select: {
+      amount: true,
+      description: true,
+    },
+  })
+
+  const [largestExpense, largestIncome] = await Promise.all([
+    largestExpenseRequest,
+    largestIncomeRequest,
+  ])
+
+  res.status(status.OK).send({
+    income: {
+      value: largestIncome?.amount
+        ? decimalToNumber(largestIncome.amount)
+        : null,
+      description: largestIncome?.description
+        ? decrypt(largestIncome.description)
+        : null,
+    },
+    expense: {
+      value: largestExpense?.amount
+        ? decimalToNumber(largestExpense.amount)
+        : null,
+      description: largestExpense?.description
+        ? decrypt(largestExpense.description)
+        : null,
+    },
+  })
+  return
 }

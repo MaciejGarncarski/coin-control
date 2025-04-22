@@ -18,12 +18,14 @@ import status from 'http-status'
 import ms from 'ms'
 import { v7 } from 'uuid'
 
+import { decimalToNumber } from '../../utils/decimal-to-number.js'
 import { decrypt, encrypt } from '../../utils/encryption.js'
 import type {
   TypedRequestBody,
   TypedRequestParams,
   TypedRequestQuery,
 } from '../../utils/typed-request.js'
+import { filterTransactions } from './filter-transactions.js'
 
 const TRANSACTIONS_PER_PAGE = 10
 
@@ -65,14 +67,6 @@ export async function getTransactionsHandler(
 
   const whereClause: Prisma.transactionsWhereInput = search
     ? {
-        OR: [
-          {
-            description: {
-              contains: search,
-              mode: 'insensitive',
-            },
-          },
-        ],
         category: category,
         user_id: userId,
         transaction_date: {
@@ -101,26 +95,40 @@ export async function getTransactionsHandler(
     skip: skipValue,
   })
 
-  const transactionsCount = await db.transactions.count({
+  const filteredTransactions = transactions.filter(({ description }) =>
+    filterTransactions(description, search),
+  )
+
+  const transactionsCount = await db.transactions.findMany({
     where: whereClause,
+    select: {
+      description: true,
+      transaction_id: true,
+    },
   })
 
-  const maxPages = Math.ceil(transactionsCount / TRANSACTIONS_PER_PAGE)
+  const filteredTransactionsCount = transactionsCount.filter(
+    ({ description }) => filterTransactions(description, search),
+  ).length
+
+  const maxPages = Math.ceil(filteredTransactionsCount / TRANSACTIONS_PER_PAGE)
   const currentPage = Number(currPage || 1)
 
-  const transactionsDTO = transactions.map((t): GetTransactionsQuery => {
-    const decryptedDescription = t.description
-      ? decrypt(t.description)
-      : undefined
+  const transactionsDTO = filteredTransactions.map(
+    (t): GetTransactionsQuery => {
+      const decryptedDescription = t.description
+        ? decrypt(t.description)
+        : undefined
 
-    return {
-      transactionId: t.transaction_id,
-      description: decryptedDescription || null,
-      category: t.category ?? 'other',
-      amount: parseFloat(parseFloat(t.amount.toString()).toFixed(2)),
-      date: t.transaction_date,
-    }
-  })
+      return {
+        transactionId: t.transaction_id,
+        description: decryptedDescription || null,
+        category: t.category ?? 'other',
+        amount: decimalToNumber(t.amount),
+        date: t.transaction_date,
+      }
+    },
+  )
 
   const took =
     transactions.length === TRANSACTIONS_PER_PAGE
@@ -129,7 +137,7 @@ export async function getTransactionsHandler(
 
   const returnValue: GetTransactionsResponse = {
     transactions: transactionsDTO,
-    total: transactionsCount,
+    total: filteredTransactionsCount,
     took,
     currentPage,
     maxPages,
@@ -164,7 +172,7 @@ export async function addTransactionHandler(
       transactionId: transaction.transaction_id,
       description: transaction.description,
       category: transaction.category ?? 'other',
-      amount: parseFloat(parseFloat(transaction.amount.toString()).toFixed(2)),
+      amount: decimalToNumber(transaction.amount),
       date: transaction.transaction_date,
     }
 
@@ -240,7 +248,7 @@ export async function getRecentTransactionsHandler(
         : undefined
 
       return {
-        amount: parseFloat(parseFloat(amount.toString()).toFixed(2)),
+        amount: decimalToNumber(amount),
         category: category || 'other',
         description: decryptedDescription || null,
         date: transaction_date,

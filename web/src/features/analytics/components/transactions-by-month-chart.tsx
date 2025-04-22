@@ -1,6 +1,7 @@
 import type { ReactNode } from '@tanstack/react-router'
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 
+import { useIsMobile } from '@/components/hooks/use-mobile'
 import {
   Card,
   CardContent,
@@ -78,7 +79,7 @@ const mockedData = [
   },
   {
     month: 'October',
-    income: 5150,
+    income: 0,
     expense: 4450,
   },
   {
@@ -103,7 +104,7 @@ const ChartCardContainer = ({
   isError?: boolean
 }) => {
   return (
-    <Card className="border-reflect border-none md:h-[30rem] lg:h-[35rem]">
+    <Card className="border-reflect border-none md:h-[30rem] lg:h-[30rem]">
       <CardHeader>
         <CardTitle>Transactions by month</CardTitle>
         <CardDescription>Entire year of your transactions</CardDescription>
@@ -121,6 +122,7 @@ const ChartCardContainer = ({
 
 export function TransactionsByMonthChart() {
   const overview = useTransactionsOverview()
+  const isMobile = useIsMobile()
 
   if (overview.isLoading) {
     return (
@@ -154,12 +156,19 @@ export function TransactionsByMonthChart() {
         config={chartConfig}
         className="aspect-auto h-[95%] w-full">
         <AreaChart
-          margin={{
-            top: 0,
-            bottom: 0,
-            left: 50,
-            right: 50,
-          }}
+          margin={
+            isMobile
+              ? {
+                  left: 10,
+                  right: 10,
+                }
+              : {
+                  top: 0,
+                  bottom: 0,
+                  left: 50,
+                  right: 50,
+                }
+          }
           data={mockedData}>
           <defs>
             <linearGradient id="incomeFill" x1="0" y1="0" x2="0" y2="1">
@@ -184,8 +193,8 @@ export function TransactionsByMonthChart() {
             dataKey="month"
             tickLine={false}
             axisLine={false}
-            tickMargin={8}
             minTickGap={32}
+            tickMargin={isMobile ? 5 : 8}
             tickFormatter={(value) => value.slice(0, 3)}
           />
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />

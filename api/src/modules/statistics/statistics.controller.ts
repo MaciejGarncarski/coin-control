@@ -4,6 +4,8 @@ import type { Request, Response } from 'express'
 import status from 'http-status'
 import ms from 'ms'
 
+import { decimalToNumber } from '../../utils/decimal-to-number.js'
+
 export async function getStatisticsHandler(req: Request, res: Response) {
   const userId = req.session.userId
 
@@ -21,7 +23,7 @@ export async function getStatisticsHandler(req: Request, res: Response) {
   const totalBalance = parseFloat(
     transactions
       .reduce((result, el) => {
-        return result + parseFloat(parseFloat(el.amount.toString()).toFixed(2))
+        return result + decimalToNumber(el.amount)
       }, 0)
       .toFixed(2),
   )
@@ -35,7 +37,7 @@ export async function getStatisticsHandler(req: Request, res: Response) {
         )
       })
       .reduce((result, el) => {
-        return result + parseFloat(parseFloat(el.amount.toString()).toFixed(2))
+        return result + decimalToNumber(el.amount)
       }, 0)
       .toFixed(2),
   )
@@ -49,7 +51,7 @@ export async function getStatisticsHandler(req: Request, res: Response) {
         )
       })
       .reduce((result, el) => {
-        return result + parseFloat(parseFloat(el.amount.toString()).toFixed(2))
+        return result + decimalToNumber(el.amount)
       }, 0)
       .toFixed(2),
   )

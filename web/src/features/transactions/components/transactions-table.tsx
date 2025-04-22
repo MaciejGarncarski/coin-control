@@ -92,7 +92,7 @@ export const TransactionsTable = () => {
               <TableRow>
                 <TableCell colSpan={5}>
                   <p className="text-muted-foreground px-10 py-4 text-center text-lg">
-                    No data yet.
+                    No data.
                   </p>
                 </TableCell>
               </TableRow>

@@ -10,8 +10,8 @@ import { Fragment, useMemo } from 'react'
 import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
 import { Separator } from '@/components/ui/separator'
 import { useStatistics } from '@/features/homepage/api/get-statistics'
-import { ChartHomepage } from '@/features/homepage/components/homepage-chart'
 import { RecentTransactions } from '@/features/homepage/components/recent-transactions'
+import { WeeklyTransactionCountChart } from '@/features/homepage/components/weekly-transaction-count-chart'
 import { userQueryOptions } from '@/lib/auth'
 import { formatTransactionCategory } from '@/utils/format-transaction-category'
 
@@ -106,7 +106,7 @@ export const HomePage = () => {
 
       <div className="flex grid-cols-7 flex-col gap-12 md:grid">
         <div className="col-start-1 col-end-5">
-          <ChartHomepage />
+          <WeeklyTransactionCountChart />
         </div>
         <div className="col-start-5 col-end-8 flex flex-col gap-4">
           <RecentTransactions />

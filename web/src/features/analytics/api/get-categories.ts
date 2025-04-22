@@ -3,7 +3,6 @@ import { queryOptions, useQuery } from '@tanstack/react-query'
 
 import { ANALYTICS_QUERY_KEYS } from '@/constants/query-keys/analytics'
 import { fetcher } from '@/lib/fetcher'
-import { formatTransactionCategory } from '@/utils/format-transaction-category'
 
 export const getCategoriesAnalyticsQueryOptions = queryOptions({
   queryKey: [ANALYTICS_QUERY_KEYS.CATEGORIES],
@@ -17,12 +16,7 @@ export const getCategoriesAnalyticsQueryOptions = queryOptions({
       schema: categoriesAnalyticsSchema,
     })
 
-    return data?.categories.map(({ category, value }) => {
-      return {
-        category: formatTransactionCategory(category),
-        value,
-      }
-    })
+    return data?.categories
   },
 })
 

@@ -12,3 +12,16 @@ export const categoriesAnalyticsSchema = z.object({
 })
 
 export type CategoriesAnalytics = z.infer<typeof categoriesAnalyticsSchema>
+
+export const largestIncomeExpenseSchema = z.object({
+  income: z.object({
+    value: z.number().nullable(),
+    description: z.string().nullable(),
+  }),
+  expense: z.object({
+    value: z.number().nullable(),
+    description: z.string().nullable(),
+  }),
+})
+
+export type LargestIncomeExpense = z.infer<typeof largestIncomeExpenseSchema>
