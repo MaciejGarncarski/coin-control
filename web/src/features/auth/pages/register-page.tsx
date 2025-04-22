@@ -154,6 +154,7 @@ export function RegisterPage() {
 
               <Link
                 to="/auth/login"
+                search={{ error: undefined }}
                 className="text-muted-foreground text-sm underline">
                 Login
               </Link>

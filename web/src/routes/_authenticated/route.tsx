@@ -33,6 +33,7 @@ export const Route = createFileRoute('/_authenticated')({
     if (shouldRedirect) {
       throw redirect({
         to: '/auth/login',
+        search: { error: undefined },
       })
     }
   },

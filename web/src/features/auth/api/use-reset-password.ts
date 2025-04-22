@@ -24,6 +24,7 @@ export function useResetPassword() {
     onSuccess: async () => {
       await navigate({
         to: '/auth/login',
+        search: { error: undefined },
       })
 
       toast.success('Success. You can log in with new password.')

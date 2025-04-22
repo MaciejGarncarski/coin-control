@@ -11,6 +11,7 @@ describe('login page test', () => {
 
     await router.navigate({
       to: '/auth/login',
+      search: { error: undefined },
     })
 
     renderWithProviders(<MainApp />)
@@ -25,6 +26,7 @@ describe('login page test', () => {
 
     await router.navigate({
       to: '/auth/login',
+      search: { error: undefined },
     })
 
     renderWithProviders(<MainApp />)
