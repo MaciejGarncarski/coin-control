@@ -38,7 +38,7 @@ const ChartCardContainer = ({
   isError?: boolean
 }) => {
   return (
-    <Card className="border-reflect border-none md:h-[30rem] lg:h-[58dvh]">
+    <Card className="border-reflect border-none sm:h-[30rem] md:h-[58dvh]">
       <CardHeader>
         <CardTitle>Transactions Overview</CardTitle>
         <CardDescription>Your transactions from this week</CardDescription>

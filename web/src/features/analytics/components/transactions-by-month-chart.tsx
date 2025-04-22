@@ -91,7 +91,7 @@ export function TransactionsByMonthChart() {
     <ChartCardContainer>
       <ChartContainer
         config={chartConfig}
-        className="aspect-auto h-[95%] w-full">
+        className="aspect-auto h-[10rem] w-full md:h-[95%]">
         <AreaChart
           margin={
             isMobile
