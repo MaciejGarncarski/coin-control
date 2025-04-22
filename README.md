@@ -50,14 +50,47 @@ I have used pnpm workspaces as monorepo for this project. I could use turborepo 
 - Vitest
 - Supertest
 
-## Installation
-
-You need to have docker installed on your system.
-
-`pnpm install`
+## Configuration
 
 Create .env file in root directory based on .env.example
 
+```txt
+API_PORT=
+HOST=
+DATABASE_URL=
+MAIL_USER=
+MAIL_PASS=
+
+API_SECRET=
+WEB_PORT=
+APP_URL=
+API_URL=
+
+ENCRYPTION_SECRET=
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_OAUTH_URL=
+GOOGLE_ACCESS_TOKEN_URL=
+GOOGLE_CALLBACK_URL=
+```
+
+## Installation and running
+
+You need to have docker installed on your system.
+
+### Install dependencies
+
+`pnpm install`
+
+### Build shared monorepo packages
+
 `pnpm --filter "@shared/*" build`
 
+### Run docker container in dev mode
+
 `pnpm dev`
+
+## Author
+
+Maciej Garncarski
