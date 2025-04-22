@@ -27,9 +27,7 @@ const RecentTransactionsCard = ({ children }: { children: ReactNode }) => {
           </span>
         )}
       </CardHeader>
-      <CardContent className="flex h-full flex-col px-4 lg:px-6">
-        {children}
-      </CardContent>
+      <CardContent className="flex h-full flex-col">{children}</CardContent>
     </Card>
   )
 }
@@ -73,7 +71,7 @@ export const RecentTransactions = () => {
 
   return (
     <RecentTransactionsCard>
-      <ScrollArea className="mb-2 pr-4 xl:h-[40dvh]">
+      <ScrollArea className="mb-2 pr-1 md:pr-4 xl:h-[40dvh]">
         <ul className="flex flex-col gap-4">
           {recentTransactions.data?.recentTransactions.map(
             ({ transactionId, category, description, amount, date }) => {
