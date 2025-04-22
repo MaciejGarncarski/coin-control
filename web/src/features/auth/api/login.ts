@@ -1,6 +1,6 @@
 import { type LoginMutation, userSchema } from '@shared/schemas'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useRouteContext } from '@tanstack/react-router'
+import { useNavigate, useRouteContext } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
 import { AUTH_QUERY_KEYS } from '@/constants/query-keys/auth'
@@ -12,9 +12,15 @@ export const useLoginMutation = () => {
     from: '__root__',
     select: (context) => context.auth,
   })
+  const navigate = useNavigate()
 
   return useMutation({
     mutationFn: async (mutationData: LoginMutation) => {
+      navigate({
+        search: undefined,
+        viewTransition: false,
+      })
+
       const response = await fetcher({
         method: 'POST',
         url: '/auth/login',

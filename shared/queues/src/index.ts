@@ -2,14 +2,15 @@ import { Redis } from 'ioredis'
 
 import { env } from './env.js'
 
+export type * from './job-types.js'
+export * from 'bullmq'
+
 export const redisClient = new Redis({
   maxRetriesPerRequest: null,
   host: 'cache',
   password: env.REDIS_PASSWORD,
   port: parseInt(env.REDIS_PORT),
 })
-
-export * from 'bullmq'
 
 export const QUEUES = {
   NEW_EMAIL_VERIFICATION: 'new-email-verification',
@@ -20,5 +21,3 @@ export const QUEUES = {
   RESET_PASSWORD: 'reset-password-queue',
   RESET_PASSWORD_NOTIFICATION: 'reset-password-notification',
 } as const
-
-export type * from './job-types.js'

@@ -12,6 +12,7 @@ import {
   type GetTransactionsResponse,
   type RecentTransaction,
 } from '@shared/schemas'
+import { isSameWeek } from 'date-fns'
 import { type Request, type Response } from 'express'
 import status from 'http-status'
 import ms from 'ms'
@@ -291,8 +292,14 @@ export async function getTransactionOverviewHandler(
     },
   })
 
+  const thisWeekUserTransactions = userTransactions.filter(
+    ({ transaction_date }) => {
+      return isSameWeek(transaction_date, formattedDate)
+    },
+  )
+
   const response: GetTransactionOverview = {
-    data: userTransactions.map((tr) => {
+    data: thisWeekUserTransactions.map((tr) => {
       return {
         transactionDate: tr.transaction_date.toString(),
         transactionId: tr.transaction_id,

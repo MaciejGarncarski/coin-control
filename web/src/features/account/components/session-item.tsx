@@ -51,9 +51,14 @@ export const SessionItem = ({ session }: Props) => {
           </div>
           <div className="flex flex-col md:flex-row md:items-center md:gap-4">
             <span className="flex flex-col">
-              <span className="text-sm md:text-base">
-                {session.browser} on {session.os}
-              </span>
+              {!session.browser && !session.os ? (
+                <span className="text-sm md:text-base">Unknown device</span>
+              ) : (
+                <span className="text-sm md:text-base">
+                  {session.browser || 'Unknown browser'} on{' '}
+                  {session.os || 'unknown OS'}
+                </span>
+              )}
               <span className="text-muted-foreground text-xs">
                 {session.location}
               </span>

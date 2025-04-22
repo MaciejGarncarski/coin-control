@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { loginMutationSchema } from '@shared/schemas'
-import { Link } from '@tanstack/react-router'
+import { Link, useSearch } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
@@ -32,6 +32,7 @@ import { cn } from '@/lib/utils'
 
 export const LoginPage = () => {
   const loginMutation = useLoginMutation()
+  const search = useSearch({ from: '/_unauthenticated/auth/login' })
 
   const form = useForm({
     resolver: zodResolver(loginMutationSchema),
@@ -52,6 +53,15 @@ export const LoginPage = () => {
           <Logo />
         </CardTitle>
         <CardDescription>Login to CoinControl</CardDescription>
+        {search.error && (
+          <Alert variant={'destructive'} className={cn('bg-card mt-3')}>
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              {'Could not login. Try again later.'}
+            </AlertDescription>
+          </Alert>
+        )}
+
         {loginMutation.isError && (
           <Alert variant={'destructive'} className={cn('bg-card mt-3')}>
             <AlertCircle className="h-4 w-4" />

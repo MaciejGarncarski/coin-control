@@ -35,7 +35,6 @@ export type RegisterMutation = z.infer<typeof registerMutationSchema>
 export const EmailVerificationResponeSchema = z.object({
   message: z.string(),
 })
-
 export type EmailVerificationResponse = z.infer<
   typeof EmailVerificationResponeSchema
 >

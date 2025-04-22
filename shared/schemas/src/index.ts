@@ -22,6 +22,7 @@ export const apiErrorSchema = z.union([baseError, validationError])
 
 export type ApiError = z.infer<typeof apiErrorSchema>
 
+export * from './analytics.js'
 export * from './auth.js'
 export * from './statistics.js'
 export * from './transactions.js'

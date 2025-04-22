@@ -41,7 +41,7 @@ const ChartCardContainer = ({
     <Card className="border-reflect border-none md:h-[30rem] lg:h-[58dvh]">
       <CardHeader>
         <CardTitle>Transactions Overview</CardTitle>
-        <CardDescription>Your transactions from last week</CardDescription>
+        <CardDescription>Your transactions from this week</CardDescription>
       </CardHeader>
       <CardContent
         className={cn(

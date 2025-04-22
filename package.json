@@ -4,6 +4,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "build-shared": "pnpm --filter '@shared/*' build",
     "dev": "pnpm just up-dev",
     "prod": "pnpm just up-prod",
     "test-api": "pnpm just test-api",

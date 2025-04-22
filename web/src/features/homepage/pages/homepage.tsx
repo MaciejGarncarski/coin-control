@@ -56,11 +56,11 @@ export const HomePage = () => {
 
   return (
     <div className="flex flex-col gap-10 md:gap-12">
-      <div className="bg-card border-reflect flex flex-col rounded-xl py-2 shadow-xs md:h-32 md:flex-row md:py-4">
+      <div className="bg-card border-reflect flex flex-col rounded-xl py-2 shadow-xs md:h-40 md:flex-row md:px-4 md:py-4">
         {homepageTilesData.map(({ icon: Icon, title, value }) => {
           return (
             <Fragment key={title}>
-              <div className="flex grow items-center gap-4 p-6">
+              <div className="flex grow items-center gap-4 p-6 md:gap-6">
                 <span className="bg-primary/10 border-reflect text-primary flex h-10 w-10 items-center justify-center rounded-full p-2 md:hidden xl:flex">
                   <Icon />
                 </span>
@@ -84,7 +84,7 @@ export const HomePage = () => {
             </Fragment>
           )
         })}
-        <div className="flex grow items-center gap-4 p-6">
+        <div className="flex grow items-center gap-4 p-6 md:gap-6">
           <span className="bg-primary/10 border-reflect text-primary flex h-10 w-10 items-center justify-center rounded-full p-2 md:hidden xl:flex">
             <TransactionCategoryIcon
               variant="big"
