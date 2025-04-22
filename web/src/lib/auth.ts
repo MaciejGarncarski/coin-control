@@ -56,11 +56,7 @@ export const useLogoutMutation = () => {
     onSuccess: async () => {
       authContext.logout()
       router.invalidate()
-      await queryClient.invalidateQueries({
-        queryKey: [AUTH_QUERY_KEYS.SESSION],
-      })
-
-      queryClient.setQueriesData({ queryKey: [] }, () => null)
+      await queryClient.invalidateQueries()
     },
   })
 }
