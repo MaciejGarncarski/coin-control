@@ -57,51 +57,54 @@ export const BiggestTransactionCard = () => {
   return (
     <BiggestTransactionCardContainer>
       <div className="flex h-full flex-col items-center justify-center gap-6 text-center md:flex-row xl:gap-20">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-muted-foreground">Largest income</h2>
-          <Link
-            to={'/transactions'}
-            search={{
-              page: 1,
-              search: transactions.data?.income.description
-                ? transactions.data?.income.description.slice(0, 10)
-                : undefined,
-            }}
-            className="hover:underline">
-            <div className="flex flex-col gap-1">
-              {transactions.data?.income.description ? (
-                <p>&quot;{transactions.data?.income.description}&quot;</p>
-              ) : null}
-              <p className="text-3xl font-semibold text-green-700">
-                {transactions.data?.income.value
-                  ? `+${transactions.data.income.value}`
-                  : 0}
-              </p>
-            </div>
-          </Link>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <h2 className="text-muted-foreground">Largest expense</h2>
-          <Link
-            to={'/transactions'}
-            search={{
-              page: 1,
-              search: transactions.data?.expense.description
-                ? transactions.data?.expense.description.slice(0, 10)
-                : undefined,
-            }}
-            className="hover:underline">
-            <div className="flex flex-col gap-1">
-              {transactions.data?.expense.description ? (
-                <p>&quot;{transactions.data?.expense.description}&quot;</p>
-              ) : null}
-              <p className="text-3xl font-semibold text-red-700">
-                {transactions.data?.expense.value || 0}
-              </p>
-            </div>
-          </Link>
-        </div>
+        {transactions.data?.income ? (
+          <div className="flex flex-col gap-1">
+            <h2 className="text-muted-foreground">Largest income</h2>
+            <Link
+              to={'/transactions'}
+              search={{
+                page: 1,
+                search: transactions.data?.income.description
+                  ? transactions.data?.income.description.slice(0, 10)
+                  : undefined,
+              }}
+              className="hover:underline">
+              <div className="flex flex-col gap-1">
+                {transactions.data?.income.description ? (
+                  <p>&quot;{transactions.data?.income.description}&quot;</p>
+                ) : null}
+                <p className="text-3xl font-semibold text-green-700">
+                  {transactions.data?.income.value
+                    ? `+${transactions.data.income.value}`
+                    : 0}
+                </p>
+              </div>
+            </Link>
+          </div>
+        ) : null}
+        {transactions.data?.expense ? (
+          <div className="flex flex-col gap-1">
+            <h2 className="text-muted-foreground">Largest expense</h2>
+            <Link
+              to={'/transactions'}
+              search={{
+                page: 1,
+                search: transactions.data?.expense.description
+                  ? transactions.data?.expense.description.slice(0, 10)
+                  : undefined,
+              }}
+              className="hover:underline">
+              <div className="flex flex-col gap-1">
+                {transactions.data?.expense.description ? (
+                  <p>&quot;{transactions.data?.expense.description}&quot;</p>
+                ) : null}
+                <p className="text-3xl font-semibold text-red-700">
+                  {transactions.data?.expense.value || 0}
+                </p>
+              </div>
+            </Link>
+          </div>
+        ) : null}
       </div>
     </BiggestTransactionCardContainer>
   )
