@@ -91,6 +91,14 @@ You need to have docker installed on your system.
 
 `pnpm dev`
 
+## Run tests
+
+Look for test type you want to run in `justfile`.
+
+Example:
+
+`pnpm just test-api-coverage`
+
 ## Author
 
 Maciej Garncarski

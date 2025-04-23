@@ -30,3 +30,6 @@ test-web-coverage:
 
 test-web-watch:
 	docker compose -f docker-compose.test-web.yml --profile watch up --build --abort-on-container-exit 
+
+test-web-watch-coverage:
+	docker compose -f docker-compose.test-web.yml --profile watch-coverage up --build --abort-on-container-exit 

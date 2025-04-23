@@ -1,7 +1,6 @@
 import { z } from 'zod'
 
 const envSchema = z.object({
-  DATABASE_URL: z.string().startsWith('postgresql://'),
   API_SECRET: z.string(),
   API_URL: z.string(),
   HOST: z.string().ip({ version: 'v4' }),

@@ -14,10 +14,14 @@ FROM base AS dev
 WORKDIR /app
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY worker ./worker
-COPY shared ./shared
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
+COPY shared/database ./shared/database
+COPY shared/queues ./shared/queues
+COPY shared/email ./shared/email
+COPY shared/schemas ./shared/schemas
+COPY shared/eslint-prettier ./shared/eslint-prettier
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install 
 ENV NODE_ENV="development"
-# RUN pnpm --filter "worker" generate-prisma
+EXPOSE ${PORT}
 CMD [ "pnpm", "--filter", "worker", "dev" ]
 
 # build prod
@@ -31,7 +35,8 @@ RUN pnpm "--filter=@shared/*" build && \
 
 # prod
 FROM base AS prod
-COPY --from=build /prod/worker /prod/worker
+COPY --from=build /prod/worker/node_modules /prod/worker/node_modules
+COPY --from=build /prod/worker/dist /prod/worker/dist
 WORKDIR /prod/worker
 EXPOSE ${PORT}
 ENV NODE_ENV="production"

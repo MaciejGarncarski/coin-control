@@ -66,6 +66,7 @@ services:
     networks:
       - app-network
     environment:
+      - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
       - APP_ORIGIN=${APP_URL}
       - MAIL_USER=${MAIL_USER}
       - MAIL_PASS=${MAIL_PASS}

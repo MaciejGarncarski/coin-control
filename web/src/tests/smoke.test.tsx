@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 
 import { MainApp } from '@/main'
 import { unauthedHandlerOnce } from '@/tests/mocks/handlers'
@@ -10,9 +10,6 @@ describe('smoke test', () => {
     server.use(unauthedHandlerOnce)
 
     renderWithProviders(<MainApp />)
-
-    await waitFor(() => {
-      expect(screen.getByText(/login to coincontrol/i)).toBeInTheDocument()
-    })
+    expect(await screen.findByText(/login to coincontrol/i)).toBeInTheDocument()
   })
 })

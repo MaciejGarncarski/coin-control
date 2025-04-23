@@ -29,6 +29,7 @@ const auth: Auth = {
 
 export const useAuth = (): Auth & AuthUtils => {
   const userAuthenticated = useQuery(userQueryOptions)
+
   const queryClient = useQueryClient()
 
   useEffect(() => {

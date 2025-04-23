@@ -36,7 +36,6 @@ COPY shared/eslint-prettier ./shared/eslint-prettier
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install 
 ENV NODE_ENV="development"
 EXPOSE ${PORT}
-# RUN pnpm --filter "api" generate-prisma
 CMD [ "pnpm", "--filter", "api", "dev" ]
 
 # build prod

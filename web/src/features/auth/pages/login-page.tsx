@@ -61,7 +61,6 @@ export const LoginPage = () => {
             </AlertDescription>
           </Alert>
         )}
-
         {loginMutation.isError && (
           <Alert variant={'destructive'} className={cn('bg-card mt-3')}>
             <AlertCircle className="h-4 w-4" />

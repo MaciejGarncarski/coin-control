@@ -8,7 +8,7 @@ const getApiUrl = (url: string) => {
 }
 
 export const handlers = [
-  http.get(getApiUrl('/user'), () => {
+  http.get(getApiUrl('/auth/me'), () => {
     const userResponse: User = {
       avatarURL: '',
       email: 'some@email.com',
@@ -20,7 +20,7 @@ export const handlers = [
     return HttpResponse.json(userResponse)
   }),
 
-  http.get(getApiUrl('/auth/me'), () => {
+  http.post(getApiUrl('/auth/login'), () => {
     const userResponse: User = {
       avatarURL: '',
       email: 'some@email.com',
@@ -38,5 +38,23 @@ export const unauthedHandlerOnce = http.get(
   () => {
     return HttpResponse.json(null)
   },
-  { once: true },
+  { once: false },
+)
+
+export const loginErrorHandlerOnce = http.post(
+  getApiUrl('/auth/login'),
+  () => {
+    return HttpResponse.json(
+      {
+        message: 'User not found.',
+        formMessage: 'User not found.',
+        statusCode: 400,
+      },
+      {
+        status: 400,
+      },
+    )
+  },
+
+  { once: false },
 )

@@ -30,6 +30,8 @@ services:
     tty: true
     profiles:
       - watch
+    volumes:
+      - ./web/src:/app/web/src
     build:
       target: test
       dockerfile: ./web/web.Dockerfile
@@ -37,3 +39,18 @@ services:
       - VITE_PORT=3000
       - VITE_API_URL=http://localhost:3001
     command: pnpm --filter web test:watch
+
+  web-test-watch-coverage:
+    container_name: coin-control-web-test-watch-coverage
+    tty: true
+    profiles:
+      - watch-coverage
+    volumes:
+      - ./web/src:/app/web/src
+    build:
+      target: test
+      dockerfile: ./web/web.Dockerfile
+    environment:
+      - VITE_PORT=3000
+      - VITE_API_URL=http://localhost:3001
+    command: pnpm --filter web test:watch-coverage

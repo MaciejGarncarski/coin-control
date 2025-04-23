@@ -6,11 +6,15 @@ import { createNewEmailVerificationWorker } from './workers/new-email-verificati
 import { createResetPasswordLinkWorker } from './workers/reset-email-password-link.js'
 import { createResetPasswordNotificationWorker } from './workers/reset-password-notification.js'
 
-createResetPasswordLinkWorker()
-createAccountVerificationWorker()
-createResetPasswordNotificationWorker()
-createExpiredSessionRemoverWorker()
-createNewEmailVerificationWorker()
-
-createExpiredCodesRemoverWorker()
-createExpiredPasswordTokensRemoverWorker()
+try {
+  createResetPasswordLinkWorker()
+  createAccountVerificationWorker()
+  createResetPasswordNotificationWorker()
+  createExpiredSessionRemoverWorker()
+  createNewEmailVerificationWorker()
+  createExpiredCodesRemoverWorker()
+  createExpiredPasswordTokensRemoverWorker()
+} catch (e) {
+  // eslint-disable-next-line no-console
+  console.log(e)
+}

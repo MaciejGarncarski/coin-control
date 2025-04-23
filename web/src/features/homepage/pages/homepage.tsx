@@ -55,7 +55,7 @@ export const HomePage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-10 md:gap-12">
+    <div className="flex flex-col gap-10 md:gap-12" data-testid="homepage">
       <div className="bg-card border-reflect flex flex-col rounded-xl py-2 shadow-xs md:h-40 md:flex-row md:px-4 md:py-4">
         {homepageTilesData.map(({ icon: Icon, title, value }) => {
           return (

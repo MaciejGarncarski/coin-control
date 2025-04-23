@@ -20,6 +20,7 @@ const envSchema = z.object({
 const parsedEnv = envSchema.safeParse(process.env)
 
 if (!parsedEnv.success) {
+  console.log('ENV PARSING ERROR', parsedEnv.error.message)
   process.exit(1)
 }
 

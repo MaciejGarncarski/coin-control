@@ -9,10 +9,10 @@
     "format": "prettier --write --cache .",
     "lint-format": "pnpm lint && pnpm format",
     "check-types": "pnpm tsc --skipLibCheck --noEmit",
-    "test": "vitest run src/tests/smoke.test.tsx && vitest run",
-    "test:watch": "vitest run src/tests/smoke.test.tsx && vitest watch",
-    "test:coverage": "vitest run src/tests/smoke.test.tsx && vitest run --coverage",
-    "test:watch-coverage": "vitest run src/tests/smoke.test.tsx && vitest watch --coverage"
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "test:watch-coverage": "vitest watch --coverage"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",

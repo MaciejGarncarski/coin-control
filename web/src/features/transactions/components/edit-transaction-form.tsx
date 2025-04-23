@@ -24,6 +24,7 @@ import { useEditTransaction } from '@/features/transactions/api/edit-transaction
 import { AmountInput } from '@/features/transactions/components/amount-input'
 import { TransactionDatePicker } from '@/features/transactions/components/transaction-date-picker'
 import { TransactionSelect } from '@/features/transactions/components/transaction-select'
+import { formatTransaction } from '@/utils/format-transaction'
 
 type Props = {
   isOpen: boolean
@@ -94,7 +95,7 @@ export const EditTransactionForm = ({
 
     editTransactionForm.setValue(
       'amount',
-      parseFloat(amountValue.toString()) - 10,
+      formatTransaction(amountValue.toString()) - 10,
     )
   }, [amountValue, editTransactionForm])
 
@@ -105,7 +106,7 @@ export const EditTransactionForm = ({
 
     editTransactionForm.setValue(
       'amount',
-      parseFloat(amountValue.toString()) + 10,
+      formatTransaction(amountValue.toString()) + 10,
     )
   }, [amountValue, editTransactionForm])
 

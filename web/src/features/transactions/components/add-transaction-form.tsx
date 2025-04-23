@@ -27,6 +27,7 @@ import { useAddTransaction } from '@/features/transactions/api/add-transaction'
 import { AmountInput } from '@/features/transactions/components/amount-input'
 import { TransactionDatePicker } from '@/features/transactions/components/transaction-date-picker'
 import { TransactionSelect } from '@/features/transactions/components/transaction-select'
+import { formatTransaction } from '@/utils/format-transaction'
 
 export const AddTransactionForm = () => {
   const search = useSearch({ from: '/_authenticated/transactions' })
@@ -81,14 +82,14 @@ export const AddTransactionForm = () => {
   const decreaseAmount = useCallback(() => {
     newTransactionForm.setValue(
       'amount',
-      parseFloat(amountValue.toString()) - 10,
+      formatTransaction(amountValue.toString()) - 10,
     )
   }, [amountValue, newTransactionForm])
 
   const increaseAmount = useCallback(() => {
     newTransactionForm.setValue(
       'amount',
-      parseFloat(amountValue.toString()) + 10,
+      formatTransaction(amountValue.toString()) + 10,
     )
   }, [amountValue, newTransactionForm])
 
