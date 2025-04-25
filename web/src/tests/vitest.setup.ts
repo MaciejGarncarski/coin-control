@@ -32,6 +32,7 @@ beforeAll(() => {
 
 afterEach(() => {
   server.resetHandlers()
+  server.restoreHandlers()
 })
 
 afterAll(() => {

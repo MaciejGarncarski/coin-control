@@ -40,6 +40,7 @@ export const useLoginMutation = () => {
       })
 
       authContext.login()
+
       toast.success('Logged in successfully')
     },
   })

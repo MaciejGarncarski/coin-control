@@ -116,11 +116,11 @@ export async function registerHandler(
   req: TypedRequestBody<RegisterMutation>,
   res: Response,
 ) {
-  const createdUser = await registerUser(req.body)
+  const { user } = await registerUser(req.body)
 
-  req.session.userId = createdUser.user.id
+  req.session.userId = user.id
 
-  res.status(status.ACCEPTED).json(createdUser.user)
+  res.status(status.ACCEPTED).json(user)
   return
 }
 

@@ -10,6 +10,8 @@ import request from 'supertest'
 import { v7 } from 'uuid'
 
 import { buildApp } from '../../app.js'
+import { mockAuthorize } from '../../tests/mock-authorize.js'
+import { TEST_USER } from '../../tests/setup.js'
 
 const app = buildApp()
 
@@ -22,11 +24,19 @@ vi.mock('../../middlewares/authorize.js', () => ({
 
 describe('user.route.ts', async () => {
   it('should return user emails', async () => {
+    const mock = mockAuthorize()
+    mock.setSessionId('someSessionId')
+    mock.setUserId(TEST_USER.id)
+
     const response = await request(app).get('/user/emails')
     expect(response.status).toBe(status.OK)
   })
 
   it('should add user email', async () => {
+    const mock = mockAuthorize()
+    mock.setSessionId('someSessionId')
+    mock.setUserId(TEST_USER.id)
+
     const email = 'newemail@test.pl'
 
     await db.user_emails.deleteMany({
@@ -46,6 +56,10 @@ describe('user.route.ts', async () => {
   const emailId = v7()
 
   it('should resend verification email', async () => {
+    const mock = mockAuthorize()
+    mock.setSessionId('someSessionId')
+    mock.setUserId(TEST_USER.id)
+
     await db.user_emails.create({
       data: {
         user_id: '019601da-faff-76b7-ad12-ca98c8cffeb4',
@@ -67,6 +81,10 @@ describe('user.route.ts', async () => {
   })
 
   it('should not resend verification email if sent earlier', async () => {
+    const mock = mockAuthorize()
+    mock.setSessionId('someSessionId')
+    mock.setUserId(TEST_USER.id)
+
     const body: ResendEmailVerificationMutation = {
       email: 'new@email.com',
     }
@@ -88,6 +106,10 @@ describe('user.route.ts', async () => {
   })
 
   it('should return not found if no email found', async () => {
+    const mock = mockAuthorize()
+    mock.setSessionId('someSessionId')
+    mock.setUserId(TEST_USER.id)
+
     const body: ResendEmailVerificationMutation = {
       email: 'notexisting@email.com',
     }

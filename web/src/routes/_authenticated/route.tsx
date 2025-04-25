@@ -51,10 +51,6 @@ function App() {
     return null
   }
 
-  if (!user.data?.id) {
-    return null
-  }
-
   if (routeContext.auth.isEmailVerified === false) {
     return <VerifyAccountPage />
   }

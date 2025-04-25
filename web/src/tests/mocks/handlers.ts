@@ -20,17 +20,35 @@ export const handlers = [
     return HttpResponse.json(userResponse)
   }),
 
-  http.post(getApiUrl('/auth/login'), () => {
-    const userResponse: User = {
-      avatarURL: '',
-      email: 'some@email.com',
-      id: 'id',
-      isEmailVerified: true,
-      name: 'TEST_USER',
-    }
+  http.post<object, { email: string; password: string }>(
+    getApiUrl('/auth/login'),
+    async ({ request }) => {
+      const body = await request.json()
 
-    return HttpResponse.json(userResponse)
-  }),
+      if (body?.email === 'some@email.com') {
+        const userResponse: User = {
+          avatarURL: '',
+          email: 'some@email.com',
+          id: 'id',
+          isEmailVerified: true,
+          name: 'TEST_USER',
+        }
+
+        return HttpResponse.json(userResponse, { status: 200 })
+      }
+
+      return HttpResponse.json(
+        {
+          message: 'User not found.',
+          formMessage: 'User not found.',
+          statusCode: 400,
+        },
+        {
+          status: 400,
+        },
+      )
+    },
+  ),
 ]
 
 export const unauthedHandlerOnce = http.get(
@@ -38,23 +56,5 @@ export const unauthedHandlerOnce = http.get(
   () => {
     return HttpResponse.json(null)
   },
-  { once: false },
-)
-
-export const loginErrorHandlerOnce = http.post(
-  getApiUrl('/auth/login'),
-  () => {
-    return HttpResponse.json(
-      {
-        message: 'User not found.',
-        formMessage: 'User not found.',
-        statusCode: 400,
-      },
-      {
-        status: 400,
-      },
-    )
-  },
-
   { once: false },
 )

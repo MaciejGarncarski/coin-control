@@ -50,7 +50,7 @@ export const HomePage = () => {
     ],
   )
 
-  if (!user.data?.id) {
+  if (!user.data) {
     return null
   }
 

@@ -11,8 +11,8 @@ services:
       POSTGRES_DB: coin_control
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 30s
-      timeout: 30s
+      interval: 5s
+      timeout: 5s
       retries: 3
     networks:
       - app-network
@@ -59,6 +59,7 @@ services:
       - app-network
     volumes:
       - avatar-upload-test:/app/api/avatar-upload
+      - ./api/src:/app/api/src
     build:
       target: test
       dockerfile: ./api/api.Dockerfile
@@ -76,12 +77,12 @@ services:
       - REDIS_HOST=cache
       - REDIS_PORT=6379
       - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-      - ENCRYPTION_SECRET=0JmiXrFPe7DhV/WZ57E7zRZte5rnk/V9iN5dCU0PUMVi/8XQjbgqpkPqs0G1m/bk
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - GOOGLE_OAUTH_URL=${GOOGLE_OAUTH_URL}
-      - GOOGLE_ACCESS_TOKEN_URL=${GOOGLE_ACCESS_TOKEN_URL}
-      - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL}
+      - ENCRYPTION_SECRET=iTSFakeEnCryPTiONKeyC2Kc0x81Juq+FJ2MoKnYBiBxnvECJKFDBbbEhLGNYByY
+      - GOOGLE_CLIENT_ID=fortesting
+      - GOOGLE_CLIENT_SECRET=fortesting
+      - GOOGLE_OAUTH_URL=fortesting
+      - GOOGLE_ACCESS_TOKEN_URL=fortesting
+      - GOOGLE_CALLBACK_URL=fortesting
 
     command: pnpm --filter api test
 
@@ -99,6 +100,7 @@ services:
       - app-network
     volumes:
       - avatar-upload-test:/app/api/avatar-upload
+      - ./api/src:/app/api/src
     build:
       target: test
       dockerfile: ./api/api.Dockerfile
@@ -113,6 +115,15 @@ services:
       - HOST=0.0.0.0
       - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
       - API_SECRET=randomsecretfortestingpurposes
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      - ENCRYPTION_SECRET=iTSFakeEnCryPTiONKeyC2Kc0x81Juq+FJ2MoKnYBiBxnvECJKFDBbbEhLGNYByY
+      - GOOGLE_CLIENT_ID=fortesting
+      - GOOGLE_CLIENT_SECRET=fortesting
+      - GOOGLE_OAUTH_URL=fortesting
+      - GOOGLE_ACCESS_TOKEN_URL=fortesting
+      - GOOGLE_CALLBACK_URL=fortesting
 
     command: pnpm --filter api test:coverage
 
@@ -130,6 +141,7 @@ services:
       - app-network
     volumes:
       - avatar-upload-test:/app/api/avatar-upload
+      - ./api/src:/app/api/src
     build:
       target: test
       dockerfile: ./api/api.Dockerfile
@@ -144,8 +156,58 @@ services:
       - HOST=0.0.0.0
       - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
       - API_SECRET=randomsecretfortestingpurposes
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      - ENCRYPTION_SECRET=iTSFakeEnCryPTiONKeyC2Kc0x81Juq+FJ2MoKnYBiBxnvECJKFDBbbEhLGNYByY
+      - GOOGLE_CLIENT_ID=fortesting
+      - GOOGLE_CLIENT_SECRET=fortesting
+      - GOOGLE_OAUTH_URL=fortesting
+      - GOOGLE_ACCESS_TOKEN_URL=fortesting
+      - GOOGLE_CALLBACK_URL=fortesting
 
     command: pnpm --filter api test:watch
+
+  api-test-watch-coverage:
+    container_name: coin-control-api-test-watch-coverage
+    tty: true
+    profiles:
+      - watch-coverage
+    depends_on:
+      cache:
+        condition: service_started
+      database:
+        condition: service_healthy
+    networks:
+      - app-network
+    volumes:
+      - avatar-upload-test:/app/api/avatar-upload
+      - ./api/src:/app/api/src
+    build:
+      target: test
+      dockerfile: ./api/api.Dockerfile
+      args:
+        - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - PORT=3001
+      - APP_ORIGIN=http://localhost:3000
+      - API_URL=http://localhost:3001
+      - HOST=0.0.0.0
+      - DATABASE_URL=postgresql://postgres:postgres@database/coin_control?schema=public
+      - API_SECRET=randomsecretfortestingpurposes
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      - ENCRYPTION_SECRET=iTSFakeEnCryPTiONKeyC2Kc0x81Juq+FJ2MoKnYBiBxnvECJKFDBbbEhLGNYByY
+      - GOOGLE_CLIENT_ID=fortesting
+      - GOOGLE_CLIENT_SECRET=fortesting
+      - GOOGLE_OAUTH_URL=fortesting
+      - GOOGLE_ACCESS_TOKEN_URL=fortesting
+      - GOOGLE_CALLBACK_URL=fortesting
+
+    command: pnpm --filter api test:watch-coverage
 
 networks:
   app-network:

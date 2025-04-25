@@ -22,6 +22,9 @@ test-api-coverage:
 test-api-watch:
 	docker compose -f docker-compose.test-api.yml --profile watch up --build --abort-on-container-exit 
 
+test-api-watch-coverage:
+	docker compose -f docker-compose.test-api.yml --profile watch-coverage up --build --abort-on-container-exit 
+
 test-web:
 	docker compose -f docker-compose.test-web.yml --profile once up --build --abort-on-container-exit 
 

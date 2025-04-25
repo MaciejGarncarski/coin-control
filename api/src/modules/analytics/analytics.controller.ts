@@ -181,32 +181,38 @@ export async function getTransactionsByMonthHandler(
     }
   >
 
-  const transactionsData = transactions.reduce((acc, el) => {
-    const monthName = format(el.transaction_date, 'LLLL') as Month
+  const currYear = new Date().getFullYear()
 
-    const prevExpense = acc[monthName].expense || 0
-    const prevIncome = acc[monthName].income || 0
+  const transactionsData = transactions
+    .filter(({ transaction_date }) => {
+      return transaction_date.getFullYear() === currYear
+    })
+    .reduce((acc, el) => {
+      const monthName = format(el.transaction_date, 'LLLL') as Month
 
-    const currentValue = decimalToNumber(el.amount || 0)
+      const prevExpense = acc[monthName].expense || 0
+      const prevIncome = acc[monthName].income || 0
 
-    if (currentValue > 0) {
+      const currentValue = decimalToNumber(el.amount || 0)
+
+      if (currentValue > 0) {
+        return {
+          ...acc,
+          [monthName]: {
+            income: prevIncome + decimalToNumber(el.amount),
+            expense: acc[monthName].expense,
+          },
+        }
+      }
+
       return {
         ...acc,
         [monthName]: {
-          income: prevIncome + decimalToNumber(el.amount),
-          expense: acc[monthName].expense,
+          income: acc[monthName].income,
+          expense: prevExpense + Math.abs(decimalToNumber(el.amount)),
         },
       }
-    }
-
-    return {
-      ...acc,
-      [monthName]: {
-        income: acc[monthName].income,
-        expense: prevExpense + Math.abs(decimalToNumber(el.amount)),
-      },
-    }
-  }, defaultValue)
+    }, defaultValue)
 
   const resposneDto = Object.entries(transactionsData).map(([key, val]) => {
     return { month: key as Month, income: val.income, expense: val.expense }

@@ -6,8 +6,9 @@ export default defineConfig({
     globalSetup: ['src/tests/setup.ts'],
     globals: true,
     coverage: {
-      include: ['src/modules/**/*.ts'],
-      provider: 'istanbul',
+      include: ['src/modules/**/*.ts', 'src/middlewares/**/*.ts'],
+      reporter: 'text',
+      provider: 'v8',
     },
   },
 })

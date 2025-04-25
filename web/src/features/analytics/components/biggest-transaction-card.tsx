@@ -71,7 +71,9 @@ export const BiggestTransactionCard = () => {
               className="hover:underline">
               <div className="flex flex-col gap-1">
                 {transactions.data?.income.description ? (
-                  <p>&quot;{transactions.data?.income.description}&quot;</p>
+                  <p className="max-w-[20ch] truncate">
+                    &quot;{transactions.data?.income.description}&quot;
+                  </p>
                 ) : null}
                 <p className="text-3xl font-semibold text-green-700">
                   {transactions.data?.income.value
@@ -96,7 +98,9 @@ export const BiggestTransactionCard = () => {
               className="hover:underline">
               <div className="flex flex-col gap-1">
                 {transactions.data?.expense.description ? (
-                  <p>&quot;{transactions.data?.expense.description}&quot;</p>
+                  <p className="max-w-[20ch] truncate">
+                    &quot;{transactions.data?.expense.description}&quot;
+                  </p>
                 ) : null}
                 <p className="text-3xl font-semibold text-red-700">
                   {transactions.data?.expense.value || 0}

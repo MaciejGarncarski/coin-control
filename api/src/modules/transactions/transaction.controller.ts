@@ -345,6 +345,14 @@ export async function editTransactionHandler(
     },
   })
 
-  res.status(status.OK).send(updated)
+  const responseDto = {
+    transactionId: updated.transaction_id,
+    date: updated.transaction_date,
+    amount: updated.amount,
+    category: updated.category,
+    description: updated.description,
+  }
+
+  res.status(status.OK).send(responseDto)
   return
 }
