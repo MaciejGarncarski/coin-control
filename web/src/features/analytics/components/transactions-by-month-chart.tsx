@@ -141,6 +141,7 @@ export function TransactionsByMonthChart() {
             fill="url(#fill)"
             stroke="var(--color-primary)"
             stackId="a"
+            animationDuration={3500}
           />
           <Area
             dataKey="income"
@@ -148,6 +149,7 @@ export function TransactionsByMonthChart() {
             fill="url(#incomeFill)"
             stroke="var(--chart-2)"
             stackId="a"
+            animationDuration={5000}
           />
         </AreaChart>
       </ChartContainer>

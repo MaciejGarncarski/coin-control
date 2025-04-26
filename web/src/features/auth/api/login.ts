@@ -38,8 +38,12 @@ export const useLoginMutation = () => {
       await queryClient.invalidateQueries({
         queryKey: [AUTH_QUERY_KEYS.SESSION],
       })
-
       authContext.login()
+
+      await navigate({
+        to: '/',
+        viewTransition: true,
+      })
 
       toast.success('Logged in successfully')
     },

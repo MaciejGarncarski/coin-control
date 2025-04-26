@@ -22,7 +22,7 @@ jobs:
         with:
           version: latest
 
-      - name: Build the frontend image
+      - name: Build the backend api image
         uses: docker/build-push-action@v6
         with:
           load: true

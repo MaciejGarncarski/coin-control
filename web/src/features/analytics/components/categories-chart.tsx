@@ -122,6 +122,7 @@ export const CategoriesChart = () => {
             </linearGradient>
           </defs>
           <Pie
+            animationDuration={1000}
             fill="url(#fill)"
             stroke="var(--color-accent)"
             data={categories.data || []}

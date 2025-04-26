@@ -16,7 +16,7 @@ export const UserMenu = () => {
   return (
     <div
       className={cn(
-        'border-reflect bg-primary/10 flex max-h-20 min-h-14 items-center gap-3 overflow-hidden rounded-md px-3 py-2 shadow',
+        'border-reflect bg-muted flex max-h-20 min-h-14 items-center gap-3 overflow-hidden rounded-md px-3 py-2 shadow',
       )}>
       <UserAvatar />
 
