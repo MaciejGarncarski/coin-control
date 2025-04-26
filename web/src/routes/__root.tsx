@@ -46,7 +46,8 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       { title: 'CoinControl' },
       {
         name: 'description',
-        content: 'CoinControl - App to track your spendings in one place',
+        content:
+          'Budget tracking app designed to help users monitor their income and expenses. It addresses the common problem of lacking control over personal finances by providing tools for effective money management.',
       },
     ],
   }),
