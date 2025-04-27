@@ -14,7 +14,7 @@
     "lint-format": "pnpm lint && pnpm format",
     "check-types": "pnpm tsc --skipLibCheck --noEmit"
   },
-  "packageManager": "pnpm@10.6.1",
+  "packageManager": "pnpm@10.9.0",
   "dependencies": {
     "@react-email/components": "0.0.34",
     "react": "^19.1.0",

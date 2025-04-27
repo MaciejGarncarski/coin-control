@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ARG NODE_VERSION=22.14.0
-ARG PNPM_VERSION=10.6.1
+ARG PNPM_VERSION=10.9.0
 ARG DATABASE_URL="test"
 
 # base

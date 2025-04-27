@@ -1,12 +1,86 @@
 import { db } from '@shared/database'
-import type { GoogleOAuthResponse } from '@shared/schemas'
+import {
+  googleOauthAccessTokenSchema,
+  type GoogleOAuthResponse,
+  googleOauthResponseSchema,
+} from '@shared/schemas'
 import status from 'http-status'
 import { v7 } from 'uuid'
+import type { z } from 'zod'
 
+import { env } from '../../../config/env.js'
+import { userDTO } from '../../../mappers/user.dto.js'
 import { ApiError } from '../../../utils/api-error.js'
-import { userDTO } from '../user.dto.js'
+import { ValidationError } from '../../../utils/validation-error.js'
 
-type Props = {
+type GetAccessTokenData = {
+  code: string
+}
+
+export async function getAccessToken(data: GetAccessTokenData) {
+  const bodyData = {
+    code: data.code,
+    client_id: env.GOOGLE_CLIENT_ID,
+    client_secret: env.GOOGLE_CLIENT_SECRET,
+    redirect_uri: env.GOOGLE_CALLBACK_URL,
+    grant_type: 'authorization_code',
+  }
+
+  const response = await fetch(env.GOOGLE_ACCESS_TOKEN_URL, {
+    method: 'POST',
+    body: JSON.stringify(bodyData),
+  })
+
+  const access_token_data = await response.json()
+  const parsedTokenData =
+    googleOauthAccessTokenSchema.safeParse(access_token_data)
+
+  if (!parsedTokenData.success) {
+    const errorMessages = parsedTokenData.error.errors.map(
+      (issue: z.ZodIssue) => {
+        return issue.path.map((el) => el.toString())
+      },
+    )
+
+    throw new ValidationError({
+      message: 'Validation error',
+      paths: errorMessages.toString(),
+    })
+  }
+
+  const { access_token } = parsedTokenData.data
+
+  return access_token
+}
+
+type GetUserInfoData = {
+  accessToken: string
+}
+
+export async function getUserInfo({ accessToken }: GetUserInfoData) {
+  const userInfoResponse = await fetch(
+    ` https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${accessToken}`,
+  )
+  const userInfo = await userInfoResponse.json()
+  const parsedUserInfo = googleOauthResponseSchema.safeParse(userInfo)
+
+  if (!parsedUserInfo.success) {
+    const errorMessages = parsedUserInfo.error.errors.map(
+      (issue: z.ZodIssue) => {
+        return issue.path.map((el) => el.toString())
+      },
+    )
+
+    throw new ValidationError({
+      message: 'Validation error',
+      paths: errorMessages.toString(),
+    })
+  }
+
+  return parsedUserInfo.data
+}
+
+type CheckGoogleUserExistsProps = {
   googleUserId: string
   googleUserEmail: string
 }
@@ -14,7 +88,7 @@ type Props = {
 export async function checkGoogleUserExists({
   googleUserId,
   googleUserEmail,
-}: Props) {
+}: CheckGoogleUserExistsProps) {
   const userIdData = await db.users.findFirst({
     where: {
       OR: [

@@ -9,6 +9,8 @@ import { status } from 'http-status'
 import ms from 'ms'
 import { UAParser } from 'ua-parser-js'
 
+import { sessionsDTO } from '../../mappers/sessions.dto.js'
+import { userDTO } from '../../mappers/user.dto.js'
 import { ApiError } from '../../utils/api-error.js'
 import type {
   TypedRequestBody,
@@ -24,8 +26,6 @@ import {
   verifyAccount,
   verifyPassword,
 } from './auth.service.js'
-import { sessionsDTO } from './sessions.dto.js'
-import { userDTO } from './user.dto.js'
 
 export async function postLoginHandler(
   req: TypedRequestBody<LoginMutation>,

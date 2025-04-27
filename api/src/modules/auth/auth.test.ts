@@ -1,3 +1,4 @@
+import { db } from '@shared/database'
 import type { NextFunction, Request, Response } from 'express'
 import status from 'http-status'
 import request from 'supertest'
@@ -44,6 +45,31 @@ describe('auth.route.ts', async () => {
       expect(response.status).toBe(status.BAD_REQUEST)
       expect(response.body).toHaveProperty('message')
       expect(response.body).toHaveProperty('statusCode')
+    })
+  })
+
+  describe('POST /auth/register', () => {
+    it('should register user', async () => {
+      mockAuthorize()
+
+      await db.users.deleteMany({
+        where: {
+          email: 'newAccount@test.com',
+        },
+      })
+
+      const body = {
+        email: 'newAccount@test.com',
+        fullName: 'New User',
+        password: 'password',
+        confirmPassword: 'password',
+      }
+
+      const response = await request(app).post('/auth/register').send(body)
+
+      expect(response.status).toBe(status.ACCEPTED)
+      expect(response.body).toHaveProperty('email')
+      expect(response.body).toHaveProperty('name')
     })
   })
 })

@@ -59,6 +59,7 @@ export const transactionsTableColumns = [
     cell: ({ row }) => {
       return (
         <TransactionTableMenu
+          key={row.original.transactionId}
           transactionId={row.original.transactionId}
           amount={row.original.amount}
           category={row.original.category}

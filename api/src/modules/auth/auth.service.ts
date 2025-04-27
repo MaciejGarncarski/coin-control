@@ -9,10 +9,10 @@ import { v7 } from 'uuid'
 import { z } from 'zod'
 
 import { emailVerificationQueue } from '../../lib/queues/email-verification.js'
+import { userDTO } from '../../mappers/user.dto.js'
 import { ApiError } from '../../utils/api-error.js'
 import { generateOTP } from '../../utils/generate-otp.js'
 import { getUserLocation } from '../../utils/get-user-location.js'
-import { userDTO } from './user.dto.js'
 
 type CheckUserExistsProps = {
   email: string
