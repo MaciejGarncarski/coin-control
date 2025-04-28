@@ -3,7 +3,7 @@ import express from 'express'
 import expressSession from 'express-session'
 import helmet from 'helmet'
 
-import { limiter } from './config/rate-limit.js'
+import { globalRateLimit } from './config/rate-limit.js'
 import { sessionConfig } from './config/session.js'
 import { httpLogger } from './logger/logger.js'
 import { corsMiddleware } from './middlewares/cors.js'
@@ -26,8 +26,8 @@ export const buildApp = () => {
   app.use(bodyParser.json())
   app.use(expressSession(sessionConfig))
   app.use(httpLogger)
+  app.use(globalRateLimit)
   app.use(mainRouter)
-  app.use(limiter)
   app.use(authRouter)
   app.use(errorMiddleware)
   app.use(notFoundMiddleware)
