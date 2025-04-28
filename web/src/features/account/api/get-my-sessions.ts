@@ -17,6 +17,8 @@ export const getMySessionsQueryOptions = queryOptions({
     return data
   },
   refetchOnMount: true,
+  gcTime: 5000,
+  staleTime: 1000 * 60 * 5,
 })
 
 export const useMySessions = () => {

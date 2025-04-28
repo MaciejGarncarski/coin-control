@@ -11,6 +11,7 @@ import { z } from 'zod'
 import { emailVerificationQueue } from '../../lib/queues/email-verification.js'
 import { userDTO } from '../../mappers/user.dto.js'
 import { ApiError } from '../../utils/api-error.js'
+import { encrypt } from '../../utils/encryption.js'
 import { generateOTP } from '../../utils/generate-otp.js'
 import { getUserLocation } from '../../utils/get-user-location.js'
 
@@ -409,8 +410,8 @@ export async function saveSessionData({
       device_type:
         parsedUserAgent.device.type === 'mobile' ? 'mobile' : 'desktop',
       last_access: new Date(),
-      ip_address: userIP,
-      location: userLocation,
+      ip_address: encrypt(userIP),
+      location: userLocation ? encrypt(userLocation) : null,
     },
   })
 }

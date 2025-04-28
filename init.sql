@@ -86,7 +86,7 @@ CREATE TABLE public.sessions (
     device_type character varying(255),
     operating_system character varying(255),
     browser character varying(255),
-    ip_address character varying(45),
+    ip_address character varying(255),
     location character varying(255),
     id uuid NOT NULL
 );
