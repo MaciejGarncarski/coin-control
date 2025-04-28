@@ -123,7 +123,7 @@ export async function registerUser(userData: RegisterMutation) {
     throw new ApiError({
       message: 'User already exists.',
       formMessage: 'User already exists.',
-      statusCode: status.BAD_REQUEST,
+      statusCode: status.CONFLICT,
     })
   }
 

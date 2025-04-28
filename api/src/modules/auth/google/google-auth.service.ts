@@ -170,7 +170,7 @@ export async function registerGoogleUser(googleUserData: GoogleOAuthResponse) {
     throw new ApiError({
       message: 'User already exists.',
       formMessage: 'User already exists.',
-      statusCode: status.BAD_REQUEST,
+      statusCode: status.CONFLICT,
     })
   }
 

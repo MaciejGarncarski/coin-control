@@ -5,6 +5,7 @@ import request from 'supertest'
 
 import { buildApp } from '../../app.js'
 import { mockAuthorize } from '../../tests/mock-authorize.js'
+import { TEST_USER } from '../../tests/setup.js'
 
 const app = buildApp()
 
@@ -71,5 +72,21 @@ describe('auth.route.ts', async () => {
       expect(response.body).toHaveProperty('email')
       expect(response.body).toHaveProperty('name')
     })
+  })
+
+  it('should return error on user already existing', async () => {
+    mockAuthorize()
+
+    const body = {
+      email: TEST_USER.email,
+      fullName: 'New User',
+      password: 'password',
+      confirmPassword: 'password',
+    }
+
+    const response = await request(app).post('/auth/register').send(body)
+
+    expect(response.status).toBe(status.CONFLICT)
+    expect(response.body).toHaveProperty('message')
   })
 })
