@@ -1,12 +1,17 @@
 import { Link } from '@tanstack/react-router'
 import { Cookie } from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion, type TargetAndTransition } from 'motion/react'
 import { useState } from 'react'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 
 const ONE_MONTH = 1000 * 60 * 60 * 24 * 30
+
+const exitProps: TargetAndTransition = {
+  y: 200,
+  opacity: 0,
+}
 
 export const CookieBanner = () => {
   const isAccepted = localStorage.getItem('cookie-banner-accepted')
@@ -23,10 +28,7 @@ export const CookieBanner = () => {
     <AnimatePresence mode="wait">
       {isShown ? (
         <motion.div
-          exit={{
-            y: 200,
-            opacity: 0,
-          }}
+          exit={exitProps}
           className="fixed bottom-4 left-[50%] -translate-x-[50%] md:bottom-4 md:left-4 md:translate-x-0">
           <Alert className="w-[22rem] md:w-auto">
             <Cookie className="h-4 w-4" />

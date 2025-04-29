@@ -19,6 +19,10 @@ export const Sessions = () => {
   const mySessions = useMySessions()
   const deleteAllSessions = useDeleteAllSessions()
 
+  const handleDeleteAllSessions = () => {
+    deleteAllSessions.mutate()
+  }
+
   return (
     <section>
       <Card>
@@ -39,7 +43,7 @@ export const Sessions = () => {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => deleteAllSessions.mutate()}>
+                <AlertDialogAction onClick={handleDeleteAllSessions}>
                   Continue
                 </AlertDialogAction>
               </AlertDialogFooter>

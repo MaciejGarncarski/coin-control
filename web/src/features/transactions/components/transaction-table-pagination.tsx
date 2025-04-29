@@ -1,7 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useCallback } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 import { Button } from '@/components/ui/button'
@@ -16,7 +15,7 @@ export const TransactionTablePagination = () => {
   const navigate = useNavigate({ from: '/transactions' })
   const queryClient = useQueryClient()
 
-  const prevPage = useCallback(() => {
+  const prevPage = () => {
     const newPage = Number(search.page) - 1
     const maxPages = transactions.data?.maxPages
 
@@ -40,9 +39,9 @@ export const TransactionTablePagination = () => {
       resetScroll: false,
       viewTransition: false,
     })
-  }, [navigate, search.page, transactions.data?.maxPages])
+  }
 
-  const nextPage = useCallback(() => {
+  const nextPage = () => {
     const newPage = Number(search.page) + 1
 
     const maxPages = transactions.data?.maxPages
@@ -67,7 +66,7 @@ export const TransactionTablePagination = () => {
       resetScroll: false,
       viewTransition: false,
     })
-  }, [navigate, search.page, transactions.data?.maxPages])
+  }
 
   const prefetchPrevPage = useDebouncedCallback(
     () => {

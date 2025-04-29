@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import type { CheckedState } from '@radix-ui/react-checkbox'
 import { addEmailMutationSchema } from '@shared/schemas'
 import { Plus } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -46,13 +46,13 @@ export const AddEmailForm = () => {
     },
   })
 
-  const closeDialog = useCallback(() => {
+  const closeDialog = () => {
     setIsOpen(false)
     setIsChecked(false)
     form.reset({
       email: '',
     })
-  }, [form])
+  }
 
   const addEmail = form.handleSubmit(({ email }) => {
     if (

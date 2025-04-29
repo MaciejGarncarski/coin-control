@@ -53,6 +53,13 @@ export const TransactionTableMenu = ({
     })
   }
 
+  const openEdit = () => {
+    setEditOpen(true)
+  }
+  const openDelete = () => {
+    setDeleteOpen(true)
+  }
+
   return (
     <>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -67,7 +74,8 @@ export const TransactionTableMenu = ({
               <Button
                 variant={'ghost'}
                 size={'sm'}
-                onClick={() => setEditOpen(true)}
+                onClick={openEdit}
+                disabled={deleteMutation.isPending}
                 className="w-full justify-start text-left font-normal">
                 <Edit className="text-muted-foreground" />
                 Edit
@@ -80,7 +88,7 @@ export const TransactionTableMenu = ({
               <Button
                 variant={'ghost'}
                 size={'sm'}
-                onClick={() => setDeleteOpen(true)}
+                onClick={openDelete}
                 className="w-full justify-start text-left font-normal">
                 <Trash className="text-muted-foreground" />
                 Delete

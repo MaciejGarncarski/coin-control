@@ -11,6 +11,10 @@ type Props = {
 export const SessionIP = ({ ip }: Props) => {
   const [isShown, setIsShown] = useState(false)
 
+  const handleToggleIP = () => {
+    setIsShown((prev) => !prev)
+  }
+
   return (
     <div className="flex items-center justify-center gap-2 md:justify-start">
       <span className="text-foreground">IP:</span>
@@ -25,7 +29,7 @@ export const SessionIP = ({ ip }: Props) => {
         type="button"
         variant={'ghost'}
         size="sm"
-        onClick={() => setIsShown((prev) => !prev)}>
+        onClick={handleToggleIP}>
         {isShown ? <EyeOff /> : <Eye />}
       </Button>
     </div>

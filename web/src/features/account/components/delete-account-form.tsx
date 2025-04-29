@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -61,7 +61,10 @@ export const DeleteAccountForm = () => {
     },
   })
 
-  const onCancel = useCallback(() => setDialogOpen(false), [])
+  const closeDialog = () => setDialogOpen(false)
+  const openDialog = () => {
+    setDialogOpen(true)
+  }
 
   if (user.isPending) {
     return null
@@ -93,7 +96,7 @@ export const DeleteAccountForm = () => {
             type="button"
             variant={'destructive'}
             size={'sm'}
-            onClick={() => setDialogOpen(true)}
+            onClick={openDialog}
             className="ml-auto">
             Delete Personal Account
           </Button>
@@ -158,7 +161,7 @@ export const DeleteAccountForm = () => {
               </div>
               <DialogFooter>
                 <div className="mt-4 flex w-full justify-between">
-                  <Button type="button" size={'sm'} onClick={onCancel}>
+                  <Button type="button" size={'sm'} onClick={closeDialog}>
                     Cancel
                   </Button>
                   <Button

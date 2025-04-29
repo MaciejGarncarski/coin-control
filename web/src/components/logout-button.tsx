@@ -24,13 +24,17 @@ export const LogoutButton = ({
 }: Props) => {
   const logoutMutation = useLogoutMutation()
 
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
+
   return (
     <Button
       variant={variant}
       size={size}
       type="button"
       className={className}
-      onClick={() => logoutMutation.mutate()}>
+      onClick={handleLogout}>
       {withIcon ? <LogOut /> : null}
       Logout
     </Button>

@@ -11,6 +11,9 @@ function InputPassword({
 }: Omit<React.ComponentProps<'input'>, 'type'>) {
   const [showPassword, setShowPassword] = React.useState(false)
 
+  const handleTogglePassword = () => {
+    setShowPassword((prev) => !prev)
+  }
   return (
     <span className="relative">
       <input
@@ -29,7 +32,7 @@ function InputPassword({
         variant="outline"
         className="bg-card absolute top-1 right-1 h-7 w-7"
         size="icon"
-        onClick={() => setShowPassword((prev) => !prev)}
+        onClick={handleTogglePassword}
         disabled={disabled}>
         {showPassword && !disabled ? (
           <EyeIcon className="h-4 w-4" aria-hidden="true" />
