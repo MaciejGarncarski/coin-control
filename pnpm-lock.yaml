@@ -315,8 +315,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1(react-hook-form@7.56.1(react@19.1.0))
       '@maciekdev/fetcher':
-        specifier: ^1.5.0
-        version: 1.5.0(zod@3.24.3)
+        specifier: ^1.5.1
+        version: 1.5.1(zod@3.24.3)
       '@radix-ui/react-alert-dialog':
         specifier: ^1.1.11
         version: 1.1.11(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1324,11 +1324,11 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@maciekdev/fetcher@1.5.0':
-    resolution: {integrity: sha512-WcItKjxKWZuD54mtxfn9AUmCM6nril6tcoejO021Qdaluu5ueuemr5XPjfIMvaKFKbQ6vpaHp7tJnPtpy73LZg==}
+  '@maciekdev/fetcher@1.5.1':
+    resolution: {integrity: sha512-nIVadAO8sHVhqbV7QcCPXdMxut5LdZoc09TvY6n+sEscoTx+VPA+TQ+xqbq6wkBwFgm7ARTyGqyeCqNQfNt+Qg==}
     engines: {node: '>=18.0'}
     peerDependencies:
-      zod: ^4.0.0-beta.20250410T041907
+      zod: ^3.24.3
 
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
     resolution: {integrity: sha512-QZHtlVgbAdy2zAqNA9Gu1UpIuI8Xvsd1v8ic6B2pZmeFnFcMWiPLfWXh7TVw4eGEZ/C9TH281KwhVoeQUKbyjw==}
@@ -7008,7 +7008,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@maciekdev/fetcher@1.5.0(zod@3.24.3)':
+  '@maciekdev/fetcher@1.5.1(zod@3.24.3)':
     dependencies:
       zod: 3.24.3
 
