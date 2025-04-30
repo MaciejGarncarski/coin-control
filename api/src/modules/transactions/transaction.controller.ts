@@ -300,26 +300,26 @@ export async function getTransactionOverviewHandler(
     },
   })
 
-  const thisWeekUserTransactions = userTransactions.filter(
-    ({ transaction_date }) => {
+  const thisWeekUserTransactions = userTransactions
+    .filter(({ transaction_date }) => {
       const formattedTransactionDate = new TZDate(
-        new Date(transaction_date).setHours(23, 59, 59, 999),
+        new Date(transaction_date).setHours(0, 0, 0, 0),
         timeZone,
       )
 
       return isSameWeek(formattedTransactionDate, formattedDate, {
         weekStartsOn: 1,
       })
-    },
-  )
-
-  const response: GetTransactionOverview = {
-    data: thisWeekUserTransactions.map((tr) => {
+    })
+    .map((tr) => {
       return {
-        transactionDate: tr.transaction_date.toString(),
+        transactionDate: new TZDate(tr.transaction_date, timeZone).toString(),
         transactionId: tr.transaction_id,
       }
-    }),
+    })
+
+  const response: GetTransactionOverview = {
+    data: thisWeekUserTransactions,
   }
 
   res.status(status.OK).send(response)
