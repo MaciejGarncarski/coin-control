@@ -1,6 +1,5 @@
 import { type DayName, getTransactionOverviewSchema } from '@shared/schemas'
 import { queryOptions, useQuery } from '@tanstack/react-query'
-import { getWeek } from 'date-fns'
 
 import { TRANSACTIONS_QUERY_KEYS } from '@/constants/query-keys/transactions'
 import { fetcher } from '@/lib/fetcher'
@@ -17,19 +16,9 @@ export const overviewTransactionsQueryOptions = queryOptions({
       schema: getTransactionOverviewSchema,
     })
 
-    const weekNumber = getWeek(new Date())
-
     if (transactionData) {
       const transactionsGroupedByDay = transactionData.data.reduce(
         (result, element) => {
-          const weekNumberOfTransaction = getWeek(
-            new Date(element.transactionDate),
-          )
-
-          if (weekNumberOfTransaction !== weekNumber) {
-            return result
-          }
-
           const dayName = new Date(element.transactionDate).toLocaleDateString(
             'en-GB',
             {
