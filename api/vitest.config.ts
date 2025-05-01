@@ -8,7 +8,7 @@ export default defineConfig({
     coverage: {
       include: ['src/modules/**/*.ts', 'src/middlewares/**/*.ts'],
       reporter: 'text',
-      provider: 'v8',
+      provider: 'istanbul',
     },
   },
 })
