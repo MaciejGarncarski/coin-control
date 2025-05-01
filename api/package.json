@@ -14,7 +14,7 @@
     "test": "vitest run src/tests/smoke.test.ts && vitest run",
     "test:watch": "vitest run src/tests/smoke.test.ts && vitest watch",
     "test:coverage": "vitest run src/tests/smoke.test.ts && vitest run --coverage",
-    "test:watch-coverage": "vitest run src/tests/smoke.test.ts && vitest watch --coverage"
+    "test:watch-coverage": "vitest run src/tests/smoke.test.ts && vitest --watch --coverage"
   },
   "license": "ISC",
   "packageManager": "pnpm@10.9.0",

@@ -23,7 +23,7 @@ vi.mock('../../middlewares/authorize.js', () => ({
 }))
 
 describe('user.route.ts', async () => {
-  it('should return user emails', async () => {
+  it('GET /user/emails', async () => {
     const mock = mockAuthorize()
     mock.setSessionId('someSessionId')
     mock.setUserId(TEST_USER.id)
@@ -32,7 +32,7 @@ describe('user.route.ts', async () => {
     expect(response.status).toBe(status.OK)
   })
 
-  it('should add user email', async () => {
+  it('POST /user/emails', async () => {
     const mock = mockAuthorize()
     mock.setSessionId('someSessionId')
     mock.setUserId(TEST_USER.id)
@@ -55,70 +55,72 @@ describe('user.route.ts', async () => {
 
   const emailId = v7()
 
-  it('should resend verification email', async () => {
-    const mock = mockAuthorize()
-    mock.setSessionId('someSessionId')
-    mock.setUserId(TEST_USER.id)
+  describe('POST /user/resend-email-verification', () => {
+    it('should resend verification email', async () => {
+      const mock = mockAuthorize()
+      mock.setSessionId('someSessionId')
+      mock.setUserId(TEST_USER.id)
 
-    await db.user_emails.create({
-      data: {
-        user_id: '019601da-faff-76b7-ad12-ca98c8cffeb4',
+      await db.user_emails.create({
+        data: {
+          user_id: '019601da-faff-76b7-ad12-ca98c8cffeb4',
+          email: 'new@email.com',
+          email_id: emailId,
+          is_verified: false,
+          is_primary: false,
+        },
+      })
+
+      const body: ResendEmailVerificationMutation = {
         email: 'new@email.com',
-        email_id: emailId,
-        is_verified: false,
-        is_primary: false,
-      },
+      }
+
+      const response = await request(app)
+        .post('/user/resend-email-verification')
+        .send(body)
+      expect(response.status).toBe(status.ACCEPTED)
     })
 
-    const body: ResendEmailVerificationMutation = {
-      email: 'new@email.com',
-    }
+    it('should not resend verification email if sent earlier', async () => {
+      const mock = mockAuthorize()
+      mock.setSessionId('someSessionId')
+      mock.setUserId(TEST_USER.id)
 
-    const response = await request(app)
-      .post('/user/resend-email-verification')
-      .send(body)
-    expect(response.status).toBe(status.ACCEPTED)
-  })
+      const body: ResendEmailVerificationMutation = {
+        email: 'new@email.com',
+      }
 
-  it('should not resend verification email if sent earlier', async () => {
-    const mock = mockAuthorize()
-    mock.setSessionId('someSessionId')
-    mock.setUserId(TEST_USER.id)
+      await db.email_verification.create({
+        data: {
+          email_id: emailId,
+          user_id: '019601da-faff-76b7-ad12-ca98c8cffeb4',
+          id: v7(),
+          expires_at: new Date(Date.now() + ms('50 minutes')),
+        },
+      })
 
-    const body: ResendEmailVerificationMutation = {
-      email: 'new@email.com',
-    }
+      const response = await request(app)
+        .post('/user/resend-email-verification')
+        .send(body)
 
-    await db.email_verification.create({
-      data: {
-        email_id: emailId,
-        user_id: '019601da-faff-76b7-ad12-ca98c8cffeb4',
-        id: v7(),
-        expires_at: new Date(Date.now() + ms('50 minutes')),
-      },
+      expect(response.status).toBe(status.BAD_REQUEST)
     })
 
-    const response = await request(app)
-      .post('/user/resend-email-verification')
-      .send(body)
+    it('should return not found if no email found', async () => {
+      const mock = mockAuthorize()
+      mock.setSessionId('someSessionId')
+      mock.setUserId(TEST_USER.id)
 
-    expect(response.status).toBe(status.BAD_REQUEST)
-  })
+      const body: ResendEmailVerificationMutation = {
+        email: 'notexisting@email.com',
+      }
 
-  it('should return not found if no email found', async () => {
-    const mock = mockAuthorize()
-    mock.setSessionId('someSessionId')
-    mock.setUserId(TEST_USER.id)
+      const response = await request(app)
+        .post('/user/resend-email-verification')
+        .send(body)
 
-    const body: ResendEmailVerificationMutation = {
-      email: 'notexisting@email.com',
-    }
-
-    const response = await request(app)
-      .post('/user/resend-email-verification')
-      .send(body)
-
-    expect(response.status).toBe(status.BAD_REQUEST)
-    expect(response.text).toMatch(/not found/i)
+      expect(response.status).toBe(status.BAD_REQUEST)
+      expect(response.text).toMatch(/not found/i)
+    })
   })
 })
