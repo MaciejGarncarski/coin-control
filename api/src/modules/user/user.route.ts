@@ -8,9 +8,7 @@ import {
   verifySecondaryEmailMutaitonSchema,
 } from '@shared/schemas'
 import { Router } from 'express'
-import ms from 'ms'
 
-import { createRateLimiter } from '../../lib/rate-limiter.js'
 import { authorize } from '../../middlewares/authorize.js'
 import { validateBody } from '../../middlewares/validator-body.js'
 import {
@@ -26,16 +24,10 @@ import {
 
 export const userRouter = Router()
 
-const addNewEmailLimiter = createRateLimiter({
-  windowMs: ms('3 minutes'),
-  limit: 30,
-})
-
 userRouter.get('/emails', authorize, getUserEmailsHandler)
 
 userRouter.post(
   '/emails',
-  addNewEmailLimiter,
   authorize,
   validateBody(addEmailMutationSchema),
   addEmailHandler,
@@ -78,10 +70,6 @@ userRouter.patch(
 
 userRouter.post(
   '/delete-account',
-  createRateLimiter({
-    limit: 10,
-    windowMs: ms('1 minute'),
-  }),
   authorize,
   validateBody(deleteUserAccountMutationSchema),
   deleteUserAccountHandler,

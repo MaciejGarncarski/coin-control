@@ -5,9 +5,7 @@ import {
   registerMutationSchema,
 } from '@shared/schemas'
 import { Router } from 'express'
-import ms from 'ms'
 
-import { createRateLimiter } from '../../lib/rate-limiter.js'
 import { authorize } from '../../middlewares/authorize.js'
 import { validateBody } from '../../middlewares/validator-body.js'
 import { validateParams } from '../../middlewares/validator-params.js'
@@ -25,49 +23,25 @@ import {
 import { authGoogleRouter } from './google/google-auth.route.js'
 import { passwordRouter } from './password/password.route.js'
 
-const authLimiter = createRateLimiter({
-  windowMs: ms('3 minutes'),
-  limit: 50,
-})
-
-const otpLimiter = createRateLimiter({
-  windowMs: ms('3 minutes'),
-  limit: 25,
-  standardHeaders: true,
-  legacyHeaders: false,
-})
-
 export const authRouter = Router()
 
 authRouter.use('/password', passwordRouter)
 authRouter.use('/google', authGoogleRouter)
 
-authRouter.post(
-  '/login',
-  validateBody(loginMutationSchema),
-  authLimiter,
-  postLoginHandler,
-)
+authRouter.post('/login', validateBody(loginMutationSchema), postLoginHandler)
 
 authRouter.post(
   '/register',
   validateBody(registerMutationSchema),
-  authLimiter,
   registerHandler,
 )
 
 authRouter.get('/my-sessions', authorize, getMySessionsHandler)
 
-authRouter.delete(
-  '/my-sessions',
-  authLimiter,
-  authorize,
-  logOutEveryDeviceHandler,
-)
+authRouter.delete('/my-sessions', authorize, logOutEveryDeviceHandler)
 
 authRouter.delete(
   '/my-sessions/:id',
-  authLimiter,
   authorize,
   validateParams(logOutDeviceQuerySchema),
   logOutDeviceHandler,
@@ -85,7 +59,6 @@ authRouter.post(
 
 authRouter.post(
   '/verify-otp',
-  otpLimiter,
   authorize,
   validateBody(EmailVerificationVerifyMutationSchema),
   verifyAccountHandler,
