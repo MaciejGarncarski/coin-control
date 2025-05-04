@@ -80,7 +80,7 @@ services:
       - ENCRYPTION_SECRET=iTSFakeEnCryPTiONKeyC2Kc0x81Juq+FJ2MoKnYBiBxnvECJKFDBbbEhLGNYByY
       - GOOGLE_CLIENT_ID=fortesting
       - GOOGLE_CLIENT_SECRET=fortesting
-      - GOOGLE_OAUTH_URL=fortesting
+      - GOOGLE_OAUTH_URL=https://accounts.google.com/o/oauth2/v2/auth
       - GOOGLE_ACCESS_TOKEN_URL=fortesting
       - GOOGLE_CALLBACK_URL=fortesting
 
@@ -121,7 +121,7 @@ services:
       - ENCRYPTION_SECRET=iTSFakeEnCryPTiONKeyC2Kc0x81Juq+FJ2MoKnYBiBxnvECJKFDBbbEhLGNYByY
       - GOOGLE_CLIENT_ID=fortesting
       - GOOGLE_CLIENT_SECRET=fortesting
-      - GOOGLE_OAUTH_URL=fortesting
+      - GOOGLE_OAUTH_URL=https://accounts.google.com/o/oauth2/v2/auth
       - GOOGLE_ACCESS_TOKEN_URL=fortesting
       - GOOGLE_CALLBACK_URL=fortesting
 
@@ -162,7 +162,7 @@ services:
       - ENCRYPTION_SECRET=iTSFakeEnCryPTiONKeyC2Kc0x81Juq+FJ2MoKnYBiBxnvECJKFDBbbEhLGNYByY
       - GOOGLE_CLIENT_ID=fortesting
       - GOOGLE_CLIENT_SECRET=fortesting
-      - GOOGLE_OAUTH_URL=fortesting
+      - GOOGLE_OAUTH_URL=https://accounts.google.com/o/oauth2/v2/auth
       - GOOGLE_ACCESS_TOKEN_URL=fortesting
       - GOOGLE_CALLBACK_URL=fortesting
 
@@ -203,7 +203,7 @@ services:
       - ENCRYPTION_SECRET=iTSFakeEnCryPTiONKeyC2Kc0x81Juq+FJ2MoKnYBiBxnvECJKFDBbbEhLGNYByY
       - GOOGLE_CLIENT_ID=fortesting
       - GOOGLE_CLIENT_SECRET=fortesting
-      - GOOGLE_OAUTH_URL=fortesting
+      - GOOGLE_OAUTH_URL=https://accounts.google.com/o/oauth2/v2/auth
       - GOOGLE_ACCESS_TOKEN_URL=fortesting
       - GOOGLE_CALLBACK_URL=fortesting
 

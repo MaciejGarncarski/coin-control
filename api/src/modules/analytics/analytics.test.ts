@@ -98,4 +98,49 @@ describe('analytics route', () => {
       ],
     })
   })
+
+  it('GET /analytics/largest-income-expense', async () => {
+    const app = buildApp()
+
+    await db.transactions.deleteMany({
+      where: {
+        user_id: TEST_USER.id,
+      },
+    })
+
+    await db.transactions.createMany({
+      data: [
+        {
+          amount: -10,
+          user_id: TEST_USER.id,
+          description: 'Groceries',
+          transaction_date: new Date(Date.now() - ms('10 days')),
+          category: 'foodAndDrink',
+          transaction_id: v7(),
+        },
+        {
+          amount: 10,
+          user_id: TEST_USER.id,
+          description: 'Test',
+          transaction_date: new Date(Date.now() - ms('10 days')),
+          category: 'foodAndDrink',
+          transaction_id: v7(),
+        },
+      ],
+    })
+
+    const res = await request(app).get('/analytics/largest-income-expense')
+
+    expect(res.status).toBe(status.OK)
+    expect(res.body).toEqual({
+      expense: {
+        value: -10,
+        description: 'Groceries',
+      },
+      income: {
+        value: 10,
+        description: 'Test',
+      },
+    })
+  })
 })
