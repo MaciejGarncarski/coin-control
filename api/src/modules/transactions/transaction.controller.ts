@@ -302,12 +302,12 @@ export async function getTransactionOverviewHandler(
 
   const thisWeekUserTransactions = userTransactions
     .filter(({ transaction_date }) => {
-      const formattedTransactionDate = new TZDate(
-        new Date(transaction_date).setHours(0, 0, 0, 0),
+      const currDate = new TZDate(
+        new Date().setHours(23, 59, 59, 999),
         timeZone,
       )
 
-      return isSameWeek(formattedTransactionDate, formattedDate, {
+      return isSameWeek(transaction_date, currDate, {
         weekStartsOn: 1,
       })
     })
