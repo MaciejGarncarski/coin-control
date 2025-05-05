@@ -30,7 +30,7 @@ I have used pnpm workspaces as monorepo for this project. I could use turborepo 
 
 - TypeScript
 - React
-- Tanstack Router
+- TanStack Router
 - Tailwind CSS
 - Shadcn UI
 - Vite
@@ -56,17 +56,16 @@ Create .env file in root directory based on .env.example
 
 ```txt
 API_PORT=
+API_URL=
+WEB_PORT=
+APP_URL=
 HOST=
+ENCRYPTION_SECRET=
+API_SECRET=
+
 DATABASE_URL=
 MAIL_USER=
 MAIL_PASS=
-
-API_SECRET=
-WEB_PORT=
-APP_URL=
-API_URL=
-
-ENCRYPTION_SECRET=
 
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
