@@ -10,7 +10,7 @@ I have created this app mostly for myself, but feel free to use it :P
 
 This app is hosted on my VPS.
 
-[coincontrol.maciej-garncarski.pl](https://coincontrol.maciej-garncarski.pl)
+<a href="https://coincontrol.maciej-garncarski.pl" target="_blank">coincontrol.maciej-garncarski.pl</a>
 
 ## Tech used
 
