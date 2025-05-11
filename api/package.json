@@ -17,7 +17,7 @@
     "test:watch-coverage": "vitest run src/tests/smoke.test.ts && vitest --watch --coverage"
   },
   "license": "ISC",
-  "packageManager": "pnpm@10.9.0",
+  "packageManager": "pnpm@10.10.0",
   "dependencies": {
     "@date-fns/tz": "^1.2.0",
     "@node-rs/argon2": "^2.0.2",

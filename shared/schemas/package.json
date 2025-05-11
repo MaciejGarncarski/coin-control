@@ -20,5 +20,5 @@
     "@shared/eslint-prettier": "workspace:*",
     "typescript": "^5.8.3"
   },
-  "packageManager": "pnpm@10.9.0"
+  "packageManager": "pnpm@10.10.0"
 }
