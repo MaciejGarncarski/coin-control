@@ -25,11 +25,8 @@ export const Route = createFileRoute('/_authenticated/auth/verify-email')({
       token: parsed.data.token,
     }
   },
-  loaderDeps: ({ search }) => {
-    return search
-  },
-  loader: async ({ deps }) => {
-    if (deps.token && deps.email) {
+  beforeLoad: ({ search }) => {
+    if (search.token && search.email) {
       return
     }
 

@@ -23,11 +23,9 @@ export const Route = createFileRoute('/_unauthenticated/auth/password-reset')({
       reset_token: parsed.data.reset_token,
     }
   },
-  loaderDeps: ({ search }) => {
-    return search
-  },
-  loader: async ({ deps }) => {
-    if (deps.reset_token) {
+
+  beforeLoad: async ({ search }) => {
+    if (search.reset_token) {
       return
     }
 
