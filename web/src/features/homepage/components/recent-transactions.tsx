@@ -16,7 +16,7 @@ const RecentTransactionsCard = ({ children }: { children: ReactNode }) => {
   const recentTransactions = useRecentTransactions()
 
   return (
-    <Card className="border-reflect border-none sm:h-[30rem] md:h-[58dvh]">
+    <Card className="border-reflect border-none sm:h-[30rem] md:min-h-[58dvh]">
       <CardHeader>
         <CardTitle>Recent Transactions</CardTitle>
         {!recentTransactions.isError && (
@@ -71,7 +71,7 @@ export const RecentTransactions = () => {
 
   return (
     <RecentTransactionsCard>
-      <ScrollArea className="mb-2 pr-1 md:pr-4 xl:h-[40dvh]">
+      <ScrollArea className="mb-2 pr-1 md:h-[10rem] md:pr-4 xl:h-[40dvh]">
         <ul className="flex flex-col gap-4">
           {recentTransactions.data?.recentTransactions.map(
             ({ transactionId, category, description, amount, date }) => {
