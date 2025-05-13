@@ -82,7 +82,7 @@ export function WeeklyTransactionCountChart() {
   if (totalTransactionCount === 0) {
     return (
       <ChartCardContainer>
-        <NoTransactions />
+        <NoTransactions title="No transactions this week." />
       </ChartCardContainer>
     )
   }

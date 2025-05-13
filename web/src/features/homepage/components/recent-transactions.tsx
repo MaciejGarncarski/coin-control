@@ -64,7 +64,7 @@ export const RecentTransactions = () => {
   if (recentTransactions.data?.recentTransactions.length === 0) {
     return (
       <RecentTransactionsCard>
-        <NoTransactions />
+        <NoTransactions title="No recent transactions." />
       </RecentTransactionsCard>
     )
   }
