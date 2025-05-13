@@ -145,6 +145,7 @@ export function RegisterPage() {
                   I have read{' '}
                   <Link
                     to="/privacy-policy"
+                    target="_blank"
                     className="text-foreground underline">
                     privacy policy
                   </Link>
