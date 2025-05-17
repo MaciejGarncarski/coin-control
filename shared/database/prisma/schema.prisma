@@ -1,7 +1,8 @@
 generator client {
   provider        = "prisma-client"
   output          = "../src/generated/prisma"
-  previewFeatures = ["relationJoins", "queryCompiler", "driverAdapters"]
+  previewFeatures = ["relationJoins"]
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
   moduleFormat    = "esm"
 }
 
