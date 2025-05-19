@@ -8,6 +8,7 @@ import { ApiError } from '../utils/api-error.js'
 
 export const createRateLimiter = (options: Partial<Options>) => {
   return rateLimit({
+    validate: { ip: false },
     message: {
       message: 'Too many requests, please try again later.',
       statusCode: status.TOO_MANY_REQUESTS,

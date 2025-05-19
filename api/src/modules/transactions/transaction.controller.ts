@@ -65,23 +65,14 @@ export async function getTransactionsHandler(
       : req.query.search
     : undefined
 
-  const whereClause: Prisma.transactionsWhereInput = search
-    ? {
-        category: category,
-        user_id: userId,
-        transaction_date: {
-          gte: dateFrom,
-          lte: dateTo,
-        },
-      }
-    : {
-        category: category,
-        user_id: userId,
-        transaction_date: {
-          gte: dateFrom,
-          lte: dateTo,
-        },
-      }
+  const whereClause: Prisma.transactionsWhereInput = {
+    category: category,
+    user_id: userId,
+    transaction_date: {
+      gte: dateFrom,
+      lte: dateTo,
+    },
+  }
 
   const skipBase = (Number(currPage || 1) - 1) * TRANSACTIONS_PER_PAGE
   const skipValue = skipBase < 0 ? 0 : skipBase
@@ -91,54 +82,39 @@ export async function getTransactionsHandler(
     orderBy: {
       transaction_date: 'desc',
     },
-    take: TRANSACTIONS_PER_PAGE,
-    skip: skipValue,
   })
 
-  const filteredTransactions = transactions.filter(({ description }) =>
-    filterTransactions(description, search),
-  )
-
-  const transactionsCount = await db.transactions.findMany({
-    where: whereClause,
-    select: {
-      description: true,
-      transaction_id: true,
-    },
+  const filteredTransactions = transactions.filter(({ description }) => {
+    return filterTransactions(description, search)
   })
 
-  const filteredTransactionsCount = transactionsCount.filter(
-    ({ description }) => filterTransactions(description, search),
-  ).length
-
+  const filteredTransactionsCount = filteredTransactions.length
   const maxPages = Math.ceil(filteredTransactionsCount / TRANSACTIONS_PER_PAGE)
   const currentPage = Number(currPage || 1)
 
-  const transactionsDTO = filteredTransactions.map(
-    (t): GetTransactionsQuery => {
-      const decryptedDescription = t.description
-        ? decrypt(t.description)
-        : undefined
+  const filteredByPage = filteredTransactions.filter((_, index) => {
+    const test = TRANSACTIONS_PER_PAGE * (skipValue || 1)
 
-      return {
-        transactionId: t.transaction_id,
-        description: decryptedDescription || null,
-        category: t.category ?? 'other',
-        amount: decimalToNumber(t.amount),
-        date: t.transaction_date,
-      }
-    },
-  )
+    return index < test && index >= skipValue
+  })
 
-  const took =
-    transactions.length === TRANSACTIONS_PER_PAGE
-      ? transactions.length * Number(currPage || 1)
-      : TRANSACTIONS_PER_PAGE * Number(currPage || 1) + transactions.length
+  const transactionsDTO = filteredByPage.map((t): GetTransactionsQuery => {
+    const decryptedDescription = t.description
+      ? decrypt(t.description)
+      : undefined
+
+    return {
+      transactionId: t.transaction_id,
+      description: decryptedDescription || null,
+      category: t.category ?? 'other',
+      amount: decimalToNumber(t.amount),
+      date: t.transaction_date,
+    }
+  })
 
   const returnValue: GetTransactionsResponse = {
     transactions: transactionsDTO,
     total: filteredTransactionsCount,
-    took,
     currentPage,
     maxPages,
   }

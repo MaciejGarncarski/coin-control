@@ -82,7 +82,6 @@ export const getTransactionsResponse = z.object({
   total: z.number(),
   currentPage: z.number(),
   maxPages: z.number(),
-  took: z.number(),
 })
 export type GetTransactionsResponse = z.infer<typeof getTransactionsResponse>
 
