@@ -32,7 +32,7 @@ export function DatePickerWithRange({
     navigate({
       viewTransition: false,
       search: {
-        page: search.page,
+        page: 1,
         dateFrom: range?.from ? format(range.from, 'yyyy-MM-dd') : undefined,
         dateTo: range?.to ? format(range.to, 'yyyy-MM-dd') : undefined,
       },
