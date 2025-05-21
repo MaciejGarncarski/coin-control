@@ -95,7 +95,14 @@ export const LoginPage = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <div className="flex justify-between">
+                    <FormLabel>Password</FormLabel>
+                    <Link
+                      to="/auth/forgot-password"
+                      className="text-muted-foreground text-sm underline">
+                      Forgot your password?
+                    </Link>
+                  </div>
                   <FormControl>
                     <InputPassword {...field} placeholder="Your password" />
                   </FormControl>
@@ -103,20 +110,8 @@ export const LoginPage = () => {
                 </FormItem>
               )}
             />
-            <div className="flex items-center justify-between">
-              <Link
-                to="/auth/forgot-password"
-                className="text-muted-foreground text-sm underline">
-                Forgot your password?
-              </Link>
 
-              <Link
-                to="/auth/register"
-                className="text-muted-foreground text-sm underline">
-                Register
-              </Link>
-            </div>
-            <Button type="submit">
+            <Button type="submit" className="mt-2">
               {loginMutation.isPending ? <Spinner /> : null}
               {loginMutation.isPending ? 'Logging in...' : 'Login'}
             </Button>
@@ -126,6 +121,14 @@ export const LoginPage = () => {
         <div className="flex items-center justify-stretch">
           <GoogleLoginButton />
         </div>
+        <p className="text-muted-foreground text-center text-sm">
+          Don&apos;t have an account?{' '}
+          <Link
+            to="/auth/register"
+            className="text-secondary-foreground text-center underline">
+            Register
+          </Link>
+        </p>
       </CardContent>
     </Card>
   )

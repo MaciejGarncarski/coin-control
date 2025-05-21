@@ -82,7 +82,7 @@ export function RegisterPage() {
         <Form {...form}>
           <form
             onSubmit={handleFormSubmit}
-            className="flex flex-col gap-4 md:gap-6">
+            className="flex flex-col gap-4 md:gap-4">
             <FormField
               name="email"
               control={form.control}
@@ -152,13 +152,6 @@ export function RegisterPage() {
                   .
                 </span>
               </Label>
-
-              <Link
-                to="/auth/login"
-                search={{ error: undefined }}
-                className="text-muted-foreground text-sm underline">
-                Login
-              </Link>
             </div>
             <Button type="submit" disabled={!isPrivacyPolicyRead}>
               Register
@@ -169,6 +162,15 @@ export function RegisterPage() {
         <div className="flex items-center justify-stretch">
           <GoogleLoginButton />
         </div>
+        <p className="text-muted-foreground text-center text-sm">
+          Already have an account?{' '}
+          <Link
+            to="/auth/login"
+            search={{ error: undefined }}
+            className="text-secondary-foreground text-center underline">
+            Login
+          </Link>
+        </p>
       </CardContent>
     </Card>
   )
