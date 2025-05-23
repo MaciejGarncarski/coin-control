@@ -29,6 +29,15 @@ export const CookieBanner = () => {
       {isShown ? (
         <motion.div
           exit={exitProps}
+          initial={{
+            y: 150,
+          }}
+          animate={{
+            y: 0,
+            transition: {
+              delay: 3,
+            },
+          }}
           className="fixed bottom-4 left-[50%] -translate-x-[50%] md:bottom-4 md:left-4 md:translate-x-0">
           <Alert className="w-[22rem] md:w-auto">
             <Cookie className="h-4 w-4" />
