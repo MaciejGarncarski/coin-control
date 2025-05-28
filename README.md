@@ -12,6 +12,22 @@ This app is hosted on my VPS.
 
 <a href="https://coincontrol.maciej-garncarski.pl" target="_blank">coincontrol.maciej-garncarski.pl</a>
 
+## Screenshots
+
+Here are some screenshots showcasing the app:
+
+### Homepage
+<img width="800" src="https://raw.githubusercontent.com/MaciejGarncarski/coin-control/refs/heads/main/.github/assets/screenshots/homepage.png">
+
+### Transactions
+<img width="800" src="https://raw.githubusercontent.com/MaciejGarncarski/coin-control/refs/heads/main/.github/assets/screenshots/transactions.png">
+
+### Analytics
+<img width="800" src="https://raw.githubusercontent.com/MaciejGarncarski/coin-control/refs/heads/main/.github/assets/screenshots/analytics.png">
+
+### Account
+<img width="800" src="https://raw.githubusercontent.com/MaciejGarncarski/coin-control/refs/heads/main/.github/assets/screenshots/account.png">
+
 ## Tech used
 
 I have used pnpm workspaces as monorepo for this project. I could use turborepo or nx, but I have decided to keep things simple for now.
