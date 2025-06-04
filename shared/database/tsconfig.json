@@ -25,6 +25,6 @@
     "watchFile": "useFsEvents",
     "watchDirectory": "useFsEvents",
     "synchronousWatchDirectory": true,
-    "excludeDirectories": ["**/node_modules", "dist"],
+    "excludeDirectories": ["**/node_modules", "dist"]
   }
 }

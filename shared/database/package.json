@@ -18,13 +18,13 @@
     "db-pull": "pnpm prisma db pull"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^6.8.1",
-    "@prisma/client": "^6.8.1",
-    "prisma": "^6.8.1"
+    "@prisma/adapter-pg": "^6.9.0",
+    "@prisma/client": "^6.9.0",
+    "prisma": "^6.9.0"
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
-    "@types/node": "^22.15.18",
+    "@types/node": "^22.15.29",
     "copyfiles": "^2.4.1",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.3"

@@ -23,8 +23,8 @@
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
-    "@types/node": "^22.15.18",
-    "@types/react": "^19.1.4",
+    "@types/node": "^22.15.29",
+    "@types/react": "^19.1.6",
     "react-email": "3.0.7"
   }
 }

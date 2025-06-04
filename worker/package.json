@@ -19,11 +19,11 @@
     "@shared/schemas": "workspace:*",
     "nodemailer": "^6.10.1",
     "typescript": "^5.8.3",
-    "zod": "^3.24.4"
+    "zod": "^3.25.51"
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
-    "@types/node": "^22.15.18",
+    "@types/node": "^22.15.29",
     "@types/nodemailer": "^6.4.17",
     "tsx": "^4.19.4",
     "typescript": "^5.8.2"
