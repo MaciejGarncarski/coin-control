@@ -7,6 +7,7 @@ import {
 import { Router } from 'express'
 
 import { authorize } from '../../middlewares/authorize.js'
+import { authorizeAccountType } from '../../middlewares/authorize-account-type.js'
 import { validateBody } from '../../middlewares/validator-body.js'
 import { validateParams } from '../../middlewares/validator-params.js'
 import {
@@ -38,11 +39,17 @@ authRouter.post(
 
 authRouter.get('/my-sessions', authorize, getMySessionsHandler)
 
-authRouter.delete('/my-sessions', authorize, logOutEveryDeviceHandler)
+authRouter.delete(
+  '/my-sessions',
+  authorize,
+  authorizeAccountType,
+  logOutEveryDeviceHandler,
+)
 
 authRouter.delete(
   '/my-sessions/:id',
   authorize,
+  authorizeAccountType,
   validateParams(logOutDeviceQuerySchema),
   logOutDeviceHandler,
 )
