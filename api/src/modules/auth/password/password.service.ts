@@ -1,11 +1,14 @@
 import { hash } from '@node-rs/argon2'
 import { db } from '@shared/database'
 import { QUEUES } from '@shared/queues'
+import status from 'http-status'
 import ms from 'ms'
 import { v7 } from 'uuid'
 
+import { DEMO_ACC_MAIL } from '../../../config/const.js'
 import { resetPasswordLinkQueue } from '../../../lib/queues/reset-password-link.js'
 import { resetPasswordNotificationQueue } from '../../../lib/queues/reset-password-notification.js'
+import { ApiError } from '../../../utils/api-error.js'
 import { getHashCode } from '../../../utils/get-hash-code.js'
 
 export async function getPasswordResetToken({ token }: { token: string }) {
@@ -44,12 +47,21 @@ export async function resetPassword({
         used: true,
       },
       select: {
+        users: true,
         user_id: true,
       },
     })
 
     if (!userCode.user_id) {
       throw new Error('User not found.')
+    }
+
+    if (userCode.users.email === DEMO_ACC_MAIL) {
+      throw new ApiError({
+        message: 'Unauthorized.',
+        toastMessage: 'Disabled for demo account.',
+        statusCode: status.UNAUTHORIZED,
+      })
     }
 
     const hashedPassword = await hash(newPassword)

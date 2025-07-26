@@ -332,7 +332,7 @@ export async function setPrimaryEmailHandler(
     })
   }
 
-  await db.$transaction(async (tx) => {
+  await db.$transaction(async () => {
     const prevPrimaryEmail = await db.users.findFirst({
       where: {
         id: userId,

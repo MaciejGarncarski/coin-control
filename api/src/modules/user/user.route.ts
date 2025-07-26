@@ -10,6 +10,7 @@ import {
 import { Router } from 'express'
 
 import { authorize } from '../../middlewares/authorize.js'
+import { authorizeAccountType } from '../../middlewares/authorize-account-type.js'
 import { validateBody } from '../../middlewares/validator-body.js'
 import {
   addEmailHandler,
@@ -29,6 +30,7 @@ userRouter.get('/emails', authorize, getUserEmailsHandler)
 userRouter.post(
   '/emails',
   authorize,
+  authorizeAccountType,
   validateBody(addEmailMutationSchema),
   addEmailHandler,
 )
@@ -36,6 +38,7 @@ userRouter.post(
 userRouter.post(
   '/resend-email-verification',
   authorize,
+  authorizeAccountType,
   validateBody(resendEmailVerificationMutationSchema),
   resendEmailVerificationHandler,
 )
@@ -43,6 +46,7 @@ userRouter.post(
 userRouter.post(
   '/verify-secondary-email',
   authorize,
+  authorizeAccountType,
   validateBody(verifySecondaryEmailMutaitonSchema),
   verifySecondaryEmailHandler,
 )
@@ -50,6 +54,7 @@ userRouter.post(
 userRouter.post(
   '/set-primary-email',
   authorize,
+  authorizeAccountType,
   validateBody(setPrimaryEmailMutationSchema),
   setPrimaryEmailHandler,
 )
@@ -57,6 +62,7 @@ userRouter.post(
 userRouter.post(
   '/delete-email',
   authorize,
+  authorizeAccountType,
   validateBody(deleteEmailMutationSchema),
   deleteEmailHandler,
 )
@@ -64,6 +70,7 @@ userRouter.post(
 userRouter.patch(
   '/',
   authorize,
+  authorizeAccountType,
   validateBody(userFullNameMutationSchema),
   updateUserHandler,
 )
@@ -71,6 +78,7 @@ userRouter.patch(
 userRouter.post(
   '/delete-account',
   authorize,
+  authorizeAccountType,
   validateBody(deleteUserAccountMutationSchema),
   deleteUserAccountHandler,
 )

@@ -48,6 +48,11 @@ function RouteComponent() {
           <ThemeSwitcher withText />
         </div>
         <Outlet />
+        <div className="text-muted-foreground relative top-10 text-center text-balance">
+          <h2 className="text-center">Demo account:</h2>
+          <p>Email: maciejgarncarski@protonmail.com</p>
+          <p>Password: DemoAcc123</p>
+        </div>
         <CookieBanner />
       </main>
     </div>

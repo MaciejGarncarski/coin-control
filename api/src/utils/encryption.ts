@@ -12,10 +12,10 @@ const key = createHash('sha512')
   .update(secretKey)
   .digest('hex')
   .substring(0, 32)
-const iv = randomBytes(16)
 const algorithm = 'aes-256-cbc'
 
 export function encrypt(data: string) {
+  const iv = randomBytes(16)
   const cipher = createCipheriv(algorithm, Buffer.from(key), iv)
   let encrypted = cipher.update(data, 'utf-8', 'hex')
   encrypted += cipher.final('hex')
@@ -34,7 +34,7 @@ export function decrypt(data: string) {
     let decrypted = decipher.update(encrypted, 'hex', 'utf-8')
     decrypted += decipher.final('utf-8')
     return decrypted
-  } catch (error) {
+  } catch {
     return data
   }
 }

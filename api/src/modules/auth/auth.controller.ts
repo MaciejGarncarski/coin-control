@@ -9,7 +9,8 @@ import { status } from 'http-status'
 import ms from 'ms'
 import { UAParser } from 'ua-parser-js'
 
-import { sessionsDTO } from '../../mappers/sessions.dto.js'
+import { DEMO_ACC_MAIL } from '../../config/const.js'
+import { sessionsDTO, sessionsDTODemoAcc } from '../../mappers/sessions.dto.js'
 import { userDTO } from '../../mappers/user.dto.js'
 import { ApiError } from '../../utils/api-error.js'
 import type {
@@ -194,6 +195,7 @@ export async function getMySessionsHandler(req: Request, res: Response) {
     },
     take: 10,
     select: {
+      users: true,
       browser: true,
       device_type: true,
       ip_address: true,
@@ -205,8 +207,15 @@ export async function getMySessionsHandler(req: Request, res: Response) {
     },
   })
 
-  const sessionsData = sessions.map((s) => sessionsDTO(s, req.session.id))
+  if (sessions.some((sess) => sess.users.email === DEMO_ACC_MAIL)) {
+    const sessionsData = sessions.map((s) =>
+      sessionsDTODemoAcc(s, req.session.id),
+    )
+    res.status(status.OK).json(sessionsData)
+    return
+  }
 
+  const sessionsData = sessions.map((s) => sessionsDTO(s, req.session.id))
   res.status(status.OK).json(sessionsData)
 }
 

@@ -6,6 +6,7 @@ import type {
 import type { Response } from 'express'
 import status from 'http-status'
 
+import { DEMO_ACC_MAIL } from '../../../config/const.js'
 import { ApiError } from '../../../utils/api-error.js'
 import type { TypedRequestBody } from '../../../utils/typed-request.js'
 import {
@@ -19,6 +20,14 @@ export async function forgotPasswordLinkHandler(
   res: Response,
 ) {
   const email = req.body.email
+
+  if (email === DEMO_ACC_MAIL) {
+    throw new ApiError({
+      message: 'Unauthorized.',
+      toastMessage: 'Disabled for demo account.',
+      statusCode: status.UNAUTHORIZED,
+    })
+  }
 
   const foundUser = await db.users.findFirst({
     where: {
@@ -36,7 +45,6 @@ export async function forgotPasswordLinkHandler(
   }
 
   await sendResetPasswordCode({ email: email, userId: foundUser.id })
-
   res.status(status.ACCEPTED).json({ message: 'success' })
 }
 

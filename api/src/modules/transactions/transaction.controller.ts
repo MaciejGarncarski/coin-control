@@ -154,7 +154,7 @@ export async function addTransactionHandler(
 
     res.status(status.CREATED).json({ transaction: transactionDTO })
     return
-  } catch (error) {
+  } catch {
     res.status(status.BAD_REQUEST).json({ message: 'Invalid data' })
   }
 }

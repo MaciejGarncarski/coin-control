@@ -1,4 +1,4 @@
-import type { ReactNode } from '@tanstack/react-router'
+import type { ReactNode } from 'react'
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 
 import { useIsMobile } from '@/components/hooks/use-mobile'

@@ -1,5 +1,5 @@
-import type { ReactNode } from '@tanstack/react-router'
 import { Info } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 
 import {
