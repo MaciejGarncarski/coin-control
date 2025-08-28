@@ -21,14 +21,14 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "eslint": "^9.34.0",
+    "eslint": "^9.32.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
     "prettier": "^3.6.2",
     "rust-just": "^1.42.4",
-    "typescript": "^5.9.2"
+    "typescript": "^5.8.3"
   },
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b"
+  "packageManager": "pnpm@10.10.0"
 }

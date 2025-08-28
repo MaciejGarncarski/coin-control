@@ -14,17 +14,17 @@
     "lint-format": "pnpm lint && pnpm format",
     "check-types": "pnpm tsc --skipLibCheck --noEmit"
   },
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.10.0",
   "dependencies": {
     "@react-email/components": "0.0.34",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "typescript": "^5.9.2"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
-    "@types/node": "^22.18.0",
-    "@types/react": "^19.1.12",
+    "@types/node": "^22.16.5",
+    "@types/react": "^19.1.8",
     "react-email": "3.0.7"
   }
 }

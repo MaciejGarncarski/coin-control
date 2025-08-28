@@ -6,6 +6,7 @@ import { TransactionBadge } from '@/components/transactions/transaction-badge'
 import { TransactionCategoryIcon } from '@/components/transactions/transaction-category-icon'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useRecentTransactions } from '@/features/homepage/api/get-recent-transactions'
 import { NoTransactions } from '@/features/homepage/components/no-transactions'
@@ -70,7 +71,7 @@ export const RecentTransactions = () => {
 
   return (
     <RecentTransactionsCard>
-      <div className="mb-2 h-full overflow-y-auto pr-1 md:pr-4">
+      <ScrollArea className="mb-2 pr-1 md:h-[10rem] md:pr-4 xl:h-[40dvh]">
         <ul className="flex flex-col gap-4">
           {recentTransactions.data?.recentTransactions.map(
             ({ transactionId, category, description, amount, date }) => {
@@ -106,7 +107,7 @@ export const RecentTransactions = () => {
             },
           )}
         </ul>
-      </div>
+      </ScrollArea>
       <Button asChild type="button" className="mt-5 w-full md:mt-auto">
         <Link
           to={'/transactions'}

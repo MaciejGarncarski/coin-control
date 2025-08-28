@@ -1,14 +1,9 @@
 generator client {
   provider        = "prisma-client"
   output          = "../src/generated/prisma"
-  previewFeatures = ["relationJoins", "driverAdapters", "queryCompiler", "nativeDistinct"]
+  previewFeatures = ["relationJoins", "driverAdapters", "queryCompiler"]
   moduleFormat    = "esm"
-
-  runtime = "nodejs"
-  generatedFileExtension = "ts"
-  importFileExtension = "js"
 }
-
 
 datasource db {
   provider = "postgresql"

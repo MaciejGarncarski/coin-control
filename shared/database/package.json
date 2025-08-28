@@ -8,7 +8,8 @@
   "types": "./src/index.ts",
   "scripts": {
     "clean": "rimraf ./dist",
-    "build": "pnpm prisma generate && pnpm clean && pnpm tsc -b",
+    "copy-engine": "copyfiles -f ./src/generated/prisma/libquery* ./dist/src/generated/prisma",
+    "build": "pnpm prisma generate && pnpm clean && pnpm tsc -b ; sleep 2 && pnpm copy-engine",
     "lint": "eslint --fix .",
     "format": "prettier --write --cache .",
     "lint-format": "pnpm lint && pnpm format",
@@ -17,16 +18,16 @@
     "db-pull": "pnpm prisma db pull"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "6.12.0",
-    "@prisma/client": "6.12.0",
-    "prisma": "6.12.0"
+    "@prisma/adapter-pg": "^6.12.0",
+    "@prisma/client": "^6.12.0",
+    "prisma": "^6.12.0"
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
-    "@types/node": "^22.18.0",
+    "@types/node": "^22.16.5",
     "copyfiles": "^2.4.1",
     "rimraf": "^6.0.1",
-    "typescript": "^5.9.2"
+    "typescript": "^5.8.3"
   },
-  "packageManager": "pnpm@10.15.0"
+  "packageManager": "pnpm@10.10.0"
 }
