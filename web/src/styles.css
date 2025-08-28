@@ -214,6 +214,12 @@
       animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
       animation-name: opacity-reveal;
     }
+
+    [data-no-view-transition]::view-transition-group(disabled),
+    [data-no-view-transition]::view-transition-old(disabled),
+    [data-no-view-transition]::view-transition-new(disabled) {
+      animation-duration: 0s !important;
+    }
   }
 
   @keyframes reveal {

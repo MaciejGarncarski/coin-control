@@ -24,7 +24,7 @@
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
     "@types/node": "^22.16.5",
-    "@types/react": "^19.1.8",
+    "@types/react": "^19.1.12",
     "react-email": "3.0.7"
   }
 }

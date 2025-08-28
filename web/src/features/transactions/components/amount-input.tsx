@@ -1,28 +1,28 @@
 import { Minus, Plus } from 'lucide-react'
+import type { ComponentProps } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-type AdditionalProps = {
+type Props = {
   onReduce: () => void
   onIncrease: () => void
 }
 
 export function AmountInput({
   className,
-  type,
   onIncrease,
   onReduce,
   value,
   ...props
-}: React.ComponentProps<'input'> & AdditionalProps) {
+}: ComponentProps<'input'> & Props) {
   const inputVal = Number(value || 0) as number
 
   return (
     <div className="bg-primary/5 border-reflect flex rounded-lg">
       <Button
         type="button"
-        className="w-12 touch-manipulation rounded-r-none"
+        className="w-16 touch-manipulation rounded-r-none"
         onClick={onReduce}>
         <Minus className="size-5" />
       </Button>

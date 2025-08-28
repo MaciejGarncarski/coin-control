@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { type Category, editTransactionMutation } from '@shared/schemas'
 import { useCallback } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
@@ -57,7 +58,18 @@ export const EditTransactionForm = ({
     },
   })
 
-  const amountValue = editTransactionForm.watch().amount
+  const amountValue = editTransactionForm.watch().amount || 0
+  const isIncome = amountValue > 0
+
+  useEffect(() => {
+    if (isIncome) {
+      editTransactionForm.setValue('category', 'income')
+    }
+
+    if (!isIncome) {
+      editTransactionForm.setValue('category', category)
+    }
+  }, [isIncome, editTransactionForm, category])
 
   const closeAndReset = () => {
     setIsOpen(false)
@@ -89,10 +101,6 @@ export const EditTransactionForm = ({
   })
 
   const decreaseAmount = useCallback(() => {
-    if (!amountValue) {
-      return
-    }
-
     editTransactionForm.setValue(
       'amount',
       formatTransaction(amountValue.toString()) - 10,
@@ -100,10 +108,6 @@ export const EditTransactionForm = ({
   }, [amountValue, editTransactionForm])
 
   const increaseAmount = useCallback(() => {
-    if (!amountValue) {
-      return
-    }
-
     editTransactionForm.setValue(
       'amount',
       formatTransaction(amountValue.toString()) + 10,
@@ -164,6 +168,7 @@ export const EditTransactionForm = ({
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <TransactionSelect
+                    isIncome={isIncome}
                     onChange={field.onChange}
                     value={field.value || 'other'}
                   />

@@ -38,6 +38,7 @@ export const CookieBanner = () => {
               delay: 3,
             },
           }}
+          data-no-view-transition
           className="fixed bottom-4 left-[50%] -translate-x-[50%] md:bottom-4 md:left-4 md:translate-x-0">
           <Alert className="w-[22rem] md:w-auto">
             <Cookie className="h-4 w-4" />
