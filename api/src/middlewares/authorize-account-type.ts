@@ -2,8 +2,8 @@ import { db } from '@shared/database'
 import type { NextFunction, Request, Response } from 'express'
 import status from 'http-status'
 
-import { DEMO_ACC_MAIL } from '../config/const.js'
 import { ApiError } from '../utils/api-error.js'
+import { checkIsDemoAccount } from '../utils/check-is-demo-account.js'
 
 export async function authorizeAccountType(
   req: Request,
@@ -30,7 +30,7 @@ export async function authorizeAccountType(
     },
   })
 
-  if (userData?.email === DEMO_ACC_MAIL) {
+  if (userData?.email && checkIsDemoAccount(userData.email)) {
     throw new ApiError({
       message: 'Unauthorized.',
       toastMessage: 'Disabled for demo account.',

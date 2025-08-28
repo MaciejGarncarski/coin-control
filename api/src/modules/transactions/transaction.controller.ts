@@ -18,6 +18,7 @@ import status from 'http-status'
 import ms from 'ms'
 import { v7 } from 'uuid'
 
+import { ApiError } from '../../utils/api-error.js'
 import { decimalToNumber } from '../../utils/decimal-to-number.js'
 import { decrypt, encrypt } from '../../utils/encryption.js'
 import type {
@@ -25,6 +26,7 @@ import type {
   TypedRequestParams,
   TypedRequestQuery,
 } from '../../utils/typed-request.js'
+import { validateCategory } from '../../utils/validate-category.js'
 import { filterTransactions } from './filter-transactions.js'
 
 const TRANSACTIONS_PER_PAGE = 10
@@ -129,6 +131,16 @@ export async function addTransactionHandler(
 ) {
   const userId = req.session.userId
   const { description, category, amount, date } = req.body
+
+  const isCategoryValid = validateCategory(category, amount)
+
+  if (!isCategoryValid) {
+    throw new ApiError({
+      message: 'Bad request',
+      statusCode: status.BAD_REQUEST,
+      toastMessage: 'Invalid category and amount combination.',
+    })
+  }
 
   const encryptedDescription = description ? encrypt(description) : undefined
 

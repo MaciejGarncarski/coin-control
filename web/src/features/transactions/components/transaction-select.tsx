@@ -15,9 +15,10 @@ import { formatTransactionCategory } from '@/utils/format-transaction-category'
 type Props = {
   value: Category
   onChange: () => void
+  isIncome: boolean
 }
 
-export const TransactionSelect = ({ onChange, value }: Props) => {
+export const TransactionSelect = ({ onChange, value, isIncome }: Props) => {
   return (
     <Select onValueChange={onChange} defaultValue={value}>
       <FormControl>
@@ -30,38 +31,45 @@ export const TransactionSelect = ({ onChange, value }: Props) => {
       </FormControl>
       <SelectContent>
         <ScrollArea className={cn('h-[15rem]')}>
-          <SelectItem value="income">
-            <TransactionCategoryIcon category="income" />
-            Income
-          </SelectItem>
-          <SelectItem value="groceries">
-            <TransactionCategoryIcon category="groceries" />
-            Groceries
-          </SelectItem>
-          <SelectItem value="foodAndDrink">
-            <TransactionCategoryIcon category="foodAndDrink" />
-            Food and Drink
-          </SelectItem>
-          <SelectItem value="utilities">
-            <TransactionCategoryIcon category="utilities" />
-            Utilities
-          </SelectItem>
-          <SelectItem value="housing">
-            <TransactionCategoryIcon category="housing" />
-            Housing
-          </SelectItem>
-          <SelectItem value="shopping">
-            <TransactionCategoryIcon category="shopping" />
-            Shopping
-          </SelectItem>
-          <SelectItem value="transportation">
-            <TransactionCategoryIcon category="transportation" />
-            Transportation
-          </SelectItem>
-          <SelectItem value="other">
-            <TransactionCategoryIcon category="other" />
-            Other
-          </SelectItem>
+          {isIncome ? (
+            <>
+              <SelectItem value="income">
+                <TransactionCategoryIcon category="income" />
+                Income
+              </SelectItem>
+            </>
+          ) : (
+            <>
+              <SelectItem value="groceries">
+                <TransactionCategoryIcon category="groceries" />
+                Groceries
+              </SelectItem>
+              <SelectItem value="foodAndDrink">
+                <TransactionCategoryIcon category="foodAndDrink" />
+                Food and Drink
+              </SelectItem>
+              <SelectItem value="utilities">
+                <TransactionCategoryIcon category="utilities" />
+                Utilities
+              </SelectItem>
+              <SelectItem value="housing">
+                <TransactionCategoryIcon category="housing" />
+                Housing
+              </SelectItem>
+              <SelectItem value="shopping">
+                <TransactionCategoryIcon category="shopping" />
+                Shopping
+              </SelectItem>
+              <SelectItem value="transportation">
+                <TransactionCategoryIcon category="transportation" />
+                Transportation
+              </SelectItem>
+              <SelectItem value="other">
+                <TransactionCategoryIcon category="other" />
+                Other
+              </SelectItem>
+            </>
+          )}
         </ScrollArea>
       </SelectContent>
     </Select>

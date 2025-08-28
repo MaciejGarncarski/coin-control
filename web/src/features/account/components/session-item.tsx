@@ -60,7 +60,7 @@ export const SessionItem = ({ session }: Props) => {
                 </span>
               )}
               <span className="text-muted-foreground text-xs">
-                {session.location}
+                {session.location || 'Location not found'}
               </span>
             </span>
 

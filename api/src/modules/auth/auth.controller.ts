@@ -13,6 +13,7 @@ import { DEMO_ACC_MAIL } from '../../config/const.js'
 import { sessionsDTO, sessionsDTODemoAcc } from '../../mappers/sessions.dto.js'
 import { userDTO } from '../../mappers/user.dto.js'
 import { ApiError } from '../../utils/api-error.js'
+import { checkIsDemoAccount } from '../../utils/check-is-demo-account.js'
 import type {
   TypedRequestBody,
   TypedRequestParams,
@@ -76,11 +77,18 @@ export async function getUserHandler(req: Request, res: Response) {
     }
 
     try {
+      const isDemoAccountType = checkIsDemoAccount(user.email)
+
+      if (isDemoAccountType) {
+        return
+      }
+
       const userIP = req.ip
 
       if (!userIP) {
         return
       }
+
       const parsedUserAgent = UAParser(req.headers)
       await saveSessionData({
         parsedUserAgent,

@@ -3,6 +3,7 @@ import { addTransactionMutation } from '@shared/schemas'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { useCallback, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
@@ -49,6 +50,17 @@ export const AddTransactionForm = () => {
   })
 
   const amountValue = newTransactionForm.watch().amount
+  const isIncome = amountValue > 0
+
+  useEffect(() => {
+    if (isIncome) {
+      newTransactionForm.setValue('category', 'income')
+    }
+
+    if (!isIncome) {
+      newTransactionForm.setValue('category', 'other')
+    }
+  }, [isIncome, newTransactionForm])
 
   const closeAndReset = () => {
     setDialogOpen(false)
@@ -169,6 +181,7 @@ export const AddTransactionForm = () => {
                   <FormLabel>Category</FormLabel>
                   <TransactionSelect
                     onChange={field.onChange}
+                    isIncome={isIncome}
                     value={field.value}
                   />
                   <FormMessage />
