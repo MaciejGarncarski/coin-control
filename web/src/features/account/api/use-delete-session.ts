@@ -9,6 +9,7 @@ export const useDeleteOneSession = () => {
     mutationFn: (sessionID: string) => {
       return fetcher({
         method: 'DELETE',
+        throwOnError: true,
         url: `/auth/my-sessions/${sessionID}`,
       })
     },

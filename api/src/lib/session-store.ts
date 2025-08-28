@@ -1,5 +1,5 @@
 import { db } from '@shared/database'
-import session, { Session, type SessionData } from 'express-session'
+import session, { Session } from 'express-session'
 import ms from 'ms'
 import { v7 } from 'uuid'
 

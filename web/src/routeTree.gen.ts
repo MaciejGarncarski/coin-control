@@ -8,204 +8,279 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as UnauthenticatedRouteRouteImport } from './routes/_unauthenticated/route'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated/transactions'
+import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
+import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
+import { Route as UnauthenticatedAuthIndexRouteImport } from './routes/_unauthenticated/auth/index'
+import { Route as UnauthenticatedAuthRegisterRouteImport } from './routes/_unauthenticated/auth/register'
+import { Route as UnauthenticatedAuthPasswordResetRouteImport } from './routes/_unauthenticated/auth/password-reset'
+import { Route as UnauthenticatedAuthLoginRouteImport } from './routes/_unauthenticated/auth/login'
+import { Route as UnauthenticatedAuthForgotPasswordRouteImport } from './routes/_unauthenticated/auth/forgot-password'
+import { Route as AuthenticatedAuthVerifyEmailRouteImport } from './routes/_authenticated/auth/verify-email'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as PrivacyPolicyImport } from './routes/privacy-policy'
-import { Route as UnauthenticatedRouteImport } from './routes/_unauthenticated/route'
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
-import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedTransactionsImport } from './routes/_authenticated/transactions'
-import { Route as AuthenticatedAnalyticsImport } from './routes/_authenticated/analytics'
-import { Route as AuthenticatedAccountImport } from './routes/_authenticated/account'
-import { Route as UnauthenticatedAuthIndexImport } from './routes/_unauthenticated/auth/index'
-import { Route as UnauthenticatedAuthRegisterImport } from './routes/_unauthenticated/auth/register'
-import { Route as UnauthenticatedAuthPasswordResetImport } from './routes/_unauthenticated/auth/password-reset'
-import { Route as UnauthenticatedAuthLoginImport } from './routes/_unauthenticated/auth/login'
-import { Route as UnauthenticatedAuthForgotPasswordImport } from './routes/_unauthenticated/auth/forgot-password'
-import { Route as AuthenticatedAuthVerifyEmailImport } from './routes/_authenticated/auth/verify-email'
-
-// Create/Update Routes
-
-const PrivacyPolicyRoute = PrivacyPolicyImport.update({
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
   id: '/privacy-policy',
   path: '/privacy-policy',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const UnauthenticatedRouteRoute = UnauthenticatedRouteImport.update({
+const UnauthenticatedRouteRoute = UnauthenticatedRouteRouteImport.update({
   id: '/_unauthenticated',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AuthenticatedRouteRoute = AuthenticatedRouteImport.update({
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-
-const AuthenticatedTransactionsRoute = AuthenticatedTransactionsImport.update({
-  id: '/transactions',
-  path: '/transactions',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-
-const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsImport.update({
+const AuthenticatedTransactionsRoute =
+  AuthenticatedTransactionsRouteImport.update({
+    id: '/transactions',
+    path: '/transactions',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-
-const AuthenticatedAccountRoute = AuthenticatedAccountImport.update({
+const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   id: '/account',
   path: '/account',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-
-const UnauthenticatedAuthIndexRoute = UnauthenticatedAuthIndexImport.update({
-  id: '/auth/',
-  path: '/auth/',
-  getParentRoute: () => UnauthenticatedRouteRoute,
-} as any)
-
+const UnauthenticatedAuthIndexRoute =
+  UnauthenticatedAuthIndexRouteImport.update({
+    id: '/auth/',
+    path: '/auth/',
+    getParentRoute: () => UnauthenticatedRouteRoute,
+  } as any)
 const UnauthenticatedAuthRegisterRoute =
-  UnauthenticatedAuthRegisterImport.update({
+  UnauthenticatedAuthRegisterRouteImport.update({
     id: '/auth/register',
     path: '/auth/register',
     getParentRoute: () => UnauthenticatedRouteRoute,
   } as any)
-
 const UnauthenticatedAuthPasswordResetRoute =
-  UnauthenticatedAuthPasswordResetImport.update({
+  UnauthenticatedAuthPasswordResetRouteImport.update({
     id: '/auth/password-reset',
     path: '/auth/password-reset',
     getParentRoute: () => UnauthenticatedRouteRoute,
   } as any)
-
-const UnauthenticatedAuthLoginRoute = UnauthenticatedAuthLoginImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => UnauthenticatedRouteRoute,
-} as any)
-
+const UnauthenticatedAuthLoginRoute =
+  UnauthenticatedAuthLoginRouteImport.update({
+    id: '/auth/login',
+    path: '/auth/login',
+    getParentRoute: () => UnauthenticatedRouteRoute,
+  } as any)
 const UnauthenticatedAuthForgotPasswordRoute =
-  UnauthenticatedAuthForgotPasswordImport.update({
+  UnauthenticatedAuthForgotPasswordRouteImport.update({
     id: '/auth/forgot-password',
     path: '/auth/forgot-password',
     getParentRoute: () => UnauthenticatedRouteRoute,
   } as any)
-
 const AuthenticatedAuthVerifyEmailRoute =
-  AuthenticatedAuthVerifyEmailImport.update({
+  AuthenticatedAuthVerifyEmailRouteImport.update({
     id: '/auth/verify-email',
     path: '/auth/verify-email',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/account': typeof AuthenticatedAccountRoute
+  '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/transactions': typeof AuthenticatedTransactionsRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
+  '/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
+  '/auth/login': typeof UnauthenticatedAuthLoginRoute
+  '/auth/password-reset': typeof UnauthenticatedAuthPasswordResetRoute
+  '/auth/register': typeof UnauthenticatedAuthRegisterRoute
+  '/auth': typeof UnauthenticatedAuthIndexRoute
+}
+export interface FileRoutesByTo {
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/account': typeof AuthenticatedAccountRoute
+  '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/transactions': typeof AuthenticatedTransactionsRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
+  '/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
+  '/auth/login': typeof UnauthenticatedAuthLoginRoute
+  '/auth/password-reset': typeof UnauthenticatedAuthPasswordResetRoute
+  '/auth/register': typeof UnauthenticatedAuthRegisterRoute
+  '/auth': typeof UnauthenticatedAuthIndexRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_unauthenticated': typeof UnauthenticatedRouteRouteWithChildren
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
+  '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
+  '/_unauthenticated/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
+  '/_unauthenticated/auth/login': typeof UnauthenticatedAuthLoginRoute
+  '/_unauthenticated/auth/password-reset': typeof UnauthenticatedAuthPasswordResetRoute
+  '/_unauthenticated/auth/register': typeof UnauthenticatedAuthRegisterRoute
+  '/_unauthenticated/auth/': typeof UnauthenticatedAuthIndexRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/privacy-policy'
+    | '/account'
+    | '/analytics'
+    | '/transactions'
+    | '/'
+    | '/auth/verify-email'
+    | '/auth/forgot-password'
+    | '/auth/login'
+    | '/auth/password-reset'
+    | '/auth/register'
+    | '/auth'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/privacy-policy'
+    | '/account'
+    | '/analytics'
+    | '/transactions'
+    | '/'
+    | '/auth/verify-email'
+    | '/auth/forgot-password'
+    | '/auth/login'
+    | '/auth/password-reset'
+    | '/auth/register'
+    | '/auth'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/_unauthenticated'
+    | '/privacy-policy'
+    | '/_authenticated/account'
+    | '/_authenticated/analytics'
+    | '/_authenticated/transactions'
+    | '/_authenticated/'
+    | '/_authenticated/auth/verify-email'
+    | '/_unauthenticated/auth/forgot-password'
+    | '/_unauthenticated/auth/login'
+    | '/_unauthenticated/auth/password-reset'
+    | '/_unauthenticated/auth/register'
+    | '/_unauthenticated/auth/'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  UnauthenticatedRouteRoute: typeof UnauthenticatedRouteRouteWithChildren
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthenticatedRouteImport
-      parentRoute: typeof rootRoute
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_unauthenticated': {
       id: '/_unauthenticated'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof UnauthenticatedRouteImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof UnauthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/privacy-policy': {
-      id: '/privacy-policy'
-      path: '/privacy-policy'
-      fullPath: '/privacy-policy'
-      preLoaderRoute: typeof PrivacyPolicyImport
-      parentRoute: typeof rootRoute
-    }
-    '/_authenticated/account': {
-      id: '/_authenticated/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AuthenticatedAccountImport
-      parentRoute: typeof AuthenticatedRouteImport
-    }
-    '/_authenticated/analytics': {
-      id: '/_authenticated/analytics'
-      path: '/analytics'
-      fullPath: '/analytics'
-      preLoaderRoute: typeof AuthenticatedAnalyticsImport
-      parentRoute: typeof AuthenticatedRouteImport
-    }
-    '/_authenticated/transactions': {
-      id: '/_authenticated/transactions'
-      path: '/transactions'
-      fullPath: '/transactions'
-      preLoaderRoute: typeof AuthenticatedTransactionsImport
-      parentRoute: typeof AuthenticatedRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/': {
       id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedIndexImport
-      parentRoute: typeof AuthenticatedRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/auth/verify-email': {
-      id: '/_authenticated/auth/verify-email'
-      path: '/auth/verify-email'
-      fullPath: '/auth/verify-email'
-      preLoaderRoute: typeof AuthenticatedAuthVerifyEmailImport
-      parentRoute: typeof AuthenticatedRouteImport
+    '/_authenticated/transactions': {
+      id: '/_authenticated/transactions'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof AuthenticatedTransactionsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_unauthenticated/auth/forgot-password': {
-      id: '/_unauthenticated/auth/forgot-password'
-      path: '/auth/forgot-password'
-      fullPath: '/auth/forgot-password'
-      preLoaderRoute: typeof UnauthenticatedAuthForgotPasswordImport
-      parentRoute: typeof UnauthenticatedRouteImport
+    '/_authenticated/analytics': {
+      id: '/_authenticated/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AuthenticatedAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_unauthenticated/auth/login': {
-      id: '/_unauthenticated/auth/login'
-      path: '/auth/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof UnauthenticatedAuthLoginImport
-      parentRoute: typeof UnauthenticatedRouteImport
-    }
-    '/_unauthenticated/auth/password-reset': {
-      id: '/_unauthenticated/auth/password-reset'
-      path: '/auth/password-reset'
-      fullPath: '/auth/password-reset'
-      preLoaderRoute: typeof UnauthenticatedAuthPasswordResetImport
-      parentRoute: typeof UnauthenticatedRouteImport
-    }
-    '/_unauthenticated/auth/register': {
-      id: '/_unauthenticated/auth/register'
-      path: '/auth/register'
-      fullPath: '/auth/register'
-      preLoaderRoute: typeof UnauthenticatedAuthRegisterImport
-      parentRoute: typeof UnauthenticatedRouteImport
+    '/_authenticated/account': {
+      id: '/_authenticated/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthenticatedAccountRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_unauthenticated/auth/': {
       id: '/_unauthenticated/auth/'
       path: '/auth'
       fullPath: '/auth'
-      preLoaderRoute: typeof UnauthenticatedAuthIndexImport
-      parentRoute: typeof UnauthenticatedRouteImport
+      preLoaderRoute: typeof UnauthenticatedAuthIndexRouteImport
+      parentRoute: typeof UnauthenticatedRouteRoute
+    }
+    '/_unauthenticated/auth/register': {
+      id: '/_unauthenticated/auth/register'
+      path: '/auth/register'
+      fullPath: '/auth/register'
+      preLoaderRoute: typeof UnauthenticatedAuthRegisterRouteImport
+      parentRoute: typeof UnauthenticatedRouteRoute
+    }
+    '/_unauthenticated/auth/password-reset': {
+      id: '/_unauthenticated/auth/password-reset'
+      path: '/auth/password-reset'
+      fullPath: '/auth/password-reset'
+      preLoaderRoute: typeof UnauthenticatedAuthPasswordResetRouteImport
+      parentRoute: typeof UnauthenticatedRouteRoute
+    }
+    '/_unauthenticated/auth/login': {
+      id: '/_unauthenticated/auth/login'
+      path: '/auth/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof UnauthenticatedAuthLoginRouteImport
+      parentRoute: typeof UnauthenticatedRouteRoute
+    }
+    '/_unauthenticated/auth/forgot-password': {
+      id: '/_unauthenticated/auth/forgot-password'
+      path: '/auth/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof UnauthenticatedAuthForgotPasswordRouteImport
+      parentRoute: typeof UnauthenticatedRouteRoute
+    }
+    '/_authenticated/auth/verify-email': {
+      id: '/_authenticated/auth/verify-email'
+      path: '/auth/verify-email'
+      fullPath: '/auth/verify-email'
+      preLoaderRoute: typeof AuthenticatedAuthVerifyEmailRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
-
-// Create and export the route tree
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
@@ -246,190 +321,11 @@ const UnauthenticatedRouteRouteChildren: UnauthenticatedRouteRouteChildren = {
 const UnauthenticatedRouteRouteWithChildren =
   UnauthenticatedRouteRoute._addFileChildren(UnauthenticatedRouteRouteChildren)
 
-export interface FileRoutesByFullPath {
-  '': typeof UnauthenticatedRouteRouteWithChildren
-  '/privacy-policy': typeof PrivacyPolicyRoute
-  '/account': typeof AuthenticatedAccountRoute
-  '/analytics': typeof AuthenticatedAnalyticsRoute
-  '/transactions': typeof AuthenticatedTransactionsRoute
-  '/': typeof AuthenticatedIndexRoute
-  '/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
-  '/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
-  '/auth/login': typeof UnauthenticatedAuthLoginRoute
-  '/auth/password-reset': typeof UnauthenticatedAuthPasswordResetRoute
-  '/auth/register': typeof UnauthenticatedAuthRegisterRoute
-  '/auth': typeof UnauthenticatedAuthIndexRoute
-}
-
-export interface FileRoutesByTo {
-  '': typeof UnauthenticatedRouteRouteWithChildren
-  '/privacy-policy': typeof PrivacyPolicyRoute
-  '/account': typeof AuthenticatedAccountRoute
-  '/analytics': typeof AuthenticatedAnalyticsRoute
-  '/transactions': typeof AuthenticatedTransactionsRoute
-  '/': typeof AuthenticatedIndexRoute
-  '/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
-  '/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
-  '/auth/login': typeof UnauthenticatedAuthLoginRoute
-  '/auth/password-reset': typeof UnauthenticatedAuthPasswordResetRoute
-  '/auth/register': typeof UnauthenticatedAuthRegisterRoute
-  '/auth': typeof UnauthenticatedAuthIndexRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/_unauthenticated': typeof UnauthenticatedRouteRouteWithChildren
-  '/privacy-policy': typeof PrivacyPolicyRoute
-  '/_authenticated/account': typeof AuthenticatedAccountRoute
-  '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
-  '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
-  '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/auth/verify-email': typeof AuthenticatedAuthVerifyEmailRoute
-  '/_unauthenticated/auth/forgot-password': typeof UnauthenticatedAuthForgotPasswordRoute
-  '/_unauthenticated/auth/login': typeof UnauthenticatedAuthLoginRoute
-  '/_unauthenticated/auth/password-reset': typeof UnauthenticatedAuthPasswordResetRoute
-  '/_unauthenticated/auth/register': typeof UnauthenticatedAuthRegisterRoute
-  '/_unauthenticated/auth/': typeof UnauthenticatedAuthIndexRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | ''
-    | '/privacy-policy'
-    | '/account'
-    | '/analytics'
-    | '/transactions'
-    | '/'
-    | '/auth/verify-email'
-    | '/auth/forgot-password'
-    | '/auth/login'
-    | '/auth/password-reset'
-    | '/auth/register'
-    | '/auth'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | ''
-    | '/privacy-policy'
-    | '/account'
-    | '/analytics'
-    | '/transactions'
-    | '/'
-    | '/auth/verify-email'
-    | '/auth/forgot-password'
-    | '/auth/login'
-    | '/auth/password-reset'
-    | '/auth/register'
-    | '/auth'
-  id:
-    | '__root__'
-    | '/_authenticated'
-    | '/_unauthenticated'
-    | '/privacy-policy'
-    | '/_authenticated/account'
-    | '/_authenticated/analytics'
-    | '/_authenticated/transactions'
-    | '/_authenticated/'
-    | '/_authenticated/auth/verify-email'
-    | '/_unauthenticated/auth/forgot-password'
-    | '/_unauthenticated/auth/login'
-    | '/_unauthenticated/auth/password-reset'
-    | '/_unauthenticated/auth/register'
-    | '/_unauthenticated/auth/'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  UnauthenticatedRouteRoute: typeof UnauthenticatedRouteRouteWithChildren
-  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
-}
-
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   UnauthenticatedRouteRoute: UnauthenticatedRouteRouteWithChildren,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/_authenticated",
-        "/_unauthenticated",
-        "/privacy-policy"
-      ]
-    },
-    "/_authenticated": {
-      "filePath": "_authenticated/route.tsx",
-      "children": [
-        "/_authenticated/account",
-        "/_authenticated/analytics",
-        "/_authenticated/transactions",
-        "/_authenticated/",
-        "/_authenticated/auth/verify-email"
-      ]
-    },
-    "/_unauthenticated": {
-      "filePath": "_unauthenticated/route.tsx",
-      "children": [
-        "/_unauthenticated/auth/forgot-password",
-        "/_unauthenticated/auth/login",
-        "/_unauthenticated/auth/password-reset",
-        "/_unauthenticated/auth/register",
-        "/_unauthenticated/auth/"
-      ]
-    },
-    "/privacy-policy": {
-      "filePath": "privacy-policy.tsx"
-    },
-    "/_authenticated/account": {
-      "filePath": "_authenticated/account.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/analytics": {
-      "filePath": "_authenticated/analytics.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/transactions": {
-      "filePath": "_authenticated/transactions.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/": {
-      "filePath": "_authenticated/index.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/auth/verify-email": {
-      "filePath": "_authenticated/auth/verify-email.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_unauthenticated/auth/forgot-password": {
-      "filePath": "_unauthenticated/auth/forgot-password.tsx",
-      "parent": "/_unauthenticated"
-    },
-    "/_unauthenticated/auth/login": {
-      "filePath": "_unauthenticated/auth/login.tsx",
-      "parent": "/_unauthenticated"
-    },
-    "/_unauthenticated/auth/password-reset": {
-      "filePath": "_unauthenticated/auth/password-reset.tsx",
-      "parent": "/_unauthenticated"
-    },
-    "/_unauthenticated/auth/register": {
-      "filePath": "_unauthenticated/auth/register.tsx",
-      "parent": "/_unauthenticated"
-    },
-    "/_unauthenticated/auth/": {
-      "filePath": "_unauthenticated/auth/index.tsx",
-      "parent": "/_unauthenticated"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
