@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "pnpm tsx watch --include '../shared/**/**' --exclude '../shared/**/node_modules' --clear-screen=false  src/server.ts",
+    "dev": "pnpm tsx watch --conditions=typescript --include '../shared/**/**' --exclude '../shared/**/node_modules' --clear-screen=false  src/server.ts",
     "build": "pnpm tsc --build",
     "start": "pnpm build && node --env-file=.env ./dist/src/server.js",
     "lint": "eslint --fix .",

@@ -3,7 +3,7 @@
   "name": "worker",
   "type": "module",
   "scripts": {
-    "dev": "pnpm tsx watch --clear-screen=false  src/app.ts",
+    "dev": "pnpm tsx watch --conditions=typescript --clear-screen=false  src/app.ts",
     "build": "pnpm tsc --build",
     "start": "pnpm build && node --env-file=.env ./dist/src/app.js",
     "lint": "eslint --fix .",
