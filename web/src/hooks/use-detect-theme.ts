@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 
-import { useThemeStore } from '@/features/layout/comoponents/theme-state'
+import { usePreferencesStore } from '@/features/layout/stores/preferences-store'
 
 export const useDetectTheme = () => {
-  const themeState = useThemeStore((n) => n.theme)
+  const themeState = usePreferencesStore((n) => n.theme)
 
   useEffect(() => {
     const darkModePreference = window.matchMedia('(prefers-color-scheme: dark)')

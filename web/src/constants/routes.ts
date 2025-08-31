@@ -14,7 +14,7 @@ type RoutesData = Array<{
   text: string
 }>
 
-export const rotues = [
+export const routes = [
   {
     icon: Blocks,
     text: 'Dashboard',

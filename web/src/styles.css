@@ -183,42 +183,29 @@
       source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
   }
 
-  html:active-view-transition-type(main-transition) {
+  :where(html:active-view-transition-type(main-transition)):not(
+    .no-transitions
+  ) {
     &::view-transition-old(content) {
-      animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
-      animation-name: reveal;
-      animation-direction: reverse;
+      animation: reveal 300ms cubic-bezier(0.4, 0, 0.2, 1) reverse both;
     }
 
     &::view-transition-new(content) {
-      animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
-      animation-name: reveal;
+      animation: reveal 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
     }
 
-    html::view-transition-old(logos) {
-      animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
-      animation-name: opacity-reveal;
-      animation-direction: reverse;
+    &::view-transition-old(logos) {
+      animation: opacity-reveal 300ms cubic-bezier(0.4, 0, 0.2, 1) reverse both;
     }
-    html::view-transition-new(logos) {
-      animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
-      animation-name: opacity-reveal;
+    &::view-transition-new(logos) {
+      animation: opacity-reveal 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
     }
 
-    html::view-transition-old(header) {
-      animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
-      animation-name: opacity-reveal;
-      animation-direction: reverse;
+    &::view-transition-old(header) {
+      animation: opacity-reveal 300ms cubic-bezier(0.4, 0, 0.2, 1) reverse both;
     }
-    html::view-transition-new(header) {
-      animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
-      animation-name: opacity-reveal;
-    }
-
-    [data-no-view-transition]::view-transition-group(disabled),
-    [data-no-view-transition]::view-transition-old(disabled),
-    [data-no-view-transition]::view-transition-new(disabled) {
-      animation-duration: 0s !important;
+    &::view-transition-new(header) {
+      animation: opacity-reveal 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
     }
   }
 
@@ -246,6 +233,12 @@
     ::view-transition-new(*) {
       animation: none !important;
     }
+  }
+
+  html.no-transitions::view-transition-group(*),
+  html.no-transitions::view-transition-old(*),
+  html.no-transitions::view-transition-new(*) {
+    animation: none !important;
   }
 
   .border-reflect {

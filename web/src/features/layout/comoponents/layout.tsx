@@ -4,7 +4,7 @@ import { type ReactNode, useMemo } from 'react'
 import { useIsMobile } from '@/components/hooks/use-mobile'
 import { Logo } from '@/components/logo'
 import { UserAvatar } from '@/components/user-avatar'
-import { rotues } from '@/constants/routes'
+import { routes } from '@/constants/routes'
 import { MobileNavbar } from '@/features/layout/comoponents/mobile-navbar'
 import { ThemeSwitcher } from '@/features/layout/comoponents/theme-switcher'
 import { UserDropdown } from '@/features/layout/comoponents/user-dropdown'
@@ -41,7 +41,7 @@ export function Layout({ children }: { children: ReactNode }) {
                   </Link>
                   <nav className="text-muted-foreground hidden w-full text-sm md:ml-6 md:block lg:ml-10">
                     <ul className="flex items-center justify-center gap-2 lg:justify-start lg:gap-10">
-                      {rotues.map(({ text, url, icon: Icon }) => {
+                      {routes.map(({ text, url, icon: Icon }) => {
                         return (
                           <li key={text}>
                             <Link

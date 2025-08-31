@@ -3,22 +3,38 @@ import { persist } from 'zustand/middleware'
 
 import { transitionManager } from '@/utils/transition-manager'
 
+const ACCENT_CLASSES = ['green', 'blue', 'pink', 'red']
+const NO_TRANSITIONS_CLASS = 'no-transitions'
+
 export type Accent = 'green' | 'blue' | 'pink' | 'red'
 type Theme = 'dark' | 'light' | 'system'
 
-type ThemeProviderState = {
+type PreferencesState = {
   accent: Accent
   setAccent: (newAccent: Accent) => void
   theme: Theme
   setTheme: (newTheme: Theme) => void
+  transitionsEnabled: boolean
+  setTransitionsEnabled: (data: boolean) => void
 }
 
-const ACCENT_CLASSES = ['green', 'blue', 'pink', 'red']
-
-export const useThemeStore = create<ThemeProviderState>()(
+export const usePreferencesStore = create<PreferencesState>()(
   persist(
     (set, get) => {
       return {
+        transitionsEnabled: get()?.transitionsEnabled || true,
+        setTransitionsEnabled: (data) => {
+          const root = window.document.documentElement
+          if (data === false) {
+            root.classList.add(NO_TRANSITIONS_CLASS)
+          }
+
+          if (data) {
+            root.classList.remove(NO_TRANSITIONS_CLASS)
+          }
+
+          set({ transitionsEnabled: data })
+        },
         theme: get()?.theme || 'system',
         accent: get()?.accent || 'green',
         setAccent: (newAccent) => {
@@ -64,6 +80,10 @@ export const useThemeStore = create<ThemeProviderState>()(
           root.classList.remove('light', 'dark')
           root.classList.remove(...ACCENT_CLASSES)
           root.classList.add(state?.accent || 'green')
+
+          if (state?.transitionsEnabled === false) {
+            root.classList.add(NO_TRANSITIONS_CLASS)
+          }
 
           if (state?.theme === 'system') {
             const systemTheme = window.matchMedia(

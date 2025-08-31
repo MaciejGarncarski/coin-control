@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { AccentSwitcher } from '@/features/layout/comoponents/accent-switcher'
+import { ViewTransitionsCheckbox } from '@/features/layout/comoponents/view-transitions-checkbox'
 
 type Props = {
   side?: 'top' | 'right' | 'bottom' | 'left'
@@ -55,6 +56,12 @@ export function UserDropdown({ triggerComponent, side = 'right' }: Props) {
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <AccentSwitcher />
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <ViewTransitionsCheckbox />
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

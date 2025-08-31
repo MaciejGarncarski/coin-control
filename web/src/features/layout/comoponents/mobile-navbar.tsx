@@ -13,7 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { rotues } from '@/constants/routes'
+import { routes } from '@/constants/routes'
 import { UserMenu } from '@/features/layout/comoponents/user-menu'
 
 export function MobileNavbar() {
@@ -47,7 +47,7 @@ export function MobileNavbar() {
         <ScrollArea className="h-[calc(100dvh-14rem)]">
           <nav className="text-muted-foreground mx-4 py-4 text-lg">
             <ul className="flex flex-col gap-10">
-              {rotues.map(({ icon: Icon, text, url }) => {
+              {routes.map(({ icon: Icon, text, url }) => {
                 return (
                   <li key={text}>
                     <Link

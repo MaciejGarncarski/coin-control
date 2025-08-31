@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useThemeStore } from '@/features/layout/comoponents/theme-state'
+import { usePreferencesStore } from '@/features/layout/stores/preferences-store'
 import { cn } from '@/lib/utils'
 
 type ThemeSwitcherProps = {
@@ -15,8 +15,8 @@ type ThemeSwitcherProps = {
 }
 
 export function ThemeSwitcher({ withText = false }: ThemeSwitcherProps) {
-  const theme = useThemeStore((s) => s.theme)
-  const setTheme = useThemeStore((s) => s.setTheme)
+  const theme = usePreferencesStore((s) => s.theme)
+  const setTheme = usePreferencesStore((s) => s.setTheme)
 
   return (
     <DropdownMenu>

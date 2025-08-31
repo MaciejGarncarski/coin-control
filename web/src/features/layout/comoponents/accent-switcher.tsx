@@ -6,12 +6,12 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useThemeStore } from '@/features/layout/comoponents/theme-state'
+import { usePreferencesStore } from '@/features/layout/stores/preferences-store'
 import { cn } from '@/lib/utils'
 
 export const AccentSwitcher = () => {
-  const accent = useThemeStore((s) => s.accent)
-  const setAccent = useThemeStore((s) => s.setAccent)
+  const accent = usePreferencesStore((s) => s.accent)
+  const setAccent = usePreferencesStore((s) => s.setAccent)
 
   return (
     <DropdownMenuGroup>
