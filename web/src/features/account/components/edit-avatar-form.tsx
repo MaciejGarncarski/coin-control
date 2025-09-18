@@ -74,8 +74,10 @@ export const EditAvatarForm = () => {
     uploadAvatarMutation.mutate(
       { avatar: croppedImage },
       {
-        onError: () => {
-          toast.error('Error. Try again later.')
+        onError: (err) => {
+          if (!('toastMessage' in err)) {
+            toast.error('Error. Try again later.')
+          }
         },
         onSuccess: () => {
           setCroppedImage(null)
