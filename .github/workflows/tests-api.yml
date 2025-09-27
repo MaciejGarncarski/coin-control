@@ -22,13 +22,6 @@ jobs:
         with:
           version: latest
 
-      - name: Build the backend api image
-        uses: docker/build-push-action@v6
-        with:
-          load: true
-          context: .
-          file: api/api.Dockerfile
-
       - name: Run tests
         run: docker compose -f docker-compose.test-api.yml --profile once up --abort-on-container-exit
 

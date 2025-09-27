@@ -22,15 +22,8 @@ jobs:
         with:
           version: latest
 
-      - name: Build the frontend image
-        uses: docker/build-push-action@v6
-        with:
-          load: true
-          context: .
-          file: api/api.Dockerfile
-
       - name: Run tests
-        run: docker compose -f docker-compose.test-web.yml --profile once up --abort-on-container-exit
+        run: docker compose -f docker-compose.test-web.yml --profile once up --build --abort-on-container-exit
 
       - name: Compose down
         if: always()
