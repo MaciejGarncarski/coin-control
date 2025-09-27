@@ -22,9 +22,17 @@ jobs:
         with:
           version: latest
 
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
+
       - name: Run tests
         run: docker compose -f docker-compose.test-web.yml --profile once up --build --abort-on-container-exit
 
       - name: Compose down
         if: always()
-        run: docker compose -f docker-compose.test-web.yml down
+        run: docker compose -f docker-compose.test-web.yml down --volumes
