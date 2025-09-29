@@ -100,8 +100,8 @@ export function TransactionsByMonthChart() {
                   right: 10,
                 }
               : {
-                  top: 0,
-                  bottom: 0,
+                  top: 20,
+                  bottom: 10,
                   left: 50,
                   right: 50,
                 }
