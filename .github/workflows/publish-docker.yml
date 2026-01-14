@@ -17,6 +17,7 @@ jobs:
             image: ghcr.io/maciejgarncarski/coin-control-api
           - dockerfile: ./worker/worker.Dockerfile
             appname: maciejgarncarski/coin-control-worker
+            build-args: DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
             image: ghcr.io/maciejgarncarski/coin-control-worker
           - dockerfile: ./web/web.Dockerfile
             appname: maciejgarncarski/coin-control-web
