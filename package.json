@@ -21,12 +21,12 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "eslint": "^9.32.0",
+    "eslint": "^9.39.2",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
-    "prettier": "^3.6.2",
-    "rust-just": "^1.42.4",
-    "typescript": "^5.8.3"
+    "prettier": "^3.7.4",
+    "rust-just": "^1.46.0",
+    "typescript": "^5.9.3"
   },
   "author": "",
   "license": "ISC",
