@@ -60,6 +60,8 @@ services:
     build:
       target: prod
       dockerfile: ./worker/worker.Dockerfile
+      args:
+        DATABASE_URL: postgresql://postgres:postgres@database/coin_control?schema=public
     depends_on:
       - cache
       - database
@@ -87,6 +89,8 @@ services:
     build:
       target: prod
       dockerfile: ./api/api.Dockerfile
+      args:
+        DATABASE_URL: postgresql://postgres:postgres@database/coin_control?schema=public
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:

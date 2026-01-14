@@ -12,6 +12,9 @@ RUN corepack enable
 
 # tests
 FROM base AS test
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 WORKDIR /app
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY api ./api
@@ -40,6 +43,8 @@ CMD [ "pnpm", "--filter", "api", "dev" ]
 
 # build prod
 FROM base AS build
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
 COPY . /app
 WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install --frozen-lockfile

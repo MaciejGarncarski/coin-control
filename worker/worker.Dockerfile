@@ -2,6 +2,7 @@
 
 ARG NODE_VERSION=24.13.0 
 ARG PNPM_VERSION=10.10.0
+ARG DATABASE_URL
 
 # base
 FROM node:${NODE_VERSION}-alpine AS base
@@ -28,6 +29,8 @@ CMD [ "pnpm", "--filter", "worker", "dev" ]
 FROM base AS build
 COPY . /app
 WORKDIR /app
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store HUSKY=0 pnpm install --frozen-lockfile
 RUN pnpm "--filter=@shared/*" build && \
     pnpm --filter=worker build && \
@@ -35,6 +38,8 @@ RUN pnpm "--filter=@shared/*" build && \
 
 # prod
 FROM base AS prod
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
 COPY --from=build /prod/worker/node_modules /prod/worker/node_modules
 COPY --from=build /prod/worker/dist /prod/worker/dist
 WORKDIR /prod/worker

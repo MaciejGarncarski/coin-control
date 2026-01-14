@@ -3,7 +3,7 @@ services:
     image: nginx:1-alpine
     container_name: coin-control-avatars
     ports:
-      - 3002:80
+      - 8089:80
     volumes:
       - ./api/avatar-upload/:/coin-control-avatars
       - ./avatar-service/nginx.conf:/etc/nginx/conf.d/default.conf

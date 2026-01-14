@@ -26,15 +26,9 @@ const ResizeObserverMock = vi.fn(() => ({
 
 vi.stubGlobal('ResizeObserver', ResizeObserverMock)
 
-beforeAll(() => {
-  server.listen()
-})
-
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
+afterAll(() => server.close())
 afterEach(() => {
   server.resetHandlers()
   server.restoreHandlers()
-})
-
-afterAll(() => {
-  server.close()
 })
