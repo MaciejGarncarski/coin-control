@@ -1,5 +1,7 @@
-import { copyFile, mkdir, unlink } from 'node:fs/promises'
+import { createReadStream, createWriteStream } from 'node:fs'
+import { mkdir, unlink } from 'node:fs/promises'
 import { join, normalize } from 'node:path'
+import { pipeline } from 'node:stream/promises'
 
 import { db } from '@shared/database'
 import { type Request, type Response } from 'express'
@@ -61,7 +63,12 @@ export async function uploadUserAvatarHandler(req: Request, res: Response) {
   await mkdir(normalize(join('avatar-upload')), { recursive: true })
   const newAvatarName = `${avatarId}.jpg`
   const safeFilePath = normalize(join('avatar-upload', newAvatarName))
-  await copyFile(avatar.filepath, safeFilePath)
+
+  await pipeline(
+    createReadStream(avatar.filepath),
+    createWriteStream(safeFilePath),
+  )
+
   const avatarURL = `${env.API_URL}/avatars/${newAvatarName}`
 
   await db.users.update({

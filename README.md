@@ -4,8 +4,6 @@
 
 CoinControl is a budget tracking app designed to help users monitor their income and expenses. It addresses the common problem of lacking control over personal finances by providing tools for effective money management.
 
-I have created this app mostly for myself, but feel free to use it :P
-
 ## Live deployment
 
 This app is hosted on my VPS.
@@ -17,15 +15,19 @@ This app is hosted on my VPS.
 Here are some screenshots showcasing the app:
 
 ### Homepage
+
 <img width="800" src="https://raw.githubusercontent.com/MaciejGarncarski/coin-control/refs/heads/main/.github/assets/screenshots/homepage.png">
 
 ### Transactions
+
 <img width="800" src="https://raw.githubusercontent.com/MaciejGarncarski/coin-control/refs/heads/main/.github/assets/screenshots/transactions.png">
 
 ### Analytics
+
 <img width="800" src="https://raw.githubusercontent.com/MaciejGarncarski/coin-control/refs/heads/main/.github/assets/screenshots/analytics.png">
 
 ### Account
+
 <img width="800" src="https://raw.githubusercontent.com/MaciejGarncarski/coin-control/refs/heads/main/.github/assets/screenshots/account.png">
 
 ## Tech used
@@ -105,6 +107,10 @@ You need to have docker installed on your system.
 ### Run docker container in dev mode
 
 `pnpm dev`
+
+### Init database
+
+`cat init.sql | docker exec -i coin-control-database psql`
 
 ## Run tests
 
