@@ -3,7 +3,7 @@ services:
     image: nginx:1-alpine
     container_name: coin-control-avatars
     ports:
-      - 8089:80
+      - 3002:80
     volumes:
       - ./api/avatar-upload/:/coin-control-avatars
       - ./avatar-service/nginx.conf:/etc/nginx/conf.d/default.conf
@@ -70,7 +70,6 @@ services:
     volumes:
       - ./worker/src:/app/worker/src
       - ./worker/prisma:/app/worker/prisma
-      - ./worker/node_modules:/app/worker/node_modules
       - ./shared:/app/shared
     depends_on:
       - cache
@@ -100,7 +99,6 @@ services:
       - ./api/avatar-upload:/app/api/avatar-upload
       - ./api/src:/app/api/src
       - ./api/prisma:/app/api/prisma
-      - ./api/node_modules:/app/api/node_modules
       - ./shared:/app/shared
     networks:
       - app-network
