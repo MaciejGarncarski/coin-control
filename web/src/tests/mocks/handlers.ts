@@ -1,4 +1,9 @@
-import type { User } from '@shared/schemas'
+import type {
+  GetRecentTransactions,
+  GetStatistics,
+  GetTransactionOverview,
+  User,
+} from '@shared/schemas'
 import { http, HttpResponse } from 'msw'
 
 import { env } from '@/config/env'
@@ -45,26 +50,41 @@ export const handlers = [
   ),
 
   http.get(new RegExp('/transactions/overview'), () => {
-    return HttpResponse.json({
-      totalBalance: 0,
-      thisMonthIncome: 0,
-      thisMonthSpending: 0,
-      mostCommonCategoryThisMonth: 'Food', // or whatever your Enum/Type expects
-      chartData: [],
-    })
+    const data: GetTransactionOverview = {
+      data: [
+        { transactionDate: new Date().toISOString(), transactionId: 'tx1' },
+      ],
+    }
+
+    return HttpResponse.json(data)
   }),
 
   http.get(new RegExp('/transactions/recent'), () => {
-    return HttpResponse.json({
-      data: [],
-    })
+    const recentTransactionsData: GetRecentTransactions = {
+      recentTransactions: [
+        {
+          transactionId: 'tx1',
+          amount: 20,
+          category: 'foodAndDrink',
+          date: new Date(),
+          description: 'Lunch',
+        },
+      ],
+      transactionCountThisMonth: 1,
+    }
+
+    return HttpResponse.json(recentTransactionsData)
   }),
 
   http.get(new RegExp('/statistics'), () => {
-    return HttpResponse.json({
-      categories: [],
-      totalSpent: 0,
-    })
+    const stats: GetStatistics = {
+      totalBalance: { changeFromLastMonth: 0, value: 0 },
+      thisMonthIncome: { changeFromLastMonth: 0, value: 0 },
+      thisMonthSpending: { changeFromLastMonth: 0, value: 0 },
+      mostCommonCategoryThisMonth: 'foodAndDrink',
+    }
+
+    return HttpResponse.json(stats)
   }),
 
   http.get(new RegExp('/user/emails'), () => {
