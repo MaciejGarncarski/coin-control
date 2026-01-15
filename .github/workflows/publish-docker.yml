@@ -15,10 +15,15 @@ jobs:
           - dockerfile: ./api/api.Dockerfile
             appname: maciejgarncarski/coin-control-api
             image: ghcr.io/maciejgarncarski/coin-control-api
+            build_args: |
+              DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
+
           - dockerfile: ./worker/worker.Dockerfile
             appname: maciejgarncarski/coin-control-worker
-            build-args: DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
             image: ghcr.io/maciejgarncarski/coin-control-worker
+            build_args: |
+              DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
+
           - dockerfile: ./web/web.Dockerfile
             appname: maciejgarncarski/coin-control-web
             image: ghcr.io/maciejgarncarski/coin-control-web
