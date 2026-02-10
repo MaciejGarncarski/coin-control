@@ -17,16 +17,15 @@
     "db-pull": "pnpm prisma db pull"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.2.0",
-    "@prisma/client": "^7.2.0",
-    "prisma": "^7.2.0"
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
+    "prisma": "^7.3.0"
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
-    "@types/node": "^22.19.6",
+    "@types/node": "catalog:",
     "copyfiles": "^2.4.1",
     "rimraf": "^6.1.2",
-    "typescript": "^5.9.3"
-  },
-  "packageManager": "pnpm@10.10.0"
+    "typescript": "catalog:"
+  }
 }

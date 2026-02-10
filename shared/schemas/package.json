@@ -18,7 +18,6 @@
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
-    "typescript": "^5.9.3"
-  },
-  "packageManager": "pnpm@10.10.0"
+    "typescript": "catalog:"
+  }
 }

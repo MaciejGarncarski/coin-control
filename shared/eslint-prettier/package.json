@@ -11,7 +11,6 @@
     "./base": "./base.js",
     "./react": "./react.js"
   },
-  "packageManager": "pnpm@10.10.0",
   "dependencies": {
     "@eslint/js": "^9.39.2",
     "@tanstack/eslint-plugin-query": "^5.91.2",
