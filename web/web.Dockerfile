@@ -10,24 +10,29 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-# tests
-FROM base AS test
+# deps
+FROM base AS deps
 WORKDIR /app
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
+COPY web/package.json ./web/package.json
+COPY shared/schemas/package.json ./shared/schemas/package.json
+COPY shared/eslint-prettier/package.json ./shared/eslint-prettier/package.json
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
+
+# tests
+FROM deps AS test
+WORKDIR /app
 COPY web ./web
 COPY shared/schemas ./shared/schemas
 COPY shared/eslint-prettier ./shared/eslint-prettier
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 RUN pnpm "--filter=@shared/*" build
 
 # dev
-FROM base AS dev
+FROM deps AS dev
 WORKDIR /app
-COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY web ./web
 COPY shared/schemas ./shared/schemas
 COPY shared/eslint-prettier ./shared/eslint-prettier
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 ENV NODE_ENV="development"
 EXPOSE ${PORT}
 CMD [ "pnpm", "--filter", "web", "dev" ]

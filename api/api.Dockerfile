@@ -10,33 +10,41 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
+# deps
+FROM base AS deps
+WORKDIR /app
+COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
+COPY api/package.json ./api/package.json
+COPY shared/database/package.json ./shared/database/package.json
+COPY shared/queues/package.json ./shared/queues/package.json
+COPY shared/email/package.json ./shared/email/package.json
+COPY shared/schemas/package.json ./shared/schemas/package.json
+COPY shared/eslint-prettier/package.json ./shared/eslint-prettier/package.json
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
+
 # tests
-FROM base AS test
+FROM deps AS test
 ARG DATABASE_URL
 ENV DATABASE_URL=$DATABASE_URL
 
 WORKDIR /app
-COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY api ./api
 COPY shared/database ./shared/database
 COPY shared/queues ./shared/queues
 COPY shared/email ./shared/email
 COPY shared/schemas ./shared/schemas
 COPY shared/eslint-prettier ./shared/eslint-prettier
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 RUN pnpm "--filter=@shared/*" build
 
 # dev
-FROM base AS dev
+FROM deps AS dev
 WORKDIR /app
-COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY api ./api
 COPY shared/database ./shared/database
 COPY shared/queues ./shared/queues
 COPY shared/email ./shared/email
 COPY shared/schemas ./shared/schemas
 COPY shared/eslint-prettier ./shared/eslint-prettier
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install 
 ENV NODE_ENV="development"
 EXPOSE ${PORT}
 CMD [ "pnpm", "--filter", "api", "dev" ]

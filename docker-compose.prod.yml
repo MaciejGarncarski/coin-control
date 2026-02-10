@@ -57,11 +57,6 @@ services:
     image: ghcr.io/maciejgarncarski/coin-control-worker:latest
     container_name: coin-control-worker-prod
     pull_policy: always
-    build:
-      target: prod
-      dockerfile: ./worker/worker.Dockerfile
-      args:
-        DATABASE_URL: postgresql://postgres:postgres@database/coin_control?schema=public
     depends_on:
       - cache
       - database
@@ -86,11 +81,6 @@ services:
       - database
     networks:
       - app-network
-    build:
-      target: prod
-      dockerfile: ./api/api.Dockerfile
-      args:
-        DATABASE_URL: postgresql://postgres:postgres@database/coin_control?schema=public
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
@@ -118,11 +108,6 @@ services:
     image: ghcr.io/maciejgarncarski/coin-control-web:latest
     pull_policy: always
     container_name: coin-control-web-prod
-    build:
-      dockerfile: ./web/web.Dockerfile
-      args:
-        VITE_API_URL: ${API_URL}
-        NODE_ENV: production
     depends_on:
       - api
     environment:
