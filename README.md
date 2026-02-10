@@ -39,7 +39,6 @@ I have used pnpm workspaces as monorepo for this project. I could use turborepo 
 - Docker
 - Docker compose
 - Nginx
-- just (command runner)
 - Postgresql database
 - Redis
 - Github Actions CI/CD
@@ -110,15 +109,23 @@ You need to have docker installed on your system.
 
 ### Init database
 
-`cat init.sql | docker exec -i coin-control-database psql`
+`pnpm init-db`
+
+### Reset database
+
+`pnpm reset-db`
+
+### Seed database
+
+`pnpm seed-db`
 
 ## Run tests
 
-Look for test type you want to run in `justfile`.
+Look for test type you want to run in `package.json` scripts.
 
 Example:
 
-`pnpm just test-api-coverage`
+`pnpm test-api-coverage`
 
 ## Author
 

@@ -28,6 +28,7 @@ services:
       - app-network
     volumes:
       - coin-control-database-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
   cache:
     image: redis:8.0-alpine
     container_name: coin-control-cache
