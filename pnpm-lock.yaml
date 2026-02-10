@@ -10,6 +10,12 @@ catalogs:
     '@types/node':
       specifier: 25.2.2
       version: 25.2.2
+    eslint:
+      specifier: 9.39.2
+      version: 9.39.2
+    prettier:
+      specifier: 3.8.1
+      version: 3.8.1
     typescript:
       specifier: 5.9.3
       version: 5.9.3
@@ -25,7 +31,7 @@ importers:
         specifier: ^19.8.1
         version: 19.8.1
       eslint:
-        specifier: ^9.39.2
+        specifier: 'catalog:'
         version: 9.39.2(jiti@2.6.1)
       husky:
         specifier: ^9.1.7
@@ -34,8 +40,8 @@ importers:
         specifier: ^15.5.2
         version: 15.5.2
       prettier:
-        specifier: ^3.7.4
-        version: 3.7.4
+        specifier: 'catalog:'
+        version: 3.8.1
       rust-just:
         specifier: ^1.46.0
         version: 1.46.0
@@ -262,7 +268,7 @@ importers:
         specifier: ^1.141.0
         version: 1.141.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
       eslint:
-        specifier: ^9.22.0
+        specifier: 'catalog:'
         version: 9.39.2(jiti@2.6.1)
       eslint-plugin-react:
         specifier: ^7.37.5
@@ -280,8 +286,8 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0(@typescript-eslint/eslint-plugin@8.53.0(@typescript-eslint/parser@8.53.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))
       prettier:
-        specifier: ^3.5.3
-        version: 3.7.4
+        specifier: 'catalog:'
+        version: 3.8.1
       typescript-eslint:
         specifier: ^8.53.0
         version: 8.53.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
@@ -493,7 +499,7 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(vitest@3.2.4(@types/node@25.2.2)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.2.2)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.2))
       eslint:
-        specifier: ^9.39.2
+        specifier: 'catalog:'
         version: 9.39.2(jiti@2.6.1)
       jsdom:
         specifier: ^26.1.0
@@ -502,11 +508,11 @@ importers:
         specifier: ^2.12.7
         version: 2.12.7(@types/node@25.2.2)(typescript@5.9.3)
       prettier:
-        specifier: ^3.7.4
-        version: 3.7.4
+        specifier: 'catalog:'
+        version: 3.8.1
       prettier-plugin-tailwindcss:
         specifier: ^0.6.14
-        version: 0.6.14(prettier@3.7.4)
+        version: 0.6.14(prettier@3.8.1)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -6087,8 +6093,8 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  prettier@3.7.4:
-    resolution: {integrity: sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==}
+  prettier@3.8.1:
+    resolution: {integrity: sha512-UOnG6LftzbdaHZcKoPFtOcCKztrQ57WkHDeRD9t/PTQtmT0NHSeWWepj6pS0z/N7+08BHFDQVUrfmfMRcZwbMg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -10199,7 +10205,7 @@ snapshots:
       '@tanstack/router-core': 1.149.3
       '@tanstack/router-utils': 1.143.11
       '@tanstack/virtual-file-routes': 1.145.4
-      prettier: 3.7.4
+      prettier: 3.8.1
       recast: 0.23.11
       source-map: 0.7.6
       tsx: 4.21.0
@@ -13164,13 +13170,13 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-tailwindcss@0.6.14(prettier@3.7.4):
+  prettier-plugin-tailwindcss@0.6.14(prettier@3.8.1):
     dependencies:
-      prettier: 3.7.4
+      prettier: 3.8.1
 
   prettier@3.4.2: {}
 
-  prettier@3.7.4: {}
+  prettier@3.8.1: {}
 
   pretty-format@27.5.1:
     dependencies:

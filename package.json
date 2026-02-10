@@ -21,10 +21,10 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "eslint": "^9.39.2",
+    "eslint": "catalog:",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
-    "prettier": "^3.7.4",
+    "prettier": "catalog:",
     "rust-just": "^1.46.0",
     "typescript": "catalog:"
   },

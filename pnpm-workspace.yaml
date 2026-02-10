@@ -7,6 +7,8 @@ packages:
 catalog:
   "@types/node": 25.2.2
   typescript: 5.9.3
+  eslint: 9.39.2
+  prettier: 3.8.1
 
 onlyBuiltDependencies:
   - "@prisma/client"
