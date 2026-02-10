@@ -5,7 +5,7 @@
   "type": "module",
   "version": "1.0.0",
   "main": "./dist/src/index.js",
-  "types": "./src/index.ts",
+  "types": "./dist/src/index.d.ts",
   "scripts": {
     "clean": "rimraf ./dist",
     "build": "pnpm prisma generate && pnpm clean && pnpm tsc -b",
