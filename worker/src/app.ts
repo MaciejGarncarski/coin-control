@@ -14,6 +14,9 @@ try {
   createNewEmailVerificationWorker()
   createExpiredCodesRemoverWorker()
   createExpiredPasswordTokensRemoverWorker()
+
+  // eslint-disable-next-line no-console
+  console.log('Workers started')
 } catch (e) {
   // eslint-disable-next-line no-console
   console.log(e)

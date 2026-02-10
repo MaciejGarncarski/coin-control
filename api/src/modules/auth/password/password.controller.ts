@@ -7,6 +7,7 @@ import type { Response } from 'express'
 import status from 'http-status'
 
 import { DEMO_ACC_MAIL } from '../../../config/const.js'
+import { httpLogger } from '../../../logger/logger.js'
 import { ApiError } from '../../../utils/api-error.js'
 import type { TypedRequestBody } from '../../../utils/typed-request.js'
 import {
@@ -40,6 +41,9 @@ export async function forgotPasswordLinkHandler(
 
   if (!foundUser?.id) {
     // send fake resopnse so attacker does not know if email exists.
+    httpLogger.logger.warn(
+      'Password reset requested for non existing email: ' + email,
+    )
     res.status(status.ACCEPTED).json({ message: 'success' })
     return
   }

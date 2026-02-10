@@ -3,9 +3,9 @@
   "name": "worker",
   "type": "module",
   "scripts": {
-    "dev": "pnpm tsx watch --clear-screen=false  src/app.ts",
-    "build": "pnpm tsc --build",
-    "start": "pnpm build && node --env-file=.env ./dist/src/app.js",
+    "dev": "pnpm tsx watch --clear-screen=false --include '../shared/**/**' --exclude '../shared/**/node_modules' src/app.ts",
+    "build": "pnpm tsdown --clean --no-bundle",
+    "start": "pnpm build && node --env-file=.env ./dist/app.js",
     "lint": "eslint --fix .",
     "format": "prettier --write --cache .",
     "lint-format": "pnpm lint && pnpm format",
@@ -23,8 +23,9 @@
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
     "@types/node": "catalog:",
-    "@types/nodemailer": "^6.4.21",
-    "tsx": "^4.21.0",
+    "@types/nodemailer": "catalog:",
+    "tsdown": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:"
   }
 }

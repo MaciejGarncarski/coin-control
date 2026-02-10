@@ -13,11 +13,7 @@
     "noImplicitOverride": true,
 
     "module": "NodeNext",
-    "outDir": "dist",
-    "sourceMap": true,
-    "declaration": true,
-    "composite": true,
-    "declarationMap": true,
+    "noEmit": true,
     "lib": ["es2022", "DOM"]
   },
   "exclude": ["*.mjs", "node_modules", "dist"],

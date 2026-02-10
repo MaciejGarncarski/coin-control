@@ -67,4 +67,4 @@ COPY --from=build /prod/api/dist /prod/api/dist
 WORKDIR /prod/api
 EXPOSE ${PORT}
 ENV NODE_ENV="production"
-CMD ["node", "./dist/src/server.js"]
+CMD ["node", "./dist/server.js"]

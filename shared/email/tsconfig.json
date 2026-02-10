@@ -14,12 +14,8 @@
     "noImplicitOverride": true,
 
     "module": "NodeNext",
-    "outDir": "dist",
-    "sourceMap": true,
-    "declaration": true,
-    "composite": true,
+    "noEmit": true,
     "jsx": "react-jsx",
-    "declarationMap": true,
     "lib": ["es2022"]
   },
   "exclude": ["*.mjs", "node_modules", "dist"],
