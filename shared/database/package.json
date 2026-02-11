@@ -17,9 +17,9 @@
     "db-pull": "pnpm prisma db pull"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.3.0",
-    "@prisma/client": "^7.3.0",
-    "prisma": "^7.3.0"
+    "@prisma/adapter-pg": "^7.4.0",
+    "@prisma/client": "^7.4.0",
+    "prisma": "^7.4.0"
   },
   "devDependencies": {
     "@shared/eslint-prettier": "workspace:*",
