@@ -9,7 +9,7 @@
     "build-dev": "docker compose -f docker-compose.dev.yml build",
     "down-dev": "docker compose -f docker-compose.dev.yml down",
     "prod": "docker compose -f docker-compose.prod.yml up --detach",
-    "prod-local": "docker compose -f docker-compose.prod.yml up",
+    "staging": "docker compose -f docker-compose.prod.yml up",
     "down-prod": "docker compose -f docker-compose.prod.yml down",
     "test-api": "docker compose -f docker-compose.test-api.yml --profile once up --abort-on-container-exit",
     "test-api-coverage": "docker compose -f docker-compose.test-api.yml --profile coverage up --abort-on-container-exit",

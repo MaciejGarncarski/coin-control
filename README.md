@@ -107,6 +107,10 @@ You need to have docker installed on your system.
 
 `pnpm dev`
 
+### Run docker container in staging mode (prod-like locally)
+
+`pnpm staging`
+
 ### Init database
 
 `pnpm init-db`
