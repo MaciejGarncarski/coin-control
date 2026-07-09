@@ -15,8 +15,9 @@ export const sessionConfig: SessionOptions = {
   saveUninitialized: false,
   store: SessionStore,
   cookie: {
-    secure: false,
+    secure: env.NODE_ENV === 'production',
     httpOnly: true,
+    sameSite: 'lax',
     maxAge: COOKIE_MAX_AGE,
   },
 }
