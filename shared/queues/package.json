@@ -14,8 +14,8 @@
     "check-types": "pnpm tsc --skipLibCheck --noEmit"
   },
   "dependencies": {
-    "bullmq": "^5.66.5",
-    "ioredis": "^5.9.1",
+    "bullmq": "^5.79.3",
+    "ioredis": "5.10.1",
     "zod": "^3.25.76"
   },
   "devDependencies": {
