@@ -38,9 +38,17 @@ export async function postLoginHandler(
 
   const user = await checkUserExists({ email })
 
+  if (!user.password_hash) {
+    throw new ApiError({
+      message: 'Invalid credentials.',
+      formMessage: 'Invalid credentials.',
+      statusCode: status.BAD_REQUEST,
+    })
+  }
+
   await verifyPassword({
     password,
-    hash: user.password_hash || '',
+    hash: user.password_hash,
   })
 
   const isMinimumOneEmailVerified = user.user_emails.some(

@@ -92,10 +92,6 @@ type VerifyPasswordProps = {
 }
 
 export async function verifyPassword({ hash, password }: VerifyPasswordProps) {
-  if (hash.trim() === '') {
-    return false
-  }
-
   const passwordMatches = await verify(hash, password)
 
   if (!passwordMatches) {
