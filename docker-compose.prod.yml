@@ -2,6 +2,7 @@ services:
   avatar-service:
     image: nginx:1-alpine
     container_name: coin-control-avatars
+    restart: always
     ports:
       - 8089:80
     volumes:
@@ -56,6 +57,7 @@ services:
   worker:
     image: ghcr.io/maciejgarncarski/coin-control-worker:latest
     container_name: coin-control-worker-prod
+    restart: always
     pull_policy: always
     depends_on:
       - cache
@@ -75,6 +77,7 @@ services:
     image: ghcr.io/maciejgarncarski/coin-control-api:latest
     pull_policy: always
     container_name: coin-control-api-prod
+    restart: always
     depends_on:
       - cache
       - worker
@@ -108,6 +111,7 @@ services:
     image: ghcr.io/maciejgarncarski/coin-control-web:latest
     pull_policy: always
     container_name: coin-control-web-prod
+    restart: always
     depends_on:
       - api
     environment:
